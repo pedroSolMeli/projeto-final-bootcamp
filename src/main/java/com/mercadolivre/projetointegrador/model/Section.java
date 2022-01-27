@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -27,7 +28,9 @@ public class Section implements Serializable {
     private ProductType sectionType;
 
     @ManyToOne
+    @JsonIgnoreProperties("sections")
     private Warehouse warehouseCode;
+
 
     private Integer maxCapacity;
 

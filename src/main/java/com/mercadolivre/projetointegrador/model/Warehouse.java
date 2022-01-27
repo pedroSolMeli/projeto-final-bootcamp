@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -24,6 +25,7 @@ public class Warehouse implements Serializable {
     private String code;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "warehouseCode")
+    @JsonIgnoreProperties("warehouseCode")
     private List<Section> sections;
 
 }
