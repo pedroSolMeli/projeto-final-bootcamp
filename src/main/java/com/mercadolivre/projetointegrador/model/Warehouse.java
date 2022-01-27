@@ -6,7 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
 import java.util.List;
 
@@ -15,16 +14,16 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class Warehouse implements Serializable{
+public class Warehouse implements Serializable {
 
-	private static final long serialVersionUID = 7463206541614851461L;
+    private static final long serialVersionUID = 7463206541614851461L;
 
-	@Id
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String code;
 
-    @OneToMany
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "warehouseCode")
     private List<Section> sections;
 
 }

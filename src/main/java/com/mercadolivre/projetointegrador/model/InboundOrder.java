@@ -28,8 +28,8 @@ public class InboundOrder implements Serializable {
 
 	private LocalDate orderDate;
 
-    @ManyToOne
-    private Section section;
+   // @ManyToOne
+   // private Section section;
 
     @OneToMany(cascade = CascadeType.ALL)
     private List<Batch> batchStock;

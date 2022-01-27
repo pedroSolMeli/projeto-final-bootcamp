@@ -1,15 +1,18 @@
 package com.mercadolivre.projetointegrador.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 
 @Entity
@@ -23,7 +26,7 @@ public class Batch implements Serializable{
 
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Integer batchNumber;
+    private Long batchNumber;
 
     @ManyToOne(optional = false)
     @JoinColumn(name = "id_inbound", nullable = false)
