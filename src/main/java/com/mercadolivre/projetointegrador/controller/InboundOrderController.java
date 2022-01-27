@@ -25,5 +25,7 @@ public class InboundOrderController {
         InboundOrder result = service.updateInboundOrder(inboundOrder);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
+   
+
 
 }

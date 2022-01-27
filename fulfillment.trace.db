@@ -1,0 +1,3 @@
+2022-01-27 11:39:21 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "INBOUND_ORDER_BATCH_STOCK[*]"; expected "INSERT"; SQL statement:
+INBOUND_ORDER_BATCH_STOCK [42001-200]
