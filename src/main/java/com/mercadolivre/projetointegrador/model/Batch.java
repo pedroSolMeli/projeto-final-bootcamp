@@ -7,7 +7,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 
-
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
@@ -17,13 +17,16 @@ import java.time.LocalDateTime;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class Batch {
+public class Batch implements Serializable{
 
-    @Id
+	private static final long serialVersionUID = 7102445062867907659L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Integer batchNumber;
 
-    @ManyToOne
+    @ManyToOne(optional = false)
+    @JoinColumn(name = "id_inbound", nullable = false)
     private InboundOrder inboundOrder;
 
     private Long productId;

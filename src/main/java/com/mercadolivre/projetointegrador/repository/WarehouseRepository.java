@@ -7,6 +7,6 @@ import com.mercadolivre.projetointegrador.model.Warehouse;
 
 
 @Repository
-public interface WareouseRepository extends JpaRepository<Warehouse, Long>{
+public interface WarehouseRepository extends JpaRepository<Warehouse, Long>{
 
 }

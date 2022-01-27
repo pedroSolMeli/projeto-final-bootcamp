@@ -24,11 +24,13 @@ public class Section implements Serializable{
 	@Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+	
     private String sectionCode;
+    
     private ProductType sectionType;
 
     @ManyToOne
-//    @JoinColumn(name = "warehouse_id", nullable = false)
+//    @JoinColumn(name = "id_warehouse")
     private Warehouse warehouseCode;
 
     private Integer maxCapacity;
