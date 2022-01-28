@@ -10,7 +10,7 @@ import com.mercadolivre.projetointegrador.batch.service.BatchService;
 
 import java.util.List;
 
-@RestController
+@RestController("BatchController")
 @RequestMapping("/batch")
 public class BatchController {
 

@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mercadolivre.projetointegrador.section.model.Section;
 
-@Repository
+@Repository("SectionRepository")
 public interface SectionRepository extends JpaRepository<Section, Long>{
 
 }

@@ -1,6 +1,8 @@
 package com.mercadolivre.projetointegrador.inboundorder.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.annotation.QueryAnnotation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +14,7 @@ import com.mercadolivre.projetointegrador.inboundorder.service.InboundOrderServi
 
 import java.util.List;
 
-@RestController
+@RestController("InboundOrderController")
 @RequestMapping("/inboundorder")
 public class InboundOrderController {
 

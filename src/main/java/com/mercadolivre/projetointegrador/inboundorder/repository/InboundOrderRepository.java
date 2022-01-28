@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 
-@Repository
+@Repository("InboundOrderRepository")
 public interface InboundOrderRepository extends JpaRepository<InboundOrder, Long> {
 
 }

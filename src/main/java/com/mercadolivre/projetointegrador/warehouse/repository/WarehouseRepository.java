@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 
 
-@Repository
+@Repository("WarehouseRepository")
 public interface WarehouseRepository extends JpaRepository<Warehouse, Long>{
 
 }
