@@ -24,8 +24,8 @@ public class InboundOrderController {
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody InboundOrderRequestDto inboundOrderRequestDto) {
         InboundOrder result = service.createInboundOrder(inboundOrderRequestDto);
-        InboundOrderResponseDto response = service.convertToDto(result);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        //InboundOrderResponseDto response = service.convertToDto(result);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping

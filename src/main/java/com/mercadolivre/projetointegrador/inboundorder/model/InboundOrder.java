@@ -32,7 +32,7 @@ public class InboundOrder implements Serializable {
    // @ManyToOne
    // private Section section;
 
-    @OneToMany(cascade = CascadeType.ALL)
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "inboundOrder")
     @JsonIgnoreProperties("inboundOrder")
     private List<Batch> batchStock;
 
