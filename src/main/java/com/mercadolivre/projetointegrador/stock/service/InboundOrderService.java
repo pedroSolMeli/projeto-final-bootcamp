@@ -1,10 +1,10 @@
-package com.mercadolivre.projetointegrador.service;
+package com.mercadolivre.projetointegrador.stock.service;
 
-import com.mercadolivre.projetointegrador.dto.InboundOrderRequestDto;
-import com.mercadolivre.projetointegrador.dto.InboundOrderResponseDto;
-import com.mercadolivre.projetointegrador.model.Batch;
-import com.mercadolivre.projetointegrador.model.InboundOrder;
-import com.mercadolivre.projetointegrador.repository.InboundOrderRepository;
+import com.mercadolivre.projetointegrador.stock.dto.InboundOrderRequestDto;
+import com.mercadolivre.projetointegrador.stock.dto.InboundOrderResponseDto;
+import com.mercadolivre.projetointegrador.stock.model.Batch;
+import com.mercadolivre.projetointegrador.stock.model.InboundOrder;
+import com.mercadolivre.projetointegrador.stock.repository.InboundOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

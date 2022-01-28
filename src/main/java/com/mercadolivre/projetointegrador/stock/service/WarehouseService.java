@@ -1,10 +1,10 @@
-package com.mercadolivre.projetointegrador.service;
+package com.mercadolivre.projetointegrador.stock.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.mercadolivre.projetointegrador.model.Warehouse;
-import com.mercadolivre.projetointegrador.repository.WarehouseRepository;
+import com.mercadolivre.projetointegrador.stock.model.Warehouse;
+import com.mercadolivre.projetointegrador.stock.repository.WarehouseRepository;
 
 import java.util.List;
 

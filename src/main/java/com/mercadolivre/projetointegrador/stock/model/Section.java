@@ -1,7 +1,7 @@
-package com.mercadolivre.projetointegrador.model;
+package com.mercadolivre.projetointegrador.stock.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.mercadolivre.projetointegrador.enums.ProductType;
+import com.mercadolivre.projetointegrador.stock.enums.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

@@ -1,6 +1,6 @@
-package com.mercadolivre.projetointegrador.repository;
+package com.mercadolivre.projetointegrador.stock.repository;
 
-import com.mercadolivre.projetointegrador.model.InboundOrder;
+import com.mercadolivre.projetointegrador.stock.model.InboundOrder;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 

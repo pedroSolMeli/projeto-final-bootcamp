@@ -1,9 +1,9 @@
-package com.mercadolivre.projetointegrador.controller;
+package com.mercadolivre.projetointegrador.stock.controller;
 
-import com.mercadolivre.projetointegrador.dto.InboundOrderRequestDto;
-import com.mercadolivre.projetointegrador.dto.InboundOrderResponseDto;
-import com.mercadolivre.projetointegrador.model.InboundOrder;
-import com.mercadolivre.projetointegrador.service.InboundOrderService;
+import com.mercadolivre.projetointegrador.stock.dto.InboundOrderRequestDto;
+import com.mercadolivre.projetointegrador.stock.dto.InboundOrderResponseDto;
+import com.mercadolivre.projetointegrador.stock.model.InboundOrder;
+import com.mercadolivre.projetointegrador.stock.service.InboundOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

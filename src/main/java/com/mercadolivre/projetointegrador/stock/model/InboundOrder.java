@@ -1,4 +1,4 @@
-package com.mercadolivre.projetointegrador.model;
+package com.mercadolivre.projetointegrador.stock.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -6,8 +6,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
-
-import com.mercadolivre.projetointegrador.enums.ProductType;
 
 import java.io.Serializable;
 import java.time.LocalDate;

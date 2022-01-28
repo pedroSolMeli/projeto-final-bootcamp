@@ -1,7 +1,7 @@
-package com.mercadolivre.projetointegrador.service;
+package com.mercadolivre.projetointegrador.stock.service;
 
-import com.mercadolivre.projetointegrador.model.Section;
-import com.mercadolivre.projetointegrador.repository.SectionRepository;
+import com.mercadolivre.projetointegrador.stock.model.Section;
+import com.mercadolivre.projetointegrador.stock.repository.SectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

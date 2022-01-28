@@ -1,6 +1,6 @@
-package com.mercadolivre.projetointegrador.dto;
+package com.mercadolivre.projetointegrador.stock.dto;
 
-import com.mercadolivre.projetointegrador.model.InboundOrder;
+import com.mercadolivre.projetointegrador.stock.model.InboundOrder;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

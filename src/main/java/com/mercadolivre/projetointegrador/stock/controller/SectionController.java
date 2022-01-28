@@ -1,7 +1,7 @@
-package com.mercadolivre.projetointegrador.controller;
+package com.mercadolivre.projetointegrador.stock.controller;
 
-import com.mercadolivre.projetointegrador.model.Section;
-import com.mercadolivre.projetointegrador.service.SectionService;
+import com.mercadolivre.projetointegrador.stock.model.Section;
+import com.mercadolivre.projetointegrador.stock.service.SectionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

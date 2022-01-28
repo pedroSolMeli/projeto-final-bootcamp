@@ -1,4 +1,4 @@
-package com.mercadolivre.projetointegrador.model;
+package com.mercadolivre.projetointegrador.stock.model;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;

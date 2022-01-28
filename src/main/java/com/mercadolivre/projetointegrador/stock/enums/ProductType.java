@@ -1,4 +1,4 @@
-package com.mercadolivre.projetointegrador.enums;
+package com.mercadolivre.projetointegrador.stock.enums;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
