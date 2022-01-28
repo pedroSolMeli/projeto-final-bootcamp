@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.stock.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -30,6 +31,7 @@ public class InboundOrder implements Serializable {
    // private Section section;
 
     @OneToMany(cascade = CascadeType.ALL)
+    @JsonIgnoreProperties("inboundOrder")
     private List<Batch> batchStock;
 
 }

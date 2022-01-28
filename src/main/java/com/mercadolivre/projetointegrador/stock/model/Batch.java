@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.stock.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,7 +27,8 @@ public class Batch implements Serializable{
     private Long batchNumber;
 
     @ManyToOne(optional = false)
-    @JoinColumn(name = "id_inbound", nullable = false)
+    //@JoinColumn(name = "id_inbound", nullable = false)
+    @JsonIgnoreProperties("batchStock")
     private InboundOrder inboundOrder;
 
     private Long productId;
@@ -35,7 +37,7 @@ public class Batch implements Serializable{
     private Integer initialQuantity;
     private Integer currentQuantity;
     private LocalDate manufacturingDate;
-    private LocalDateTime manufacturingTime;
+    private LocalDateTime manufacturingTime = LocalDateTime.now();
     private LocalDate dueDate;
 
 }
