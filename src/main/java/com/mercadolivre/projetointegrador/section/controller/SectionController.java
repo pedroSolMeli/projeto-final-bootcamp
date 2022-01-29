@@ -1,5 +1,7 @@
 package com.mercadolivre.projetointegrador.section.controller;
 
+import com.mercadolivre.projetointegrador.section.dto.SectionRequestDto;
+import com.mercadolivre.projetointegrador.section.dto.SectionResponseDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
 import com.mercadolivre.projetointegrador.section.service.SectionService;
 
@@ -18,8 +20,8 @@ public class SectionController {
     SectionService service;
 
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody Section section) {
-        Section result = service.createSection(section);
+    public ResponseEntity<?> create(@RequestBody SectionRequestDto sectionRequestDto) {
+        SectionResponseDto result = service.createSection(sectionRequestDto);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
