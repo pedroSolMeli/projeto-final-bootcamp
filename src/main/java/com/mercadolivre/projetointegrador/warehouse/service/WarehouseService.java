@@ -1,7 +1,5 @@
 package com.mercadolivre.projetointegrador.warehouse.service;
 
-import com.mercadolivre.projetointegrador.section.dto.SectionResponseDto;
-import com.mercadolivre.projetointegrador.section.service.SectionService;
 import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseRequestDto;
 import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseResponseDto;
 import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class WarehouseService {
@@ -21,36 +20,25 @@ public class WarehouseService {
     @Autowired
     WarehouseRepository repository;
 
-
-    public Warehouse createWarehouse(WarehouseRequestDto warehouseRequestDto) {
+    public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto) {
+        checkIfWarehouseCodeExists(warehouseRequestDto.getCode());
         Warehouse warehouse = ConvertToObject(warehouseRequestDto);
-
         Warehouse result = repository.saveAndFlush(warehouse);
-
         WarehouseResponseDto response = ConvertToResponseDto(result);
-        return result;
-
+        return response;
     }
 
-    public List<Warehouse> findAll() {
+    public List<Warehouse> findAllWarehouses() {
         return repository.findAll();
     }
 
-    public static Warehouse ConvertToObject(WarehouseRequestDto dto) {
-        Warehouse warehouse = Warehouse.builder()
-                .code(dto.getCode())
-                .build();
+    public Warehouse getWarehouseByCode(String code) {
+        Warehouse warehouse = repository.getWarehouseByCode(code);
+        if (warehouse == null) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Warehouse not found");
+            throw responseStatusException;
+        }
         return warehouse;
-    }
-
-    public static WarehouseResponseDto ConvertToResponseDto(Warehouse warehouse) {
-        List<SectionResponseDto> sectionResponseDtos = SectionService.ConvertToResponseDto(warehouse.getSections());
-        WarehouseResponseDto warehouseResponseDto = WarehouseResponseDto.builder()
-                .id(warehouse.getId())
-                .code(warehouse.getCode())
-                .sections(sectionResponseDtos)
-                .build();
-        return warehouseResponseDto;
     }
 
     public Warehouse getWarehouseById(Long id) {
@@ -62,14 +50,30 @@ public class WarehouseService {
         return warehouse;
     }
 
-    public Warehouse getWarehouseByCode(String code) {
-
-        Warehouse warehouse = repository.findWarehouseByCode(code);
-        if (warehouse == null) {
-            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Warehouse not found");
+    public void checkIfWarehouseCodeExists(String code) {
+        Optional<Warehouse> warehouse = repository.findWarehouseByCode(code);
+        if (warehouse.isPresent()) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.CONFLICT, "Warehouse code already exists");
             throw responseStatusException;
         }
+    }
+
+    public static Warehouse ConvertToObject(WarehouseRequestDto dto) {
+        Warehouse warehouse = Warehouse.builder()
+                .code(dto.getCode())
+                .build();
         return warehouse;
     }
+
+    public static WarehouseResponseDto ConvertToResponseDto(Warehouse warehouse) {
+        //List<SectionResponseDto> sectionResponseDtos = SectionService.ConvertToResponseDto(warehouse.getSections());
+        WarehouseResponseDto warehouseResponseDto = WarehouseResponseDto.builder()
+                .id(warehouse.getId())
+                .code(warehouse.getCode())
+                // .sections(sectionResponseDtos)
+                .build();
+        return warehouseResponseDto;
+    }
+
 
 }

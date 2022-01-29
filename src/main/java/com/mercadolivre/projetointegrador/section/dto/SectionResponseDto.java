@@ -1,11 +1,13 @@
 package com.mercadolivre.projetointegrador.section.dto;
 
-import com.mercadolivre.projetointegrador.enums.ProductType;
 import lombok.Builder;
+import lombok.Data;
 
 @Builder
+@Data
 public class SectionResponseDto {
 
+    private Long id;
     private String sectionCode;
     private String sectionType;
     private Integer maxCapacity;

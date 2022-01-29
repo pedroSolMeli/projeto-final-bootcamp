@@ -25,7 +25,9 @@ public class Section implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String sectionCode;
+
+    @Column(unique = true)
+    private String code;
 
     @Enumerated(EnumType.STRING)
     private ProductType sectionType;

@@ -1,10 +1,10 @@
 package com.mercadolivre.projetointegrador.section.dto;
 
-import com.mercadolivre.projetointegrador.enums.ProductType;
 import lombok.Data;
 
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 
 @Data
 public class SectionRequestDto {
@@ -12,11 +12,11 @@ public class SectionRequestDto {
     private String sectionCode;
 
     @NotBlank(message = "sectionType must not be empty")
-    private ProductType sectionType;
+    private String sectionType;
 
-    @NotBlank(message = "maxCapacity must not be empty")
+    @NotNull(message = "maxCapacity must not be empty")
     @Min(value = 0, message = "maxCapacity must be higher than zero")
-    private Integer maxCapacity;
+    private int maxCapacity;
 
     private String warehouseCode;
 }
