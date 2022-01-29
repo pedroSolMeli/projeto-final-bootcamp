@@ -20,5 +20,6 @@ public class SectionRequestDto {
     @Min(value = 0, message = "maxCapacity must be higher than zero")
     private int maxCapacity;
 
+    @NotBlank(message = "wareHouseCode must not be empty")
     private String warehouseCode;
 }
