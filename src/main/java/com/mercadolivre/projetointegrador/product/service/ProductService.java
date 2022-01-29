@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.product.service;
 
+import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.product.dto.ProductRequestDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
@@ -7,7 +8,9 @@ import com.mercadolivre.projetointegrador.product.model.Product;
 import com.mercadolivre.projetointegrador.product.repository.ProductRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -61,4 +64,12 @@ public class ProductService {
     }
 
 
+    public Product getProductById(Long id) {
+        Product product = repository.getById(id);
+        if (product == null) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+            throw responseStatusException;
+        }
+        return product;
+    }
 }

@@ -15,7 +15,6 @@ import java.util.List;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "warehouse")
 public class Warehouse implements Serializable {
 
     private static final long serialVersionUID = 7463206541614851461L;
@@ -31,12 +30,4 @@ public class Warehouse implements Serializable {
     @JsonIgnoreProperties("warehouseCode")
     private List<Section> sections;
 
-    @Override
-    public String toString() {
-        return "Warehouse{" +
-                "id=" + id +
-                ", code='" + code + '\'' +
-                ", sections=" + sections +
-                '}';
-    }
 }

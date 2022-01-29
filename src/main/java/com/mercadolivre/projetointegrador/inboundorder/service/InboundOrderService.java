@@ -23,8 +23,9 @@ public class InboundOrderService {
     InboundOrderRepository repository;
 
     public InboundOrder createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
-        InboundOrder inboundOrder = convertToObject(inboundOrderRequestDto);
-        return repository.saveAndFlush(inboundOrder);
+        //InboundOrder inboundOrder = convertToObject(inboundOrderRequestDto);
+        //return repository.saveAndFlush(inboundOrder);
+        return null;
     }
 
     public List<InboundOrder> findAllInboundOrders() {
@@ -46,18 +47,18 @@ public class InboundOrderService {
         return dto;
     }
 
-    public InboundOrder convertToObject(InboundOrderRequestDto inboundOrderRequestDto) {
+    //public InboundOrder convertToObject(InboundOrderRequestDto inboundOrderRequestDto) {
 
-        InboundOrder inboundOrder = inboundOrderRequestDto.getInboundOrder();
-        InboundOrder object = InboundOrder.builder()
-                .orderNumber(inboundOrder.getOrderNumber())
-                .orderDate(inboundOrder.getOrderDate())
+        //InboundOrder inboundOrder = inboundOrderRequestDto.getInboundOrder();
+        //InboundOrder object = InboundOrder.builder()
+        //        .orderNumber(inboundOrder.getOrderNumber())
+        //        .orderDate(inboundOrder.getOrderDate())
                 //.section(inboundOrder.getSection())
-                .batchStock(inboundOrder.getBatchStock())
-                .build();
-        return object;
+        //        .batchStock(inboundOrder.getBatchStock())
+        //        .build();
+        //return object;
 
-    }
+    //}
 
 
 }

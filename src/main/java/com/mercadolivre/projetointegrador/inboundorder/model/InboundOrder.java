@@ -26,7 +26,9 @@ public class InboundOrder implements Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private long orderNumber;
+    private Long id;
+
+	private Long orderNumber;
 
 	private LocalDate orderDate;
 

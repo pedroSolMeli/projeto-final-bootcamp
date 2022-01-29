@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.*;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.service.BatchService;
 
+import javax.validation.Valid;
 import java.util.List;
 
 @RestController("BatchController")
