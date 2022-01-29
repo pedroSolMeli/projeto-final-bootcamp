@@ -62,7 +62,7 @@ public class SectionService {
     }
 
     public static Section ConvertToObject(SectionRequestDto dto, Warehouse warehouse) {
-        ProductType productType = ConvertToEnum(dto.getSectionType());
+        ProductType productType = ProductType.ConvertToEnum(dto.getSectionType());
         Section section = Section.builder()
                 .code(dto.getSectionCode())
                 .sectionType(productType)
@@ -90,15 +90,7 @@ public class SectionService {
         return SectionResponseDtoList;
     }
 
-    public static ProductType ConvertToEnum(String enumDescription) {
-        try {
-            ProductType productType = ProductType.valueOf(enumDescription.toUpperCase(Locale.ROOT));
-            return productType;
-        } catch (Exception e) {
-            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "ProductType with description" + enumDescription + " not found");
-            throw responseStatusException;
-        }
-    }
+
 
 
 }

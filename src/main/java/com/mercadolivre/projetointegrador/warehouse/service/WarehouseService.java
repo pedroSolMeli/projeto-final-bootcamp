@@ -59,9 +59,7 @@ public class WarehouseService {
     }
 
     public static Warehouse ConvertToObject(WarehouseRequestDto dto) {
-        Warehouse warehouse = Warehouse.builder()
-                .code(dto.getCode())
-                .build();
+        Warehouse warehouse = Warehouse.builder().code(dto.getCode()).build();
         return warehouse;
     }
 
