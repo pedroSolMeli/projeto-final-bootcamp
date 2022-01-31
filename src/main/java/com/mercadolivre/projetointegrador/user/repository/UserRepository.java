@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mercadolivre.projetointegrador.user.model.User;
 
-@Repository
+@Repository("UserRepository")
 public interface UserRepository extends JpaRepository<User, Long>{
 
 }

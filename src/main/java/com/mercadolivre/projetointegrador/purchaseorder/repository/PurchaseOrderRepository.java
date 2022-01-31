@@ -5,7 +5,7 @@ import org.springframework.stereotype.Repository;
 
 import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 
-@Repository
+@Repository("PurchaseOrderRepository")
 public interface PurchaseOrderRepository extends JpaRepository<PurchaseOrder, Long >{
 
 }

@@ -1,6 +1,8 @@
 package com.mercadolivre.projetointegrador.inboundorder.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.data.annotation.QueryAnnotation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,7 +14,7 @@ import com.mercadolivre.projetointegrador.inboundorder.service.InboundOrderServi
 
 import java.util.List;
 
-@RestController
+@RestController("InboundOrderController")
 @RequestMapping("/inboundorder")
 public class InboundOrderController {
 
@@ -22,8 +24,8 @@ public class InboundOrderController {
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody InboundOrderRequestDto inboundOrderRequestDto) {
         InboundOrder result = service.createInboundOrder(inboundOrderRequestDto);
-        InboundOrderResponseDto response = service.convertToDto(result);
-        return new ResponseEntity<>(response, HttpStatus.CREATED);
+        //InboundOrderResponseDto response = service.convertToDto(result);
+        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping

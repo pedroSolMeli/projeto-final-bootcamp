@@ -12,14 +12,18 @@ import javax.persistence.UniqueConstraint;
 
 import com.mercadolivre.projetointegrador.enums.UserRole;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @Builder
+
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "cpf" }))
 public class User implements Serializable {
+
 
 	private static final long serialVersionUID = -83702385008718071L;
 
