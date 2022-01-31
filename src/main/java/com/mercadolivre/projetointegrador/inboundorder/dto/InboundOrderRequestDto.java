@@ -1,11 +1,11 @@
 package com.mercadolivre.projetointegrador.inboundorder.dto;
 
-import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
-
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import javax.validation.Valid;
 
 @Data
 @Builder
@@ -13,8 +13,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InboundOrderRequestDto {
 
+    @Valid
     private InboundOrderDto inboundOrder;
-
 
 
 }

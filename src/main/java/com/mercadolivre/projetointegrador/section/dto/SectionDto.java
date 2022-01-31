@@ -3,7 +3,6 @@ package com.mercadolivre.projetointegrador.section.dto;
 import lombok.Builder;
 import lombok.Data;
 
-import javax.validation.Valid;
 import javax.validation.constraints.NotBlank;
 
 @Data
@@ -15,8 +14,5 @@ public class SectionDto {
 
     @NotBlank(message = "sectionCode must no be empty")
     private String warehouseCode;
-
-    @Valid
-    private SectionDto section;
 
 }

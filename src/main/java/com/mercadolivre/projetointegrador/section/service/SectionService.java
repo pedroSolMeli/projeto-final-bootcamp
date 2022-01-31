@@ -1,6 +1,7 @@
 package com.mercadolivre.projetointegrador.section.service;
 
 import com.mercadolivre.projetointegrador.enums.ProductType;
+import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import com.mercadolivre.projetointegrador.section.dto.SectionRequestDto;
 import com.mercadolivre.projetointegrador.section.dto.SectionResponseDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
@@ -15,7 +16,6 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
@@ -72,6 +72,14 @@ public class SectionService {
         return section;
     }
 
+    public static Section ConvertToObject(SectionDto dto, Warehouse warehouse) {
+        Section section = Section.builder()
+                .code(dto.getSectionCode())
+                .warehouseCode(warehouse)
+                .build();
+        return section;
+    }
+
     public static SectionResponseDto ConvertToResponseDto(Section section) {
         SectionResponseDto sectionResponseDto = SectionResponseDto.builder()
                 .id(section.getId())
@@ -89,8 +97,6 @@ public class SectionService {
         List<SectionResponseDto> SectionResponseDtoList = sectionList.stream().map(s -> ConvertToResponseDto(s)).collect(Collectors.toList());
         return SectionResponseDtoList;
     }
-
-
 
 
 }
