@@ -1,6 +1,6 @@
 package com.mercadolivre.projetointegrador.inboundorder.service;
 
-import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
+import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.service.BatchService;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderDto;
@@ -16,7 +16,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -25,7 +24,7 @@ public class InboundOrderService {
 
     @Qualifier("InboundOrderRepository")
     @Autowired
-    InboundOrderRepository repository;
+    InboundOrderRepository inboundOrderRepository;
 
     @Autowired
     WarehouseService warehouseService;
@@ -36,47 +35,51 @@ public class InboundOrderService {
     @Autowired
     BatchService batchService;
 
-    public InboundOrder createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
+    public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
         SectionDto sectionDto = inboundOrderRequestDto.getInboundOrder().getSection();
         Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
-        List<BatchRequestDto> batchStock = inboundOrderRequestDto.getInboundOrder().getBatchStock();
-        List<Batch> batchList = BatchService.ConvertToObjectList(batchStock);
-        List<Batch> batchListWithProducts = batchService.populateBatchWithProduct(batchStock, batchList);
+        InboundOrder inboundOrder = ConvertToObject(inboundOrderRequestDto, section);
+        InboundOrder inboundOrderPopulated = inboundOrderRepository.save(inboundOrder);
+        List<Batch> batchListWithInboundOrder = batchService.populateBatchListWithInboundOrder(inboundOrderRequestDto, inboundOrderPopulated);
+        inboundOrderPopulated.setBatchStock(batchListWithInboundOrder);
+        InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
+        InboundOrderResponseDto response = ConvertToDto(result);
 
-        InboundOrder inboundOrder = ConvertToObject(inboundOrderRequestDto, section, batchListWithProducts);
-        InboundOrder result = repository.saveAndFlush(inboundOrder);
-        return result;
+        return response;
     }
 
-    public List<InboundOrder> findAllInboundOrders() {
-        return repository.findAll();
+    public List<InboundOrderResponseDto> findAllInboundOrders() {
+        List<InboundOrder> result = inboundOrderRepository.findAll();
+        List<InboundOrderResponseDto> response = ConvertToDto(result);
+        return response;
     }
 
     public InboundOrder updateInboundOrder(InboundOrder inboundOrder) {
-        return repository.saveAndFlush(inboundOrder);
+        return inboundOrderRepository.saveAndFlush(inboundOrder);
     }
 
-    public List<InboundOrderResponseDto> convertToDto(List<InboundOrder> inboundOrderList) {
-        ArrayList<InboundOrderResponseDto> result = inboundOrderList.stream().map(InboundOrderResponseDto::new).collect(Collectors.toCollection(ArrayList::new));
+    public static List<InboundOrderResponseDto> ConvertToDto(List<InboundOrder> inboundOrderList) {
+        List<InboundOrderResponseDto> result = inboundOrderList.stream().map(i -> ConvertToDto(i)).collect(Collectors.toList());
         return result;
     }
 
-    public InboundOrderResponseDto convertToDto(InboundOrder inboundOrder) {
+    public static InboundOrderResponseDto ConvertToDto(InboundOrder inboundOrder) {
         List<Batch> batchStock = inboundOrder.getBatchStock();
-        InboundOrderResponseDto dto = InboundOrderResponseDto.builder().batchStock(batchStock).build();
+        List<BatchResponseDto> batchResponseDtoList = BatchService.ConvertToResponseDto(batchStock);
+        InboundOrderResponseDto dto = InboundOrderResponseDto.builder().batchStock(batchResponseDtoList).build();
         return dto;
     }
 
-    public static InboundOrder ConvertToObject(InboundOrderRequestDto inboundOrderRequestDto, Section section, List<Batch> batchList) {
+    public static InboundOrder ConvertToObject(InboundOrderRequestDto inboundOrderRequestDto, Section section) {
         InboundOrderDto inboundOrder = inboundOrderRequestDto.getInboundOrder();
         InboundOrder object = InboundOrder.builder()
                 .orderNumber(inboundOrder.getOrderNumber())
                 .orderDate(inboundOrder.getOrderDate())
                 .section(section)
-                .batchStock(batchList)
                 .build();
         return object;
     }
+
 
 }
