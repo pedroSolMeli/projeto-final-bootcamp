@@ -20,7 +20,8 @@ import lombok.NoArgsConstructor;
 @Entity
 @Data
 @Builder
-
+@NoArgsConstructor
+@AllArgsConstructor
 @Table(uniqueConstraints = @UniqueConstraint(columnNames = { "cpf" }))
 public class User implements Serializable {
 
@@ -31,13 +32,11 @@ public class User implements Serializable {
 	@GeneratedValue(strategy = GenerationType.SEQUENCE)
 	private Long id;
 	
-	//@CPF para usar no dto
 	@Column(nullable = false, length = 11)
 	private String cpf;
 	
 	private String name;
 	
-	//adicionar validação email no dto
 	private String email;
 	
 	private String password;
