@@ -13,8 +13,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class InboundOrderRequestDto {
 
-    private InboundOrderDto inboundOrder;
-
-
+    private InboundOrder inboundOrder;
 
 }

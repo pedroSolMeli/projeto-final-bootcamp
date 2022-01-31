@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 
 
-@Repository("BatchRepository")
+@Repository
 public interface BatchRepository extends JpaRepository<Batch, Long>{
+
 }

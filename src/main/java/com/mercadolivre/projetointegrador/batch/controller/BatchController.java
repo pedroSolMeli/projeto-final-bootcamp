@@ -1,18 +1,16 @@
 package com.mercadolivre.projetointegrador.batch.controller;
 
-import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
-import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
-import com.mercadolivre.projetointegrador.batch.model.Batch;
-import com.mercadolivre.projetointegrador.batch.service.BatchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import javax.validation.Valid;
+import com.mercadolivre.projetointegrador.batch.model.Batch;
+import com.mercadolivre.projetointegrador.batch.service.BatchService;
+
 import java.util.List;
 
-@RestController("BatchController")
+@RestController
 @RequestMapping("/batch")
 public class BatchController {
 
@@ -20,8 +18,8 @@ public class BatchController {
     BatchService service;
 
     @PostMapping()
-    public ResponseEntity<?> create(@Valid @RequestBody BatchRequestDto batchRequestDto){
-        BatchResponseDto result = service.createBatch(batchRequestDto);
+    public ResponseEntity<?> create(@RequestBody Batch batch){
+        Batch result = service.createBatch(batch);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

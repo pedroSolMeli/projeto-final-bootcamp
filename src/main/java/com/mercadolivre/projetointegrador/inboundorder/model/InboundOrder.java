@@ -3,7 +3,6 @@ package com.mercadolivre.projetointegrador.inboundorder.model;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 
-import com.mercadolivre.projetointegrador.section.model.Section;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -26,17 +25,14 @@ public class InboundOrder implements Serializable {
 
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    private Long id;
-
-	private Long orderNumber;
+    private long orderNumber;
 
 	private LocalDate orderDate;
 
-    @ManyToOne
-    @JsonIgnoreProperties("inboundOrder")
-    private Section section;
+   // @ManyToOne
+   // private Section section;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "inboundOrder")
+    @OneToMany(cascade = CascadeType.ALL)
     @JsonIgnoreProperties("inboundOrder")
     private List<Batch> batchStock;
 
