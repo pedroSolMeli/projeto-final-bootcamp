@@ -4,6 +4,8 @@ import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
 import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.repository.BatchRepository;
+import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDto;
+import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.product.model.Product;
 import com.mercadolivre.projetointegrador.product.repository.ProductRepository;
 import com.mercadolivre.projetointegrador.product.service.ProductService;
@@ -95,7 +97,7 @@ public class BatchService {
     public static Batch ConvertToObject(BatchRequestDto dto, Product product) {
         Batch batch = Batch.builder()
                 .batchNumber(dto.getBatchNumber())
-                .productId(product)
+                .product(product)
                 .currentTemperature(dto.getCurrentTemperature())
                 .minimalTemperature(dto.getMinimalTemperature())
                 .initialQuantity(dto.getInitialQuantity())
@@ -107,12 +109,35 @@ public class BatchService {
         return batch;
     }
 
+    private static Batch ConvertToObject(BatchRequestDto dto) {
+        Batch batch = Batch.builder()
+                .batchNumber(dto.getBatchNumber())
+                .currentTemperature(dto.getCurrentTemperature())
+                .minimalTemperature(dto.getMinimalTemperature())
+                .initialQuantity(dto.getInitialQuantity())
+                .currentQuantity(dto.getCurrentQuantity())
+                .manufacturingDate(dto.getManufacturingDate())
+                .manufacturingTime(dto.getManufacturingTime())
+                .dueDate(dto.getDueDate())
+                .build();
+        return batch;
+    }
+
+    public static List<Batch> ConvertToObjectList(List<BatchRequestDto> batchRequestDtoList) {
+        if (batchRequestDtoList == null)
+            return new ArrayList<Batch>();
+        List<Batch> batchList = batchRequestDtoList.stream().map(s -> ConvertToObject(s)).collect(Collectors.toList());
+
+        return batchList;
+    }
+
     public static BatchResponseDto ConvertToResponseDto(Batch batch) {
         BatchResponseDto response = BatchResponseDto.builder()
                 .id(batch.getId())
                 .batchNumber(batch.getBatchNumber())
-                .productId(batch.getProductId().getId())
+                .productId(batch.getProduct().getId())
                 .currentQuantity(batch.getCurrentQuantity())
+                .currentTemperature(batch.getCurrentTemperature())
                 .minimalTemperature(batch.getMinimalTemperature())
                 .initialQuantity(batch.getInitialQuantity())
                 .currentQuantity(batch.getCurrentQuantity())
@@ -129,4 +154,27 @@ public class BatchService {
         List<BatchResponseDto> batchResponseDtoList = batchList.stream().map(s -> ConvertToResponseDto(s)).collect(Collectors.toList());
         return batchResponseDtoList;
     }
+
+    public List<Batch> populateBatchWithProduct(List<BatchRequestDto> dtoList, List<Batch> batchList) {
+        for (int i = 0; i < dtoList.size(); i++) {
+            Long productId = dtoList.get(i).getProductId();
+            Product product = productService.getProductById(productId);
+            batchList.get(i).setProduct(product);
+        }
+        return batchList;
+    }
+
+    public List<Batch> populateBatchListWithInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, InboundOrder inbound) {
+        List<BatchRequestDto> batchStock = inboundOrderRequestDto.getInboundOrder().getBatchStock();
+        List<Batch> batchList = BatchService.ConvertToObjectList(batchStock);
+
+        for (int i = 0; i < batchStock.size(); i++) {
+            Product product = productService.getProductById(batchStock.get(i).getProductId());
+            batchList.get(i).setInboundOrder(inbound);
+            batchList.get(i).setProduct(product);
+        }
+
+        return batchList;
+    }
+
 }

@@ -39,7 +39,7 @@ public class Batch implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties("batch")
-    private Product productId;
+    private Product product;
 
     private Double currentTemperature;
     private Double minimalTemperature;

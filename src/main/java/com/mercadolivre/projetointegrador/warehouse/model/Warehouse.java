@@ -26,8 +26,8 @@ public class Warehouse implements Serializable {
     @Column(unique = true)
     private String code;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "warehouseCode")
-    @JsonIgnoreProperties("warehouseCode")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "warehouse")
+    @JsonIgnoreProperties("warehouse")
     private List<Section> sections;
 
 }

@@ -35,7 +35,7 @@ public class ProductService {
         return response;
     }
 
-    private static Product ConvertToObject(ProductRequestDto dto) {
+    public static Product ConvertToObject(ProductRequestDto dto) {
         ProductType productType = ProductType.ConvertToEnum(dto.getProductType());
         Product product = Product.builder()
                 .name(dto.getName())
@@ -45,7 +45,7 @@ public class ProductService {
         return product;
     }
 
-    private static ProductResponseDto ConvertToResponseDto(Product result) {
+    public static ProductResponseDto ConvertToResponseDto(Product result) {
         ProductResponseDto responseDto = ProductResponseDto.builder()
                 .id(result.getId())
                 .name(result.getName())
@@ -62,7 +62,6 @@ public class ProductService {
         return productResponseDtoList;
     }
 
-
     public Product getProductById(Long id) {
         Product product = repository.getProductById(id);
         if (product == null) {
@@ -71,4 +70,5 @@ public class ProductService {
         }
         return product;
     }
+
 }

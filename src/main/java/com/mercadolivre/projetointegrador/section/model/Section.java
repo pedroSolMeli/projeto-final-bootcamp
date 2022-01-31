@@ -34,7 +34,7 @@ public class Section implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties("sections")
-    private Warehouse warehouseCode;
+    private Warehouse warehouse;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "section")
     @JsonIgnoreProperties("section")

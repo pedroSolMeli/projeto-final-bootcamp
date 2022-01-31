@@ -36,7 +36,7 @@ public class InboundOrder implements Serializable {
     @JsonIgnoreProperties("inboundOrder")
     private Section section;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "inboundOrder")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "inboundOrder")
     @JsonIgnoreProperties("inboundOrder")
     private List<Batch> batchStock;
 

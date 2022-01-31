@@ -24,15 +24,14 @@ public class InboundOrderController {
 
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody InboundOrderRequestDto inboundOrderRequestDto) {
-        InboundOrder result = inboundOrderService.createInboundOrder(inboundOrderRequestDto);
+        InboundOrderResponseDto result = inboundOrderService.createInboundOrder(inboundOrderRequestDto);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
     @GetMapping
     public ResponseEntity<?> read() {
-        List<InboundOrder> result = inboundOrderService.findAllInboundOrders();
-        List<InboundOrderResponseDto> response = inboundOrderService.convertToDto(result);
-        return new ResponseEntity<>(response, HttpStatus.OK);
+        List<InboundOrderResponseDto> result = inboundOrderService.findAllInboundOrders();
+        return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
     @PutMapping()

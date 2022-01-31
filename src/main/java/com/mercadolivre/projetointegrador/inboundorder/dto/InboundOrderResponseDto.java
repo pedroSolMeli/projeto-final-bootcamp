@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.inboundorder.dto;
 
+import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 
@@ -16,10 +17,10 @@ import java.util.List;
 @AllArgsConstructor
 public class InboundOrderResponseDto {
 
-    private List<Batch> batchStock;
+    private List<BatchResponseDto> batchStock;
 
-    public InboundOrderResponseDto(InboundOrder inboundOrder){
-        this.batchStock = inboundOrder.getBatchStock();
-    }
+//    public InboundOrderResponseDto(InboundOrder inboundOrder){
+//        this.batchStock = inboundOrder.getBatchStock();
+//    }
 
 }
