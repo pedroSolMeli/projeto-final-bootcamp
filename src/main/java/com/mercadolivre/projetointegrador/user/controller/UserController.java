@@ -30,20 +30,20 @@ public class UserController {
 	
 	
 	 	@PostMapping()
-	    public ResponseEntity<?> create(@Valid @RequestBody User user) {
-	       User result = service.createUser(user);
-	        return new ResponseEntity<>(result, HttpStatus.CREATED);
+	    public ResponseEntity<?> create(@Valid @RequestBody UserRequestDto user) {
+	       UserResponseDto result = service.createUser(user);
+	       return new ResponseEntity<>(result, HttpStatus.CREATED);
 	    }
 
 	    @GetMapping()
 	    public ResponseEntity<?> findAll() {
-	        List<User> result = service.findAllUsers();
+	        List<UserResponseDto> result = service.findAllUsers();
 	        return new ResponseEntity<>(result, HttpStatus.OK);
 	    }
 	    
 	    @GetMapping("/{id}")
 	    public ResponseEntity<?> findUser(@PathVariable Long id) {
-	        User result = service.findUser(id);
+	        UserResponseDto result = service.findUser(id);
 	        return new ResponseEntity<>(result, HttpStatus.OK);
 	    }
 
