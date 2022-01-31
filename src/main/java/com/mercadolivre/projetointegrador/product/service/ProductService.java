@@ -1,6 +1,5 @@
 package com.mercadolivre.projetointegrador.product.service;
 
-import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.product.dto.ProductRequestDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
