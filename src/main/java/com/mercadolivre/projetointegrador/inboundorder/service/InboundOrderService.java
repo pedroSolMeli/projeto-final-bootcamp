@@ -1,6 +1,8 @@
 package com.mercadolivre.projetointegrador.inboundorder.service;
 
+import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
+import com.mercadolivre.projetointegrador.batch.service.BatchService;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderDto;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDto;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderResponseDto;
@@ -9,7 +11,6 @@ import com.mercadolivre.projetointegrador.inboundorder.repository.InboundOrderRe
 import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
 import com.mercadolivre.projetointegrador.section.service.SectionService;
-import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -32,14 +33,20 @@ public class InboundOrderService {
     @Autowired
     SectionService sectionService;
 
+    @Autowired
+    BatchService batchService;
+
     public InboundOrder createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
-        Section section = sectionService.getSectionByCode(inboundOrderRequestDto.getInboundOrder().getSection().getSectionCode());
-        Warehouse warehouse = warehouseService.getWarehouseByCode(inboundOrderRequestDto.getInboundOrder().getSection().getWarehouseCode());
+        SectionDto sectionDto = inboundOrderRequestDto.getInboundOrder().getSection();
+        Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
-        InboundOrder inboundOrder = ConvertToObject(inboundOrderRequestDto);
+        List<BatchRequestDto> batchStock = inboundOrderRequestDto.getInboundOrder().getBatchStock();
+        List<Batch> batchList = BatchService.ConvertToObjectList(batchStock);
+        List<Batch> batchListWithProducts = batchService.populateBatchWithProduct(batchStock, batchList);
 
-        //return repository.saveAndFlush(inboundOrder);
-        return null;
+        InboundOrder inboundOrder = ConvertToObject(inboundOrderRequestDto, section, batchListWithProducts);
+        InboundOrder result = repository.saveAndFlush(inboundOrder);
+        return result;
     }
 
     public List<InboundOrder> findAllInboundOrders() {
@@ -61,21 +68,15 @@ public class InboundOrderService {
         return dto;
     }
 
-
-
-    public static InboundOrder ConvertToObject(InboundOrderRequestDto inboundOrderRequestDto) {
+    public static InboundOrder ConvertToObject(InboundOrderRequestDto inboundOrderRequestDto, Section section, List<Batch> batchList) {
         InboundOrderDto inboundOrder = inboundOrderRequestDto.getInboundOrder();
-        SectionDto sectionDto = inboundOrder.getSection();
-        //Warehouse warehouse = Ware
-        //Section section = SectionService.ConvertToObject(inboundOrderRequestDto);
-
         InboundOrder object = InboundOrder.builder()
                 .orderNumber(inboundOrder.getOrderNumber())
                 .orderDate(inboundOrder.getOrderDate())
-          //      .section(section)
+                .section(section)
+                .batchStock(batchList)
                 .build();
         return object;
     }
-
 
 }

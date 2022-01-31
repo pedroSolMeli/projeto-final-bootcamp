@@ -24,7 +24,7 @@ public class SectionService {
 
     @Qualifier("SectionRepository")
     @Autowired
-    SectionRepository repository;
+    SectionRepository sectionRepository;
 
     @Autowired
     WarehouseService warehouseService;
@@ -33,19 +33,19 @@ public class SectionService {
         checkIfSectionCodeExists(sectionRequestDto.getSectionCode());
         Warehouse warehouse = warehouseService.getWarehouseByCode(sectionRequestDto.getWarehouseCode());
         Section section = ConvertToObject(sectionRequestDto, warehouse);
-        Section result = repository.saveAndFlush(section);
+        Section result = sectionRepository.saveAndFlush(section);
         SectionResponseDto response = ConvertToResponseDto(result);
         return response;
     }
 
     public List<SectionResponseDto> findAllSections() {
-        List<Section> result = repository.findAll();
+        List<Section> result = sectionRepository.findAll();
         List<SectionResponseDto> response = ConvertToResponseDto(result);
         return response;
     }
 
-    public Section getSectionByCode(String code) {
-        Section section = repository.getSectionByCode(code);
+    public Section getSectionBySectionCode(String code) {
+        Section section = sectionRepository.getSectionByCode(code);
         if (section == null) {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Section with code " + code + " not found");
             throw responseStatusException;
@@ -53,8 +53,17 @@ public class SectionService {
         return section;
     }
 
+    public Section getSectionBySectionCodeAndWarehouseCode(String sectionCode, String warehouseCode) {
+        Section section = sectionRepository.getSectionByCodeAndWarehouse_Code(sectionCode, warehouseCode);
+        if (section == null) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Section with sectionCode " + sectionCode + " and warehouseCode " + warehouseCode + " not found");
+            throw responseStatusException;
+        }
+        return section;
+    }
+
     public void checkIfSectionCodeExists(String code) {
-        Optional<Section> section = repository.findSectionByCode(code);
+        Optional<Section> section = sectionRepository.findSectionByCode(code);
         if (section.isPresent()) {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.CONFLICT, "Section code already exists");
             throw responseStatusException;
@@ -67,7 +76,7 @@ public class SectionService {
                 .code(dto.getSectionCode())
                 .sectionType(productType)
                 .maxCapacity(dto.getMaxCapacity())
-                .warehouseCode(warehouse)
+                .warehouse(warehouse)
                 .build();
         return section;
     }
@@ -75,7 +84,7 @@ public class SectionService {
     public static Section ConvertToObject(SectionDto dto, Warehouse warehouse) {
         Section section = Section.builder()
                 .code(dto.getSectionCode())
-                .warehouseCode(warehouse)
+                .warehouse(warehouse)
                 .build();
         return section;
     }
@@ -86,7 +95,7 @@ public class SectionService {
                 .sectionCode(section.getCode())
                 .sectionType(section.getSectionType().getDescription())
                 .maxCapacity(section.getMaxCapacity())
-                .warehouseCode(section.getWarehouseCode().getCode())
+                .warehouseCode(section.getWarehouse().getCode())
                 .build();
         return sectionResponseDto;
     }

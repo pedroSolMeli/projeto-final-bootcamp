@@ -27,8 +27,8 @@ public class Product {
     private ProductType productType;
     private BigDecimal price;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
-    @JsonIgnoreProperties({"inboundOrder","productId"})
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "product")
+    @JsonIgnoreProperties({"inboundOrder","product"})
     private List<Batch> batch;
 
 }
