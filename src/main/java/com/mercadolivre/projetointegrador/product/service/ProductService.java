@@ -64,7 +64,7 @@ public class ProductService {
 
 
     public Product getProductById(Long id) {
-        Product product = repository.getById(id);
+        Product product = repository.getProductById(id);
         if (product == null) {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
             throw responseStatusException;

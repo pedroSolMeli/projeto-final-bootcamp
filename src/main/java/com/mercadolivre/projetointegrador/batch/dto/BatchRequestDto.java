@@ -18,7 +18,7 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 public class BatchRequestDto implements Serializable {
 
-    //@NotNull(message = "productId must no be null")
+    @NotNull(message = "productId must no be null")
     private Long productId;
 
     @NotNull(message = "batchNumber must not be null")

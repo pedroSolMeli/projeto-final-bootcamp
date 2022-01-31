@@ -27,7 +27,7 @@ public class BatchController {
 
     @GetMapping
     public ResponseEntity<?> findAll(){
-        List<Batch> result = service.findAllBatch();
+        List<BatchResponseDto> result = service.findAllBatch();
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

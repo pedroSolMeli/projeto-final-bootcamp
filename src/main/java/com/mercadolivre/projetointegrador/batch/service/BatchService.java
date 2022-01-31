@@ -15,7 +15,9 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class BatchService {
@@ -32,6 +34,7 @@ public class BatchService {
     ProductService productService;
 
     public BatchResponseDto createBatch(BatchRequestDto batchRequestDto) {
+        checkIfBatchNumberExists(batchRequestDto.getBatchNumber());
         checkIfManufacturingDateAndTimeAreTheSame(batchRequestDto.getManufacturingDate(), batchRequestDto.getManufacturingTime());
         validateDueDate(batchRequestDto.getDueDate());
         Product product = productService.getProductById(batchRequestDto.getProductId());
@@ -41,8 +44,10 @@ public class BatchService {
         return response;
     }
 
-    public List<Batch> findAllBatch() {
-        return batchRepository.findAll();
+    public List<BatchResponseDto> findAllBatch() {
+        List<Batch> result = batchRepository.findAll();
+        List<BatchResponseDto> response = ConvertToResponseDto(result);
+        return response;
     }
 
     public Batch updateBatch(Batch batch) {
@@ -56,6 +61,14 @@ public class BatchService {
             throw responseStatusException;
         }
         return batch;
+    }
+
+    private void checkIfBatchNumberExists(Long batchNumber) {
+        Batch batch = batchRepository.getBatchByBatchNumber(batchNumber);
+        if (batch != null) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.CONFLICT, "batchNumber already exists");
+            throw responseStatusException;
+        }
     }
 
     private void checkIfManufacturingDateAndTimeAreTheSame(LocalDate manufacturingDate, LocalDateTime manufacturingTime) {
@@ -82,7 +95,7 @@ public class BatchService {
     public static Batch ConvertToObject(BatchRequestDto dto, Product product) {
         Batch batch = Batch.builder()
                 .batchNumber(dto.getBatchNumber())
-                //.productId(product)
+                .productId(product)
                 .currentTemperature(dto.getCurrentTemperature())
                 .minimalTemperature(dto.getMinimalTemperature())
                 .initialQuantity(dto.getInitialQuantity())
@@ -98,7 +111,7 @@ public class BatchService {
         BatchResponseDto response = BatchResponseDto.builder()
                 .id(batch.getId())
                 .batchNumber(batch.getBatchNumber())
-                //.productId(batch.getProductId().getId())
+                .productId(batch.getProductId().getId())
                 .currentQuantity(batch.getCurrentQuantity())
                 .minimalTemperature(batch.getMinimalTemperature())
                 .initialQuantity(batch.getInitialQuantity())
@@ -110,4 +123,10 @@ public class BatchService {
         return response;
     }
 
+    public static List<BatchResponseDto> ConvertToResponseDto(List<Batch> batchList) {
+        if (batchList == null)
+            return new ArrayList<BatchResponseDto>();
+        List<BatchResponseDto> batchResponseDtoList = batchList.stream().map(s -> ConvertToResponseDto(s)).collect(Collectors.toList());
+        return batchResponseDtoList;
+    }
 }

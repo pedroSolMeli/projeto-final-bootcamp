@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.product.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import lombok.AllArgsConstructor;
@@ -9,6 +10,7 @@ import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
@@ -25,7 +27,8 @@ public class Product {
     private ProductType productType;
     private BigDecimal price;
 
-    @OneToOne(cascade = CascadeType.DETACH)
-    private Batch batch;
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "productId")
+    @JsonIgnoreProperties({"inboundOrder","productId"})
+    private List<Batch> batch;
 
 }

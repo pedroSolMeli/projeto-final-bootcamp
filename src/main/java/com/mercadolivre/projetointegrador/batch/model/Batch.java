@@ -29,6 +29,7 @@ public class Batch implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(unique = true)
     private Long batchNumber;
 
     @ManyToOne
@@ -36,11 +37,7 @@ public class Batch implements Serializable {
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private InboundOrder inboundOrder;
 
-    //TODO Verificar modelagem entre product e batch pra descobrir o motivo de não estar persistindo
-    @OneToOne
-    @JoinTable(name = "batch_product",
-            joinColumns = {@JoinColumn(name = "product_id", referencedColumnName = "id")},
-            inverseJoinColumns = {@JoinColumn(name = "batch_id", referencedColumnName = "id", unique = true)})
+    @ManyToOne
     @JsonIgnoreProperties("batch")
     private Product productId;
 
