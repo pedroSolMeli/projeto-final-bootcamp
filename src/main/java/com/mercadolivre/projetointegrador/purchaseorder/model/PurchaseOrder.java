@@ -36,15 +36,15 @@ public class PurchaseOrder implements Serializable{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    private LocalDate orderDate;
+//    private LocalDate orderDate;
     
-    private User buyerId;
+//    private User buyerId;
     
-    private OrderStatus status;
+//    private OrderStatus status;
     
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "Product")
-    @JsonIgnoreProperties("PurchaseOrder")
-    private List<Product> products;
+//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "Product")
+//    @JsonIgnoreProperties("PurchaseOrder")
+//    private List<Product> products;
 
 //	userId USER
 //	orderStatus STRING/enum

@@ -13,6 +13,7 @@ import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -29,10 +30,17 @@ public class ProductService {
         return response;
     }
 
-    public List<ProductResponseDto> findAllProducts() {
-        List<Product> result = repository.findAll();
+    public List<ProductResponseDto> findAllProducts(Optional<ProductType> type) {
+        if(!type.isPresent()) {
+            List<Product> result = repository.findAll();
+            List<ProductResponseDto> response = ConvertToResponseDto(result);
+            return response;
+        }
+
+        List<Product> result = repository.getAllByProductType(type);
         List<ProductResponseDto> response = ConvertToResponseDto(result);
         return response;
+
     }
 
     private static Product ConvertToObject(ProductRequestDto dto) {

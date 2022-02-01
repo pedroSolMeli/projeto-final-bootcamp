@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.product.controller;
 
+import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.product.dto.ProductRequestDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
 import com.mercadolivre.projetointegrador.product.service.ProductService;
@@ -10,6 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
+import java.util.Optional;
 
 @RestController("ProductController")
 @RequestMapping("/product")
@@ -25,8 +27,9 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<?> finAll() {
-        List<ProductResponseDto> result = service.findAllProducts();
+    //TODO refatorar type para aceitar lower case
+    public ResponseEntity<?> findAll(@RequestParam(required = false) Optional<ProductType> type) {
+        List<ProductResponseDto> result = service.findAllProducts(type);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
