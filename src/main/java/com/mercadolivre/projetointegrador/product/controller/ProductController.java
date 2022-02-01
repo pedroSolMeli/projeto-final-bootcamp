@@ -30,6 +30,9 @@ public class ProductController {
     //TODO refatorar type para aceitar lower case
     public ResponseEntity<?> findAll(@RequestParam(required = false) Optional<ProductType> type) {
         List<ProductResponseDto> result = service.findAllProducts(type);
+        if(result.isEmpty()) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
