@@ -4,6 +4,7 @@ import java.io.Serializable;
 
 import javax.validation.constraints.Email;
 
+import com.mercadolivre.projetointegrador.warehouse.controller.WarehouseController;
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.mercadolivre.projetointegrador.enums.UserRole;
@@ -24,5 +25,7 @@ public class UserResponseDto implements Serializable{
 	private String email;
 
 	private UserRole userRole;
+
+	private String warehouseCode;
 
 }
