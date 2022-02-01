@@ -1,3 +1,0 @@
-2022-01-31 15:18:14 jdbc[3]: exception
-org.h2.jdbc.JdbcSQLDataException: Value too long for column "CPF VARCHAR(11)": "'848.544.780-80' (14)"; SQL statement:
-insert into user (cpf, email, name, password, user_role, id) values (?, ?, ?, ?, ?, ?) [22001-200]

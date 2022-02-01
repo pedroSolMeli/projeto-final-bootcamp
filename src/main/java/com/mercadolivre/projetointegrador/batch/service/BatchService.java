@@ -2,10 +2,12 @@ package com.mercadolivre.projetointegrador.batch.service;
 
 import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
 import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
+import com.mercadolivre.projetointegrador.batch.dto.BatchStockDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.repository.BatchRepository;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDto;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
+import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
 import com.mercadolivre.projetointegrador.product.model.Product;
 import com.mercadolivre.projetointegrador.product.repository.ProductRepository;
 import com.mercadolivre.projetointegrador.product.service.ProductService;
@@ -175,6 +177,23 @@ public class BatchService {
         }
 
         return batchList;
+    }
+
+    public static BatchStockDto ConvertToBatchStockDto(Batch batch) {
+        BatchStockDto response = BatchStockDto.builder()
+                .batchNumber(batch.getBatchNumber())
+                .currentQuantity(batch.getCurrentQuantity())
+                .currentQuantity(batch.getCurrentQuantity())
+                .dueDate(batch.getDueDate())
+                .build();
+        return response;
+    }
+
+    public static List<BatchStockDto> ConvertToListBatchStockDto(List<Batch> batchList) {
+        if (batchList == null)
+            return new ArrayList<BatchStockDto>();
+        List<BatchStockDto> productResponseDtoList = batchList.stream().map(s -> ConvertToBatchStockDto(s)).collect(Collectors.toList());
+        return productResponseDtoList;
     }
 
 }
