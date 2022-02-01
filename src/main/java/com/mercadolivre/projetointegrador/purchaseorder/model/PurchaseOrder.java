@@ -12,9 +12,8 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.OneToMany;
 
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mercadolivre.projetointegrador.enums.OrderStatus;
-import com.mercadolivre.projetointegrador.product.model.Product;
+import com.mercadolivre.projetointegrador.purchaseProduct.model.PurchaseProduct;
 import com.mercadolivre.projetointegrador.user.model.User;
 
 import lombok.AllArgsConstructor;
@@ -36,21 +35,18 @@ public class PurchaseOrder implements Serializable{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-//    private LocalDate orderDate;
+    private LocalDate orderDate;
     
-//    private User buyerId;
+    @OneToMany(cascade = CascadeType.ALL)
+    private User buyerId;
     
-//    private OrderStatus status;
+    private OrderStatus status;
     
-//    @OneToMany(cascade = CascadeType.ALL, mappedBy = "Product")
-//    @JsonIgnoreProperties("PurchaseOrder")
-//    private List<Product> products;
+    @OneToMany(cascade = CascadeType.ALL)
+    private List<PurchaseProduct> products;
 
-//	userId USER
-//	orderStatus STRING/enum
-//	products[] LISTA
+// TODO COLOCAR TOTAL 
 //	totalPrice(response) DOUBLE
-//
-//	enumOrderStatus
+
 
 }

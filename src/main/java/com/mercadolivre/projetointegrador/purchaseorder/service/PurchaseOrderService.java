@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.purchaseorder.service;
 
+import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 import com.mercadolivre.projetointegrador.purchaseorder.repository.PurchaseOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -10,6 +11,10 @@ public class PurchaseOrderService {
 
     @Qualifier("PurchaseOrderRepository")
     @Autowired
-    PurchaseOrderRepository purchaseOrderRepository;
+    PurchaseOrderRepository repository;
+
+	public PurchaseOrder createaPurchaseOrder(PurchaseOrder order) {
+		return repository.save(order);
+	}
 
 }
