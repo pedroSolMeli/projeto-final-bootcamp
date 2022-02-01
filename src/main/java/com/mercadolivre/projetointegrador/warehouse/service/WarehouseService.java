@@ -22,9 +22,9 @@ public class WarehouseService {
 
     public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto) {
         checkIfWarehouseCodeExists(warehouseRequestDto.getCode());
-        Warehouse warehouse = ConvertToObject(warehouseRequestDto);
+        Warehouse warehouse = WarehouseRequestDto.ConvertToObject(warehouseRequestDto);
         Warehouse result = repository.saveAndFlush(warehouse);
-        WarehouseResponseDto response = ConvertToResponseDto(result);
+        WarehouseResponseDto response = WarehouseResponseDto.ConvertToResponseDto(result);
         return response;
     }
 
@@ -58,20 +58,9 @@ public class WarehouseService {
         }
     }
 
-    public static Warehouse ConvertToObject(WarehouseRequestDto dto) {
-        Warehouse warehouse = Warehouse.builder().code(dto.getCode()).build();
-        return warehouse;
-    }
 
-    public static WarehouseResponseDto ConvertToResponseDto(Warehouse warehouse) {
-        //List<SectionResponseDto> sectionResponseDtos = SectionService.ConvertToResponseDto(warehouse.getSections());
-        WarehouseResponseDto warehouseResponseDto = WarehouseResponseDto.builder()
-                .id(warehouse.getId())
-                .code(warehouse.getCode())
-                // .sections(sectionResponseDtos)
-                .build();
-        return warehouseResponseDto;
-    }
+
+
 
 
 }
