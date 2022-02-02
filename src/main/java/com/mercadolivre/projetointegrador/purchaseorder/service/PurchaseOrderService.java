@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.purchaseorder.service;
 
+import com.mercadolivre.projetointegrador.purchaseorder.dto.PurchaseOrderDto;
 import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 import com.mercadolivre.projetointegrador.purchaseorder.repository.PurchaseOrderRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +14,9 @@ public class PurchaseOrderService {
     @Autowired
     PurchaseOrderRepository repository;
 
-	public PurchaseOrder createaPurchaseOrder(PurchaseOrder order) {
-		return repository.save(order);
+	public PurchaseOrder createaPurchaseOrder(PurchaseOrderDto order) {
+		PurchaseOrder orderToSave = order.ConvertToObject(order);
+		return repository.save(orderToSave);
 	}
 
 }

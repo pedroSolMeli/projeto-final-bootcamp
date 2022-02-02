@@ -38,7 +38,7 @@ public class PurchaseOrder implements Serializable{
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-//	@Builder.Default
+
 	@JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate orderDate;
     
@@ -46,7 +46,7 @@ public class PurchaseOrder implements Serializable{
     @JsonIgnoreProperties("orders")
     private User buyerId;
     
-    private OrderStatus status;
+    private OrderStatus orderStatus;
     
     @OneToMany(cascade = CascadeType.ALL)
     private List<PurchaseProduct> products;
