@@ -35,7 +35,10 @@ public class User implements Serializable {
 	private String name;
 	
 	private String email;
-	
+
+	@Column(unique = true)
+	private String login;
+
 	private String password;
  
 	private UserRole userRole;
