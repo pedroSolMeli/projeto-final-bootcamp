@@ -49,6 +49,10 @@ public class InboundOrderService {
         return response;
     }
 
+    public List<InboundOrder> getInboundOrderBySectionWarehouseId(Long warehouseId){
+       return inboundOrderRepository.getInboundOrderBySection_Warehouse_Id(warehouseId);
+    }
+
     public List<InboundOrderResponseDto> findAllInboundOrders() {
         List<InboundOrder> result = inboundOrderRepository.findAll();
         List<InboundOrderResponseDto> response = ConvertToDto(result);

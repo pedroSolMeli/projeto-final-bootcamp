@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
+import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
@@ -20,8 +22,12 @@ public class UserService {
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	WarehouseService warehouseService;
+
 	public UserResponseDto createUser(UserRequestDto user) {
-		return ConvertToResponseDto(userRepository.saveAndFlush(ConvertToObject(user)));
+		Warehouse warehouseByCode = warehouseService.getWarehouseByCode(user.getWarehouseCode());
+		return ConvertToResponseDto(userRepository.saveAndFlush(ConvertToObject(user, warehouseByCode)));
 	}
 
 	public List<UserResponseDto> findAllUsers() {
@@ -35,13 +41,14 @@ public class UserService {
 	}
 
 
-	public static User ConvertToObject(UserRequestDto dto){
+	public static User ConvertToObject(UserRequestDto dto, Warehouse warehouseByCode){
 		User user =  User.builder()
 				.cpf(dto.getCpf())
 				.name(dto.getName())
 				.email(dto.getEmail())
 				.password(dto.getPassword())
 				.userRole(dto.getUserRole())
+				//.warehouse(warehouseByCode)
 				.build();
 		return user;
 	}
@@ -52,6 +59,7 @@ public class UserService {
 				.name(user.getName())
 				.email(user.getEmail())
 				.userRole(user.getUserRole())
+				//.warehouseCode(user.getWarehouse().getCode())
 				.build();
 		return userResponseDto;
 	}
@@ -64,7 +72,5 @@ public class UserService {
 				.collect(Collectors.toList());
 		return userResponseDtoList;
 	}
-
-
 
 }
