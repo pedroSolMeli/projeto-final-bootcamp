@@ -34,6 +34,10 @@ public class UserService {
 		return ConvertToResponseDto(userRepository.getUserById(id));
 	}
 
+	public User getUserIdString(String id) {
+		return userRepository.getUserById(id);
+	}
+
 
 	public static User ConvertToObject(UserRequestDto dto){
 		User user =  User.builder()

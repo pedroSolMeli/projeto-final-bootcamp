@@ -12,10 +12,12 @@ import com.mercadolivre.projetointegrador.enums.OrderStatus;
 import com.mercadolivre.projetointegrador.purchaseProduct.model.PurchaseProduct;
 import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 
+import com.mercadolivre.projetointegrador.user.service.UserService;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 
 @Data
 @Builder
@@ -23,7 +25,9 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class PurchaseOrderDto {
 	
-	
+	@Autowired()
+    UserService service;
+
     @NotNull(message = "orderNumber cannot be null")
 	private LocalDate orderDate;
 	
@@ -36,7 +40,7 @@ public class PurchaseOrderDto {
     public PurchaseOrder ConvertToObject(PurchaseOrderDto purchaseOrdertDto) {
     	PurchaseOrder object = PurchaseOrder.builder()
     			.orderDate(purchaseOrdertDto.getOrderDate())
-    			.buyerId(null)
+    			.buyerId(service.getUserIdString(purchaseOrdertDto.getBuyerId()))
     			.orderStatus(purchaseOrdertDto.getOrderStatus())
     			.products(purchaseOrdertDto.getProducts())
                 .build();
