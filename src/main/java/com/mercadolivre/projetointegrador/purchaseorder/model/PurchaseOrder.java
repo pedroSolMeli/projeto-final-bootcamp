@@ -44,12 +44,12 @@ public class PurchaseOrder implements Serializable{
     
 	@ManyToOne
     @JsonIgnoreProperties("orders")
-    private User buyerId;
+    private User buyer;
     
     private OrderStatus orderStatus;
     
     @OneToMany(cascade = CascadeType.ALL)
-    private List<PurchaseProduct> products;
+    private List<PurchaseProduct> purchaseProducts;
 
 // TODO COLOCAR TOTAL 
 //	totalPrice(response) DOUBLE

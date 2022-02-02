@@ -9,6 +9,5 @@ import com.mercadolivre.projetointegrador.user.model.User;
 public interface UserRepository extends JpaRepository<User, Long>{
 	
 	User getUserById(Long id);
-	User getUserById(String id);
 
 }

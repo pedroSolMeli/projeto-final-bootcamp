@@ -37,8 +37,4 @@ public class UserRequestDto implements Serializable {
 
 	//@NotBlank(message = "userRole must not be empty")
 	private UserRole userRole;
-	
-	
-	
-
 }

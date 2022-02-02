@@ -29,15 +29,8 @@ public class UserService {
 	}
 
 	public UserResponseDto findUser(Long id) {
-//		User user = userRepository.getUserById(id);
-//		return ConvertToResponseDto(user);
 		return ConvertToResponseDto(userRepository.getUserById(id));
 	}
-
-	public User getUserIdString(String id) {
-		return userRepository.getUserById(id);
-	}
-
 
 	public static User ConvertToObject(UserRequestDto dto){
 		User user =  User.builder()
@@ -56,6 +49,7 @@ public class UserService {
 				.name(user.getName())
 				.email(user.getEmail())
 				.userRole(user.getUserRole())
+				.orders(user.getOrders())
 				.build();
 		return userResponseDto;
 	}
@@ -68,7 +62,4 @@ public class UserService {
 				.collect(Collectors.toList());
 		return userResponseDtoList;
 	}
-
-
-
 }

@@ -1,9 +1,11 @@
 package com.mercadolivre.projetointegrador.user.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
 import javax.validation.constraints.Email;
 
+import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.mercadolivre.projetointegrador.enums.UserRole;
@@ -24,5 +26,7 @@ public class UserResponseDto implements Serializable{
 	private String email;
 
 	private UserRole userRole;
+
+	private List<PurchaseOrder> orders;
 
 }

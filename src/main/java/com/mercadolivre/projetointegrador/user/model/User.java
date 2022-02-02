@@ -19,13 +19,11 @@ import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.enums.UserRole;
 import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -50,8 +48,8 @@ public class User implements Serializable {
  
 	private UserRole userRole;
 	
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyerId")
-    @JsonIgnoreProperties("buyerId")
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyer")
+    @JsonIgnoreProperties("buyer")
     private List<PurchaseOrder> orders;
 
 
