@@ -12,7 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -31,8 +32,8 @@ public class Warehouse implements Serializable {
     @JsonIgnoreProperties("warehouse")
     private List<Section> sections;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "warehouse")
-    @JsonIgnoreProperties("User")
-    private List<User> users;
+//    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "warehouse")
+//    @JsonIgnoreProperties("User")
+//    private List<User> users;
 
 }

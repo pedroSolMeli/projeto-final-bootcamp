@@ -43,9 +43,9 @@ public class User implements Serializable {
  
 	private UserRole userRole;
 
-	@ManyToOne
-	@JsonIgnoreProperties("user")
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private Warehouse warehouse;
+//	@ManyToOne
+//	@JsonIgnoreProperties("user")
+//	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+//	private Warehouse warehouse;
 
 }

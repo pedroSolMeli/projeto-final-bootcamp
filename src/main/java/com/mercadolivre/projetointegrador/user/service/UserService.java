@@ -48,7 +48,7 @@ public class UserService {
 				.email(dto.getEmail())
 				.password(dto.getPassword())
 				.userRole(dto.getUserRole())
-				.warehouse(warehouseByCode)
+				//.warehouse(warehouseByCode)
 				.build();
 		return user;
 	}
@@ -59,7 +59,7 @@ public class UserService {
 				.name(user.getName())
 				.email(user.getEmail())
 				.userRole(user.getUserRole())
-				.warehouseCode(user.getWarehouse().getCode())
+				//.warehouseCode(user.getWarehouse().getCode())
 				.build();
 		return userResponseDto;
 	}

@@ -5,6 +5,7 @@ import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.service.BatchService;
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
+import com.mercadolivre.projetointegrador.inboundorder.service.InboundOrderService;
 import com.mercadolivre.projetointegrador.product.dto.FindProductReponseDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductRequestDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
@@ -89,9 +90,8 @@ public class ProductService {
     }
 
     public FindProductReponseDto getProductsAndBatchs(Long productId, String orderBy){
-
         //Todo - pegar o codigo armazen do representante
-        Warehouse warehouse = warehouseService.getWarehouseById(3L);
+        Warehouse warehouse = warehouseService.getWarehouseById(2l);
         List<Section> sections = warehouse.getSections();
 
         List<Batch> listBatch = new ArrayList<>();
@@ -114,7 +114,7 @@ public class ProductService {
         }
 
         if(listBatch.isEmpty()){
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product with id: " + productId + " not found");
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found a valid product with id: " + productId);
         }
 
         SectionDto sectionDto = SectionDto.builder().sectionCode(sectionOp.getCode()).warehouseCode(sectionOp.getWarehouse().getCode()).build();
