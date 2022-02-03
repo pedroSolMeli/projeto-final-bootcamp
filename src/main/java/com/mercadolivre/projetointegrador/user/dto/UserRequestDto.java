@@ -1,21 +1,24 @@
 package com.mercadolivre.projetointegrador.user.dto;
 
 import java.io.Serializable;
+import java.util.List;
 
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
-import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseRequestDto;
+import lombok.*;
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.mercadolivre.projetointegrador.enums.UserRole;
 
+import org.springframework.security.crypto.factory.PasswordEncoderFactories;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
-import lombok.Builder;
-import lombok.Data;
-
-@Data
+@Getter
+@Setter
 @Builder
 public class UserRequestDto implements Serializable {
 
@@ -28,6 +31,9 @@ public class UserRequestDto implements Serializable {
 	@NotBlank(message = "name must not be empty")
 	private String name;
 
+	@NotBlank(message = "username must not be empty")
+	private String username;
+
 	@NotBlank(message = "email must not be empty")
 	@Email(message = "email invalid")
 	private String email;
@@ -37,7 +43,9 @@ public class UserRequestDto implements Serializable {
 	private String password;
 
 	//@NotBlank(message = "userRole must not be empty")
-	private UserRole userRole;
+	private List<String> roles;
 
 	private String warehouseCode;
+
+
 }

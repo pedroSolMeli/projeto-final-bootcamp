@@ -1,6 +1,8 @@
 package com.mercadolivre.projetointegrador.user.model;
 
 import java.io.Serializable;
+import java.util.Collection;
+import java.util.List;
 
 import javax.persistence.*;
 
@@ -37,15 +39,19 @@ public class User implements Serializable {
 	private String email;
 
 	@Column(unique = true)
-	private String login;
+	private String username;
 
 	private String password;
- 
-	private UserRole userRole;
 
-//	@ManyToOne
-//	@JsonIgnoreProperties("user")
-//	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-//	private Warehouse warehouse;
+	@ElementCollection(targetClass = UserRole.class)
+	@JoinTable(name = "userRole", joinColumns = @JoinColumn(name = "userId"))
+	@Column(name = "role", nullable = false, unique = true)
+	@Enumerated(EnumType.STRING)
+	private List<UserRole> roles;
+
+	@ManyToOne
+	@JsonIgnoreProperties("user")
+	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+	private Warehouse warehouse;
 
 }
