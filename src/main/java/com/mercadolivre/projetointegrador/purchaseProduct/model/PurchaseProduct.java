@@ -29,8 +29,8 @@ public class PurchaseProduct {
 	  	private int quantity;
 	  	
 	    @ManyToOne
-	    @JsonIgnoreProperties("purchaseProduct")
-	    private Product productId;
+//	    @JsonIgnoreProperties("purchaseProduct")
+	    private Product product;
 	
 
 }

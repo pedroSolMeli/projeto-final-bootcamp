@@ -1,18 +1,18 @@
 package com.mercadolivre.projetointegrador.purchaseorder.controller;
 
-import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDto;
-import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
-import com.mercadolivre.projetointegrador.purchaseorder.dto.PurchaseOrderDto;
-import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
-import com.mercadolivre.projetointegrador.purchaseorder.service.PurchaseOrderService;
+import java.math.BigDecimal;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import com.mercadolivre.projetointegrador.purchaseorder.dto.PurchaseOrderDto;
+import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
+import com.mercadolivre.projetointegrador.purchaseorder.service.PurchaseOrderService;
 
 @RestController("PurchaseOrderController")
 @RequestMapping("/purchaseorder")
@@ -21,8 +21,6 @@ public class PurchaseOrderController {
     @Autowired
     PurchaseOrderService service;
 
-//    @GetMapping
-//    public ResponseEntity<?>
     
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody PurchaseOrderDto order) {
@@ -30,6 +28,12 @@ public class PurchaseOrderController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
     
+//    @PostMapping()
+//    public ResponseEntity<?> create(@RequestBody PurchaseOrderDto order) {
+//        BigDecimal result = service.createaPurchaseOrder(order);
+//        return new ResponseEntity<>(result, HttpStatus.CREATED);
+//    }
+//    
     
 
 }

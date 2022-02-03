@@ -6,6 +6,6 @@ import org.springframework.stereotype.Repository;
 import com.mercadolivre.projetointegrador.purchaseProduct.model.PurchaseProduct;
 
 @Repository("PurchaseProduct")
-public interface PurchaseProductRepositoy extends JpaRepository<PurchaseProduct, Long> {
-
+public interface PurchaseProductRepository extends JpaRepository<PurchaseProduct, Long> {
+	
 }

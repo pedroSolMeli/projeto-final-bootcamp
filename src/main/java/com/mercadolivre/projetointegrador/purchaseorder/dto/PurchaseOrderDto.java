@@ -9,6 +9,7 @@ import javax.validation.constraints.NotNull;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.mercadolivre.projetointegrador.enums.OrderStatus;
+import com.mercadolivre.projetointegrador.purchaseProduct.dto.PurchaseProductDto;
 import com.mercadolivre.projetointegrador.purchaseProduct.model.PurchaseProduct;
 import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 
@@ -26,8 +27,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 @AllArgsConstructor
 public class PurchaseOrderDto {
 	
-	@Autowired
-    UserService service;
+
 
     @NotNull(message = "orderNumber cannot be null")
 	private LocalDate orderDate;
@@ -36,15 +36,19 @@ public class PurchaseOrderDto {
     
     private OrderStatus orderStatus;
   
-    private List<PurchaseProduct> products;
+    private List<PurchaseProductDto> products;
     
-    public PurchaseOrder ConvertToObject(PurchaseOrderDto purchaseOrdertDto, User user) {
+    public PurchaseOrder ConvertToObject(PurchaseOrderDto purchaseOrderDto, User user) {
+    	PurchaseProductDto productDto = PurchaseProductDto.builder().build();
+    	List<PurchaseProduct> productsObjects = productDto.ConvertToObject(purchaseOrderDto.getProducts());
         PurchaseOrder object = PurchaseOrder.builder()
-    			.orderDate(purchaseOrdertDto.getOrderDate())
+    			.orderDate(purchaseOrderDto.getOrderDate())
     			.buyer(user)
-    			.orderStatus(purchaseOrdertDto.getOrderStatus())
-    			.purchaseProducts(purchaseOrdertDto.getProducts())
+    			.orderStatus(purchaseOrderDto.getOrderStatus())
+    			.purchaseProducts(productsObjects)
                 .build();
         return object;
     }
+
+	
 }
