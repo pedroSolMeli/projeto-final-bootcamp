@@ -1,6 +1,5 @@
 package com.mercadolivre.projetointegrador.purchaseProduct.dto;
 
-
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,28 +19,19 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class PurchaseProductDto {
-	
-	@Autowired
-	ProductService productService;
-	
-	
+
 	private int quantity;
-  	
-    private Long productId;
-    
-    public PurchaseProduct ConvertToObject(PurchaseProductDto dto) {
-    	Product product = Product.builder().id(dto.productId).build();
-//    	Product product = productService.getProductById(dto.getProductId());
-    	PurchaseProduct object = PurchaseProduct.builder()
-    			.quantity(dto.getQuantity())
-    			.product(product)
-    			.build();
-    	return object;
-    }
-    
-    
-    public List<PurchaseProduct> ConvertToObject(List<PurchaseProductDto> dtos) {
-    return dtos.stream().map(dto -> ConvertToObject(dto)).collect(Collectors.toList());
-    }
-    
-    }
+
+	private Long productId;
+
+	public PurchaseProduct ConvertToObject(PurchaseProductDto dto) {
+		Product product = Product.builder().id(dto.productId).build();
+		PurchaseProduct object = PurchaseProduct.builder().quantity(dto.getQuantity()).product(product).build();
+		return object;
+	}
+
+	public List<PurchaseProduct> ConvertToObject(List<PurchaseProductDto> dtos) {
+		return dtos.stream().map(dto -> ConvertToObject(dto)).collect(Collectors.toList());
+	}
+
+}
