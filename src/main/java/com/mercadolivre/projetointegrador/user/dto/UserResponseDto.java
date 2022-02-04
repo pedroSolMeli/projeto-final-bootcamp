@@ -1,5 +1,11 @@
 package com.mercadolivre.projetointegrador.user.dto;
 
+
+import java.io.Serializable;
+
+import javax.validation.constraints.Email;
+import com.mercadolivre.projetointegrador.warehouse.controller.WarehouseController;
+import org.hibernate.validator.constraints.br.CPF;
 import com.mercadolivre.projetointegrador.enums.UserRole;
 import com.mercadolivre.projetointegrador.user.model.User;
 import lombok.Builder;
@@ -43,5 +49,7 @@ public class UserResponseDto implements Serializable {
         return userResponseDtoList;
     }
 
+
+	private String warehouseCode;
 
 }

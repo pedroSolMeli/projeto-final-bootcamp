@@ -7,6 +7,9 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.Size;
 
 import com.mercadolivre.projetointegrador.user.model.User;
+
+import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseRequestDto;
+
 import org.hibernate.validator.constraints.br.CPF;
 
 import com.mercadolivre.projetointegrador.enums.UserRole;
@@ -50,4 +53,6 @@ public class UserRequestDto implements Serializable {
 		return user;
 	}
 
+
+	private String warehouseCode;
 }
