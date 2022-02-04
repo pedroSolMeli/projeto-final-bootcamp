@@ -52,7 +52,7 @@ public class PurchaseOrderService {
 			BigDecimal price =(product.getPrice());
 			BigDecimal quantity = new BigDecimal(purchaseProduct.getQuantity());
 			
-			total.add(price.multiply(quantity));
+			total = total.add(price.multiply(quantity));
 			
 			
 		}
