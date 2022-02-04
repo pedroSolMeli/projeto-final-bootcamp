@@ -1,7 +1,5 @@
 package com.mercadolivre.projetointegrador.section.service;
 
-import com.mercadolivre.projetointegrador.enums.ProductType;
-import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import com.mercadolivre.projetointegrador.section.dto.SectionRequestDto;
 import com.mercadolivre.projetointegrador.section.dto.SectionResponseDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
@@ -14,10 +12,8 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 @Service
 public class SectionService {
@@ -32,15 +28,15 @@ public class SectionService {
     public SectionResponseDto createSection(SectionRequestDto sectionRequestDto) {
         checkIfSectionCodeExists(sectionRequestDto.getSectionCode());
         Warehouse warehouse = warehouseService.getWarehouseByCode(sectionRequestDto.getWarehouseCode());
-        Section section = ConvertToObject(sectionRequestDto, warehouse);
+        Section section = SectionRequestDto.ConvertToObject(sectionRequestDto, warehouse);
         Section result = sectionRepository.saveAndFlush(section);
-        SectionResponseDto response = ConvertToResponseDto(result);
+        SectionResponseDto response = SectionResponseDto.ConvertToResponseDto(result);
         return response;
     }
 
     public List<SectionResponseDto> findAllSections() {
         List<Section> result = sectionRepository.findAll();
-        List<SectionResponseDto> response = ConvertToResponseDto(result);
+        List<SectionResponseDto> response = SectionResponseDto.ConvertToResponseDto(result);
         return response;
     }
 
@@ -69,43 +65,5 @@ public class SectionService {
             throw responseStatusException;
         }
     }
-
-    public static Section ConvertToObject(SectionRequestDto dto, Warehouse warehouse) {
-        ProductType productType = ProductType.ConvertToEnum(dto.getSectionType());
-        Section section = Section.builder()
-                .code(dto.getSectionCode())
-                .sectionType(productType)
-                .maxCapacity(dto.getMaxCapacity())
-                .warehouse(warehouse)
-                .build();
-        return section;
-    }
-
-    public static Section ConvertToObject(SectionDto dto, Warehouse warehouse) {
-        Section section = Section.builder()
-                .code(dto.getSectionCode())
-                .warehouse(warehouse)
-                .build();
-        return section;
-    }
-
-    public static SectionResponseDto ConvertToResponseDto(Section section) {
-        SectionResponseDto sectionResponseDto = SectionResponseDto.builder()
-                .id(section.getId())
-                .sectionCode(section.getCode())
-                .sectionType(section.getSectionType().getDescription())
-                .maxCapacity(section.getMaxCapacity())
-                .warehouseCode(section.getWarehouse().getCode())
-                .build();
-        return sectionResponseDto;
-    }
-
-    public static List<SectionResponseDto> ConvertToResponseDto(List<Section> sectionList) {
-        if (sectionList == null)
-            return new ArrayList<SectionResponseDto>();
-        List<SectionResponseDto> SectionResponseDtoList = sectionList.stream().map(s -> ConvertToResponseDto(s)).collect(Collectors.toList());
-        return SectionResponseDtoList;
-    }
-
 
 }
