@@ -3,11 +3,11 @@ package com.mercadolivre.projetointegrador.batch.service;
 import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
 import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
 import com.mercadolivre.projetointegrador.batch.dto.BatchStockDto;
+import com.mercadolivre.projetointegrador.batch.dto.UnavailableProductDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.repository.BatchRepository;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDto;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
-import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
 import com.mercadolivre.projetointegrador.product.model.Product;
 import com.mercadolivre.projetointegrador.product.repository.ProductRepository;
 import com.mercadolivre.projetointegrador.product.service.ProductService;
@@ -21,6 +21,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.stream.Collectors;
 
 @Service
@@ -56,6 +57,10 @@ public class BatchService {
 
     public Batch updateBatch(Batch batch) {
         return batchRepository.saveAndFlush(batch);
+    }
+
+    public Batch saveBatch(Batch batch) {
+        return batchRepository.save(batch);
     }
 
     public Batch getById(Long id) {
@@ -94,6 +99,39 @@ public class BatchService {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "dueDate cannot be a past date");
             throw responseStatusException;
         }
+    }
+
+    public List<Batch> getBatchesByProductId(Long productId) {
+        List<Batch> result = batchRepository.getBatchesByProduct_IdOrderByCurrentQuantity(productId);
+        if (result.size() == 0) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not available in stock");
+            throw responseStatusException;
+        }
+        return result;
+    }
+
+    public UnavailableProductDto validateIfProductIsAvailableInStock(int productQuantity, Long productId) {
+        UnavailableProductDto unavailableProductDto = null;
+        List<Batch> batchList = getBatchesByProductId(productId);
+        AtomicReference<Integer> totalQuantityAvailable = new AtomicReference<>((int) 0);
+        batchList.stream().forEach(batch -> {
+            totalQuantityAvailable.accumulateAndGet(batch.getCurrentQuantity(), Integer::sum);
+        });
+        //TODO VERIFICAR SE ESTÁ DISPONÍVEL NO ESTOQUE
+        if (totalQuantityAvailable.get() < productQuantity) {
+            unavailableProductDto = UnavailableProductDto.builder()
+                    .productId(productId)
+                    .availableQuantity(totalQuantityAvailable.get())
+                    .message("Purchase quantity greater than available")
+                    .build();
+        } else if (totalQuantityAvailable.get() == 0) {
+            unavailableProductDto = UnavailableProductDto.builder()
+                    .productId(productId)
+                    .availableQuantity(totalQuantityAvailable.get())
+                    .message("Unavailable product in stock")
+                    .build();
+        }
+        return unavailableProductDto;
     }
 
     public static Batch ConvertToObject(BatchRequestDto dto, Product product) {

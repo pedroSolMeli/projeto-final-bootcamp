@@ -29,7 +29,7 @@ public class PurchaseOrderService {
 	public BigDecimal createaPurchaseOrder(PurchaseOrderDto order) {
 		User userObject = User.builder().id(order.getBuyerId()).build();
 		PurchaseOrder orderToSave = order.ConvertToObject(order, userObject);
-		//col;ocar a validaçao aqui
+		//TODO colocar a validaçao aqui
 		PurchaseOrder orderSave = repository.save(orderToSave);
 		BigDecimal cartTotalPrice = calculateTotalPriceCart(orderSave);
 		return cartTotalPrice;
