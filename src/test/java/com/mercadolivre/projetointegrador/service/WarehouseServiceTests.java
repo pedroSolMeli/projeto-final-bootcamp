@@ -28,8 +28,6 @@ public class WarehouseServiceTests {
 
         Mockito.when(warehouseService.findAllWarehouses()).thenReturn(warehouseList);
 
-        List<Warehouse>
-
     }
 
     @Test
