@@ -27,8 +27,7 @@ public class UserController {
 	
 	@Autowired
 	UserService service;
-	
-	
+
 	 	@PostMapping()
 	    public ResponseEntity<?> create(@Valid @RequestBody UserRequestDto user) {
 	       UserResponseDto result = service.createUser(user);
@@ -46,12 +45,5 @@ public class UserController {
 	        UserResponseDto result = service.findUser(id);
 	        return new ResponseEntity<>(result, HttpStatus.OK);
 	    }
-
-	
-	
-	
-	
-	
-	
 
 }

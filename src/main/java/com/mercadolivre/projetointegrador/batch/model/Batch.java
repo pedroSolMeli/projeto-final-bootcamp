@@ -5,10 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.product.model.Product;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -17,7 +14,8 @@ import java.time.LocalDateTime;
 
 
 @Entity
-@Data
+@Setter
+@Getter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,7 +37,7 @@ public class Batch implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties("batch")
-    private Product productId;
+    private Product product;
 
     private Double currentTemperature;
     private Double minimalTemperature;

@@ -4,17 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -34,7 +32,7 @@ public class Section implements Serializable {
 
     @ManyToOne
     @JsonIgnoreProperties("sections")
-    private Warehouse warehouseCode;
+    private Warehouse warehouse;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "section")
     @JsonIgnoreProperties("section")

@@ -1,5 +1,8 @@
 package com.mercadolivre.projetointegrador.section.dto;
 
+import com.mercadolivre.projetointegrador.enums.ProductType;
+import com.mercadolivre.projetointegrador.section.model.Section;
+import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import lombok.Builder;
 import lombok.Data;
 
@@ -22,4 +25,16 @@ public class SectionRequestDto {
 
     @NotBlank(message = "wareHouseCode must not be empty")
     private String warehouseCode;
+
+    public static Section ConvertToObject(SectionRequestDto dto, Warehouse warehouse) {
+        ProductType productType = ProductType.ConvertToEnum(dto.getSectionType());
+        Section section = Section.builder()
+                .code(dto.getSectionCode())
+                .sectionType(productType)
+                .maxCapacity(dto.getMaxCapacity())
+                .warehouse(warehouse)
+                .build();
+        return section;
+    }
+
 }

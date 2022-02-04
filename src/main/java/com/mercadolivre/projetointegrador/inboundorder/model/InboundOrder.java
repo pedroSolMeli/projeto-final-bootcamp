@@ -4,10 +4,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 
 import com.mercadolivre.projetointegrador.section.model.Section;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 
@@ -16,7 +13,8 @@ import java.time.LocalDate;
 import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
@@ -36,7 +34,7 @@ public class InboundOrder implements Serializable {
     @JsonIgnoreProperties("inboundOrder")
     private Section section;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "inboundOrder")
+    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "inboundOrder")
     @JsonIgnoreProperties("inboundOrder")
     private List<Batch> batchStock;
 

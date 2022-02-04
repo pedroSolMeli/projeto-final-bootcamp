@@ -15,6 +15,7 @@ public class ProductRequestDto {
     @NotBlank(message = "message must not be empty")
     private String name;
 
+
     @NotBlank(message = "productType must not be empty")
     private String productType;
 

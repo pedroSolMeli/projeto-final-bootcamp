@@ -1,6 +1,5 @@
 package com.mercadolivre.projetointegrador.product.controller;
 
-import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.product.dto.ProductRequestDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
 import com.mercadolivre.projetointegrador.product.service.ProductService;
@@ -11,7 +10,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
-import java.util.Optional;
 
 @RestController("ProductController")
 @RequestMapping("/product")
@@ -34,6 +32,14 @@ public class ProductController {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
         return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
+
+    @GetMapping("/list")
+    public ResponseEntity<?> findProductsAndBatchs(@RequestParam(name= "productId") Long productId,
+                                                   @RequestParam(name= "orderBy", required = false) String orderBy) {
+        FindProductReponseDto productsAndBatchs = service.getProductsAndBatchs(productId, orderBy);
+        return new ResponseEntity<>(productsAndBatchs, HttpStatus.OK);
     }
 
 }

@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.inboundorder.dto;
 
+import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
 import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import lombok.Builder;
 import lombok.Data;
@@ -7,6 +8,7 @@ import lombok.Data;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
+import java.util.List;
 
 @Data
 @Builder
@@ -21,7 +23,8 @@ public class InboundOrderDto {
     @Valid
     private SectionDto section;
 
-
+    @Valid
+    private List<BatchRequestDto> batchStock;
 
 
 }
