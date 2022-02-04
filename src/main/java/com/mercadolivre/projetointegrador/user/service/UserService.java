@@ -49,7 +49,6 @@ public class UserService {
 				.name(user.getName())
 				.email(user.getEmail())
 				.userRole(user.getUserRole())
-				.orders(user.getOrders())
 				.build();
 		return userResponseDto;
 	}

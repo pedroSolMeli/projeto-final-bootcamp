@@ -19,42 +19,31 @@ import com.mercadolivre.projetointegrador.user.model.User;
 @Service
 public class PurchaseOrderService {
 
-    @Qualifier("PurchaseOrderRepository")
-    @Autowired
-    PurchaseOrderRepository repository;
-    
+	@Qualifier("PurchaseOrderRepository")
+	@Autowired
+	PurchaseOrderRepository repository;
+
 	@Autowired
 	ProductService productService;
 
-//	public PurchaseOrder createaPurchaseOrder(PurchaseOrderDto order) {
-//		User userObject = User.builder().id(order.getBuyerId()).build();
-//		PurchaseOrder orderToSave = order.ConvertToObject(order, userObject);
-//		return repository.save(orderToSave);
-//	}
-	
-	
 	public BigDecimal createaPurchaseOrder(PurchaseOrderDto order) {
-	User userObject = User.builder().id(order.getBuyerId()).build();
-	PurchaseOrder orderToSave = order.ConvertToObject(order, userObject);
-	PurchaseOrder orderSave = repository.save(orderToSave);
-	BigDecimal cartTotalPrice = calculateTotalPriceCart(orderSave.getId());
-//	BigDecimal cartTotalPrice = calculateTotalPriceCart(orderSave);
-	return cartTotalPrice;
-}
+		User userObject = User.builder().id(order.getBuyerId()).build();
+		PurchaseOrder orderToSave = order.ConvertToObject(order, userObject);
+		PurchaseOrder orderSave = repository.save(orderToSave);
+		BigDecimal cartTotalPrice = calculateTotalPriceCart(orderSave);
+		return cartTotalPrice;
+	}
 
-	private BigDecimal calculateTotalPriceCart(Long id) {
-		PurchaseOrder order = repository.getById(id);
+	private BigDecimal calculateTotalPriceCart(PurchaseOrder order) {
 		List<PurchaseProduct> listToCalculate = order.getPurchaseProducts();
 		BigDecimal total = new BigDecimal(0.0);
 		for (PurchaseProduct purchaseProduct : listToCalculate) {
-			Long idProduto = purchaseProduct.getProduct().getId();
-			Product product = productService.getProductById(idProduto);
-			BigDecimal price =(product.getPrice());
+			Product product = productService.getProductById(purchaseProduct.getProduct().getId());
+			BigDecimal price = (product.getPrice());
 			BigDecimal quantity = new BigDecimal(purchaseProduct.getQuantity());
-			
+
 			total = total.add(price.multiply(quantity));
-			
-			
+
 		}
 		return total;
 	}
@@ -76,7 +65,7 @@ public class PurchaseOrderService {
 
 	public void deleteById(Long id) {
 		repository.deleteById(id);
-		
+
 	}
 
 }

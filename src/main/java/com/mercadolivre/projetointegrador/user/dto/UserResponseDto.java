@@ -27,6 +27,4 @@ public class UserResponseDto implements Serializable{
 
 	private UserRole userRole;
 
-	private List<PurchaseOrder> orders;
-
 }
