@@ -60,7 +60,7 @@ public class BatchService {
     }
 
     public Batch saveBatch(Batch batch) {
-        return batchRepository.save(batch);
+        return batchRepository.saveAndFlush(batch);
     }
 
     public Batch getById(Long id) {
@@ -102,12 +102,21 @@ public class BatchService {
     }
 
     public List<Batch> getBatchesByProductId(Long productId) {
-        List<Batch> result = batchRepository.getBatchesByProduct_IdOrderByCurrentQuantity(productId);
-        if (result.size() == 0) {
+        List<Batch> batchs = batchRepository.getBatchesByProduct_IdOrderByCurrentQuantity(productId);
+        if (batchs.size() == 0) {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not available in stock");
             throw responseStatusException;
         }
-        return result;
+
+        List<Batch> batchsValid = new ArrayList<>();
+
+        for (Batch batch: batchs) {
+            if (productService.isDueDateValid(batch.getDueDate())){
+                batchsValid.add(batch);
+            }
+        }
+
+        return batchsValid;
     }
 
     public UnavailableProductDto validateIfProductIsAvailableInStock(int productQuantity, Long productId) {

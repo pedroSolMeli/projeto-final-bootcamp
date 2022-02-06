@@ -1,6 +1,7 @@
 package com.mercadolivre.projetointegrador.purchaseorder.controller;
 
 import com.mercadolivre.projetointegrador.purchaseorder.dto.PurchaseOrderDto;
+import com.mercadolivre.projetointegrador.purchaseorder.dto.PurschaseOrderResponseDto;
 import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 import com.mercadolivre.projetointegrador.purchaseorder.service.PurchaseOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,7 +28,7 @@ public class PurchaseOrderController {
 
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody PurchaseOrderDto order) {
-        BigDecimal result = service.createaPurchaseOrder(order);
+        PurschaseOrderResponseDto result = service.createaPurchaseOrder(order);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

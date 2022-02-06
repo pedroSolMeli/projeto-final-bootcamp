@@ -1,20 +1,23 @@
 package com.mercadolivre.projetointegrador.purchaseorder.service;
 
-import java.math.BigDecimal;
-import java.util.List;
-
+import com.mercadolivre.projetointegrador.batch.dto.UnavailableProductDto;
+import com.mercadolivre.projetointegrador.batch.service.BatchService;
+import com.mercadolivre.projetointegrador.product.model.Product;
+import com.mercadolivre.projetointegrador.product.service.ProductService;
+import com.mercadolivre.projetointegrador.purchaseProduct.model.PurchaseProduct;
+import com.mercadolivre.projetointegrador.purchaseProduct.service.PurchaseProductService;
+import com.mercadolivre.projetointegrador.purchaseorder.dto.PurchaseOrderDto;
+import com.mercadolivre.projetointegrador.purchaseorder.dto.PurschaseOrderResponseDto;
+import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
+import com.mercadolivre.projetointegrador.purchaseorder.repository.PurchaseOrderRepository;
+import com.mercadolivre.projetointegrador.user.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 
-import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
-import com.mercadolivre.projetointegrador.product.model.Product;
-import com.mercadolivre.projetointegrador.product.service.ProductService;
-import com.mercadolivre.projetointegrador.purchaseProduct.model.PurchaseProduct;
-import com.mercadolivre.projetointegrador.purchaseorder.dto.PurchaseOrderDto;
-import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
-import com.mercadolivre.projetointegrador.purchaseorder.repository.PurchaseOrderRepository;
-import com.mercadolivre.projetointegrador.user.model.User;
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class PurchaseOrderService {
@@ -26,25 +29,51 @@ public class PurchaseOrderService {
 	@Autowired
 	ProductService productService;
 
-	public BigDecimal createaPurchaseOrder(PurchaseOrderDto order) {
+	@Autowired
+	PurchaseProductService purchaseProductService;
+
+	@Autowired
+	BatchService batchService;
+
+
+	public PurschaseOrderResponseDto createaPurchaseOrder(PurchaseOrderDto order) {
 		User userObject = User.builder().id(order.getBuyerId()).build();
 		PurchaseOrder orderToSave = order.ConvertToObject(order, userObject);
 		//TODO colocar a validaçao aqui
-		PurchaseOrder orderSave = repository.save(orderToSave);
-		BigDecimal cartTotalPrice = calculateTotalPriceCart(orderSave);
-		return cartTotalPrice;
+		List<UnavailableProductDto> unavailableProductDtoList = new ArrayList<>();
+
+		for (PurchaseProduct purchaseProduct : orderToSave.getPurchaseProducts()) {
+
+			Product product = productService.getProductById(purchaseProduct.getProduct().getId());
+
+			UnavailableProductDto unavailableProductDto = batchService.validateIfProductIsAvailableInStock(purchaseProduct.getQuantity(), product.getId());
+
+			if (unavailableProductDto == null){
+				purchaseProductService.subtractProductFromStock(purchaseProduct);
+				purchaseProduct.setHaveStock(true);
+			}else {
+				unavailableProductDtoList.add(unavailableProductDto);
+				purchaseProduct.setHaveStock(false);
+			}
+		}
+
+		BigDecimal cartTotalPrice = calculateTotalPriceCart(orderToSave.getPurchaseProducts());
+
+		repository.saveAndFlush(orderToSave);
+
+		return PurschaseOrderResponseDto.builder().price(cartTotalPrice).unavaibleProducts(unavailableProductDtoList).build();
 	}
 
-	private BigDecimal calculateTotalPriceCart(PurchaseOrder order) {
-		List<PurchaseProduct> listToCalculate = order.getPurchaseProducts();
+	private BigDecimal calculateTotalPriceCart(List<PurchaseProduct> purchasesProductList) {
 		BigDecimal total = new BigDecimal(0.0);
-		for (PurchaseProduct purchaseProduct : listToCalculate) {
-			Product product = productService.getProductById(purchaseProduct.getProduct().getId());
-			BigDecimal price = (product.getPrice());
-			BigDecimal quantity = new BigDecimal(purchaseProduct.getQuantity());
+		for (PurchaseProduct purchaseProduct : purchasesProductList) {
+			if (purchaseProduct.isHaveStock()) {
+				Product product = productService.getProductById(purchaseProduct.getProduct().getId());
+				BigDecimal price = (product.getPrice());
+				BigDecimal quantity = new BigDecimal(purchaseProduct.getQuantity());
 
-			total = total.add(price.multiply(quantity));
-
+				total = total.add(price.multiply(quantity));
+			}
 		}
 		return total;
 	}
