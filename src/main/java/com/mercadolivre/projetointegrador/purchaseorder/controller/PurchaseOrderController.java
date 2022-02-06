@@ -32,11 +32,11 @@ public class PurchaseOrderController {
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
-    @GetMapping()
-    public ResponseEntity<?> findAll() {
-        List<PurchaseOrder> result = service.findAll();
-        return new ResponseEntity<>(result, HttpStatus.OK);
-    }
+//    @GetMapping()
+//    public ResponseEntity<?> findAll() {
+//        List<PurchaseOrder> result = service.findAll();
+//        return new ResponseEntity<>(result, HttpStatus.OK);
+//    }
 
 
     @GetMapping("/{id}")

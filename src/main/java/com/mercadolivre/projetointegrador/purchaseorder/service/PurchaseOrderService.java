@@ -8,6 +8,7 @@ import com.mercadolivre.projetointegrador.purchaseProduct.model.PurchaseProduct;
 import com.mercadolivre.projetointegrador.purchaseProduct.service.PurchaseProductService;
 import com.mercadolivre.projetointegrador.purchaseorder.dto.PurchaseOrderDto;
 import com.mercadolivre.projetointegrador.purchaseorder.dto.PurschaseOrderResponseDto;
+import com.mercadolivre.projetointegrador.purchaseorder.dto.PurschaseResponseDto;
 import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 import com.mercadolivre.projetointegrador.purchaseorder.repository.PurchaseOrderRepository;
 import com.mercadolivre.projetointegrador.user.model.User;
@@ -85,6 +86,10 @@ public class PurchaseOrderService {
 
 	public PurchaseOrder findPurchaseOrder(Long id) {
 		PurchaseOrder result = repository.getById(id);
+
+		//todo- realizar converte para retornar o dto correto
+//		PurchaseOrderDto.builder().orderDate(result.getOrderDate()).orderStatus(result.getOrderStatus()).buyerId(result.getBuyer().getId()).products(result.getPurchaseProducts()).build();
+//		PurschaseResponseDto.builder().purchaseOrder().build();
 		return result;
 	}
 
