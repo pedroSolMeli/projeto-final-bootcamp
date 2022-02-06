@@ -31,11 +31,16 @@ public class BatchController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
+    @GetMapping("/duedate")
+    public ResponseEntity<?> findAlByDueDate(){
+        List<BatchResponseDto> result = service.findAllBatchBySection();
+        return new ResponseEntity<>(result, HttpStatus.OK);
+    }
+
     @PutMapping()
     public ResponseEntity<?> update(@RequestBody Batch batch){
         Batch result = service.updateBatch(batch);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
-
 
 }
