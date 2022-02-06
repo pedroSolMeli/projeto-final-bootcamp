@@ -54,9 +54,10 @@ public class BatchService {
         return response;
     }
 
-    public List<BatchResponseDto> findAllBatchBySection() {
+    public List<BatchResponseDto> findAllBatchBySection(Long sectionId, int numberOfDays) {
         //TODO- Já esta buscando por section (Fazer - Ordenar por data de vencimento de acordo com a quantidade de dias)
-        List<Batch> result = batchRepository.getBatchsByinboundOrder_Section_Id(3L);
+        List<Batch> result = batchRepository.getBatchsByinboundOrder_Section_Id(sectionId);
+        //Todo - Ajustar dto de retorno
         List<BatchResponseDto> response = ConvertToResponseDto(result);
         return response;
     }

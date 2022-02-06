@@ -32,8 +32,8 @@ public class BatchController {
     }
 
     @GetMapping("/duedate")
-    public ResponseEntity<?> findAlByDueDate(){
-        List<BatchResponseDto> result = service.findAllBatchBySection();
+    public ResponseEntity<?> findAlByDueDate(@RequestParam Long sectionId, @RequestParam int numberOfDays){
+        List<BatchResponseDto> result = service.findAllBatchBySection(sectionId, numberOfDays);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
