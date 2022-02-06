@@ -36,11 +36,11 @@ public class PurchaseOrderService {
 	@Autowired
 	BatchService batchService;
 
-
+	//TODO - Validar se esta criando corretamente
 	public PurschaseOrderResponseDto createaPurchaseOrder(PurchaseOrderDto order) {
 		User userObject = User.builder().id(order.getBuyerId()).build();
 		PurchaseOrder orderToSave = order.ConvertToObject(order, userObject);
-		//TODO colocar a validaçao aqui
+
 		List<UnavailableProductDto> unavailableProductDtoList = new ArrayList<>();
 
 		for (PurchaseProduct purchaseProduct : orderToSave.getPurchaseProducts()) {
@@ -93,6 +93,7 @@ public class PurchaseOrderService {
 		return result;
 	}
 
+	// Todo- Fazer o update corretamente
 	public PurchaseOrder updatePurchaseOrder(PurchaseOrder order) {
 		PurchaseOrder result = repository.saveAndFlush(order);
 		return result;
