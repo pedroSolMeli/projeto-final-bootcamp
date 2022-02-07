@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 public enum UserRole {
-	B("Builder"),
+	B("Buyer"),
     S("Seller"),
     A("Agent");
 

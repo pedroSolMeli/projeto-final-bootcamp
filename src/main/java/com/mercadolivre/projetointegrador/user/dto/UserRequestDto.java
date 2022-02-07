@@ -12,6 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.util.List;
@@ -43,7 +44,7 @@ public class UserRequestDto implements Serializable {
     @Size(min = 5, message = "password must be at least 5 characters long")
     private String password;
 
-    //@NotBlank(message = "userRole must not be empty")
+    //@NotNull(message = "userRole must not be empty")
     private List<String> roles;
 
     private String warehouseCode;
@@ -58,7 +59,21 @@ public class UserRequestDto implements Serializable {
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword()))
                 .roles(dto.getRoles().stream().map(r -> Enum.valueOf(UserRole.class, r)).collect(Collectors.toList()))
-                //.warehouse(warehouseByCode)
+                .warehouse(warehouseByCode)
+                .build();
+        return user;
+    }
+
+    public static User ConvertToObject(UserRequestDto dto) {
+        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
+
+        User user = User.builder()
+                .cpf(dto.getCpf())
+                .name(dto.getName())
+                .username(dto.getUsername())
+                .email(dto.getEmail())
+                .password(encoder.encode(dto.getPassword()))
+                .roles(dto.getRoles().stream().map(r -> Enum.valueOf(UserRole.class, r)).collect(Collectors.toList()))
                 .build();
         return user;
     }
