@@ -20,34 +20,34 @@ import java.util.stream.Collectors;
 @Builder
 public class UserResponseDto implements Serializable {
 
-    private static final long serialVersionUID = -8019060760451294727L;
+	private static final long serialVersionUID = -8019060760451294727L;
 
-    private String cpf;
+	private String cpf;
 
-    private String name;
+	private String name;
 
-    private String email;
+	private String email;
 
-    private UserRole userRole;
+	private UserRole userRole;
 
-    public static UserResponseDto ConvertToResponseDto(User user) {
-        UserResponseDto userResponseDto = UserResponseDto.builder()
-                .cpf(user.getCpf())
-                .name(user.getName())
-                .email(user.getEmail())
-                .userRole(user.getUserRole())
-                .build();
-        return userResponseDto;
-    }
+	public static UserResponseDto ConvertToResponseDto(User user) {
+		UserResponseDto userResponseDto = UserResponseDto.builder()
+				.cpf(user.getCpf())
+				.name(user.getName())
+				.email(user.getEmail())
+				.userRole(user.getUserRole())
+				.build();
+		return userResponseDto;
+	}
 
-    public static List<UserResponseDto> ConvertToResponseDto(List<User> userlist) {
-        if (userlist == null)
-            return new ArrayList<>();
-        List<UserResponseDto> userResponseDtoList = userlist.stream()
-                .map(s -> ConvertToResponseDto(s))
-                .collect(Collectors.toList());
-        return userResponseDtoList;
-    }
+	public static List<UserResponseDto> ConvertToResponseDto(List<User> userlist) {
+		if (userlist == null)
+			return new ArrayList<>();
+		List<UserResponseDto> userResponseDtoList = userlist.stream()
+				.map(s -> ConvertToResponseDto(s))
+				.collect(Collectors.toList());
+		return userResponseDtoList;
+	}
 
 
 	private String warehouseCode;

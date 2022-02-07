@@ -20,22 +20,21 @@ import java.util.List;
 @Service
 public class UserService {
 
-    @Qualifier("UserRepository")
-    @Autowired
-    UserRepository userRepository;
+	@Qualifier("UserRepository")
+	@Autowired
+	UserRepository userRepository;
 
 
-    public UserResponseDto createUser(UserRequestDto user) {
-        return UserResponseDto.ConvertToResponseDto(userRepository.saveAndFlush(UserRequestDto.ConvertToObject(user)));
-    }
+	public UserResponseDto createUser(UserRequestDto user) {
+		return UserResponseDto.ConvertToResponseDto(userRepository.saveAndFlush(UserRequestDto.ConvertToObject(user)));
+	}
 
+	public List<UserResponseDto> findAllUsers() {
+		return UserResponseDto.ConvertToResponseDto(userRepository.findAll());
+	}
 
-    public List<UserResponseDto> findAllUsers() {
-        return UserResponseDto.ConvertToResponseDto(userRepository.findAll());
-    }
-
-    public UserResponseDto findUser(Long id) {
-        return UserResponseDto.ConvertToResponseDto(userRepository.getUserById(id));
-    }
+	public UserResponseDto findUser(Long id) {
+		return UserResponseDto.ConvertToResponseDto(userRepository.getUserById(id));
+	}
 
 }
