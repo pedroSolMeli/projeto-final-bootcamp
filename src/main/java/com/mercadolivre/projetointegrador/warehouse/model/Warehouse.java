@@ -1,5 +1,6 @@
 package com.mercadolivre.projetointegrador.warehouse.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.mercadolivre.projetointegrador.section.model.Section;
 
@@ -34,6 +35,7 @@ public class Warehouse implements Serializable {
 
     @OneToMany(cascade = CascadeType.MERGE, mappedBy = "warehouse")
     @JsonIgnoreProperties("User")
+    @JsonIgnore
     private List<User> users;
 
 }
