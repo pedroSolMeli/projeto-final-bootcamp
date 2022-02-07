@@ -1,11 +1,24 @@
 package com.mercadolivre.projetointegrador.product.service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.mercadolivre.projetointegrador.batch.dto.BatchStockDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.service.BatchService;
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
-import com.mercadolivre.projetointegrador.inboundorder.service.InboundOrderService;
 import com.mercadolivre.projetointegrador.product.dto.FindProductReponseDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductRequestDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
@@ -15,20 +28,6 @@ import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
 import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Locale;
-import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -47,8 +46,14 @@ public class ProductService {
         return response;
     }
 
-    public List<ProductResponseDto> findAllProducts() {
-        List<Product> result = repository.findAll();
+    public List<ProductResponseDto> findAllProducts(Optional<ProductType> type) {
+        if(!type.isPresent()) {
+            List<Product> result = repository.findAll();
+            List<ProductResponseDto> response = ConvertToResponseDto(result);
+            return response;
+        }
+
+        List<Product> result = repository.getAllByProductType(type);
         List<ProductResponseDto> response = ConvertToResponseDto(result);
         return response;
     }
@@ -176,4 +181,5 @@ public class ProductService {
 
         return false;
     }
+
 }

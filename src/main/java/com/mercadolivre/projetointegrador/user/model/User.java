@@ -1,57 +1,56 @@
 package com.mercadolivre.projetointegrador.user.model;
 
-import java.io.Serializable;
-import java.util.Collection;
-import java.util.List;
-
-import javax.persistence.*;
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.mercadolivre.projetointegrador.enums.UserRole;
-
-import com.mercadolivre.projetointegrador.warehouse.controller.WarehouseController;
+import com.mercadolivre.projetointegrador.purchaseorder.model.PurchaseOrder;
 import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
+
+import javax.persistence.*;
+import java.io.Serializable;
+import java.util.List;
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = { "cpf" }))
+@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"cpf"}))
 public class User implements Serializable {
 
-	private static final long serialVersionUID = -83702385008718071L;
+    private static final long serialVersionUID = -83702385008718071L;
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.SEQUENCE)
-	private Long id;
-	
-	@Column(nullable = false, length = 11)
-	private String cpf;
-	
-	private String name;
-	
-	private String email;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    private Long id;
 
-	@Column(unique = true)
-	private String username;
+    @Column(nullable = false, length = 11)
+    private String cpf;
 
-	private String password;
+    private String name;
 
-	@ElementCollection(targetClass = UserRole.class)
-	@JoinTable(name = "userRole", joinColumns = @JoinColumn(name = "userId"))
-	@Column(name = "role", nullable = false, unique = true)
-	@Enumerated(EnumType.STRING)
-	private List<UserRole> roles;
+    private String email;
 
-	@ManyToOne
-	@JsonIgnoreProperties("user")
-	@JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-	private Warehouse warehouse;
+    @Column(unique = true)
+    private String username;
+
+    private String password;
+
+    @ElementCollection(targetClass = UserRole.class)
+    @JoinTable(name = "userRole", joinColumns = @JoinColumn(name = "userId"))
+    @Column(name = "role", nullable = false, unique = true)
+    @Enumerated(EnumType.STRING)
+    private List<UserRole> roles;
+
+    @ManyToOne
+    @JsonIgnoreProperties("user")
+    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    private Warehouse warehouse;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyer")
+    @JsonIgnoreProperties("buyer")
+    private List<PurchaseOrder> orders;
 
 }

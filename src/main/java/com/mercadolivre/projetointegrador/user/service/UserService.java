@@ -78,7 +78,7 @@ public class UserService {
 	}
 
 	public static UserResponseDto ConvertToResponseDto(User user){
-		UserResponseDto userResponseDto = UserResponseDto.builder()
+		UserResponseDto build = UserResponseDto.builder()
 				.cpf(user.getCpf())
 				.name(user.getName())
 				.email(user.getEmail())
@@ -86,6 +86,7 @@ public class UserService {
 //				.warehouseCode(user.getWarehouse().getCode())
 				.password(user.getPassword())
 				.build();
+		UserResponseDto userResponseDto = build;
 		return userResponseDto;
 	}
 

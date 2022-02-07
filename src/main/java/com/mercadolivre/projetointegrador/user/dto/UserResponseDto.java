@@ -1,20 +1,15 @@
 package com.mercadolivre.projetointegrador.user.dto;
 
-import java.io.Serializable;
-import java.util.List;
-
-import javax.validation.constraints.Email;
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.mercadolivre.projetointegrador.warehouse.controller.WarehouseController;
+import com.mercadolivre.projetointegrador.user.model.User;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import org.hibernate.validator.constraints.br.CPF;
 
-import com.mercadolivre.projetointegrador.enums.UserRole;
-
-import lombok.Builder;
-import lombok.Data;
+import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 @Getter
 @Setter
@@ -22,7 +17,7 @@ import lombok.Data;
 public class UserResponseDto implements Serializable{
 
 	private static final long serialVersionUID = -8019060760451294727L;
-
+	
 	private String cpf;
 
 	private String name;
@@ -33,5 +28,27 @@ public class UserResponseDto implements Serializable{
 
 	@JsonIgnore
 	private String password;
+
+	private String warehouseCode;
+
+	public static UserResponseDto ConvertToResponseDto(User user) {
+		UserResponseDto userResponseDto = UserResponseDto.builder()
+				.cpf(user.getCpf())
+				.name(user.getName())
+				.email(user.getEmail())
+				.roles(user.getUserRole())
+				.build();
+		return userResponseDto;
+	}
+
+	public static List<UserResponseDto> ConvertToResponseDto(List<User> userlist) {
+		if (userlist == null)
+			return new ArrayList<>();
+		List<UserResponseDto> userResponseDtoList = userlist.stream()
+				.map(s -> ConvertToResponseDto(s))
+				.collect(Collectors.toList());
+		return userResponseDtoList;
+	}
+
 
 }
