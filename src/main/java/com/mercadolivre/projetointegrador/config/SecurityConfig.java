@@ -30,8 +30,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .antMatchers(HttpMethod.POST, "/user").permitAll()
-                .antMatchers(HttpMethod.POST, "/warehouse").permitAll()
+                .antMatchers("/h2/**").permitAll()
+                .antMatchers("/purchaseorder").hasRole("B")
+                .antMatchers("/product").permitAll()
+                .antMatchers("/section").permitAll()
+                .antMatchers("/warehouse").permitAll()
+                .antMatchers("/inboundorder").permitAll()
                 .anyRequest().authenticated();
+
+        http.headers().frameOptions().disable();
     }
 
     @Bean
