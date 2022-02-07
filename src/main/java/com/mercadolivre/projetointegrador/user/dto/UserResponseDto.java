@@ -48,7 +48,7 @@ public class UserResponseDto implements Serializable {
                 .name(user.getName())
                 .email(user.getEmail())
                 .roles(user.getRoles().stream().map(UserRole::name).collect(Collectors.toList()))
-//				.warehouseCode(user.getWarehouse().getCode())
+				.warehouseCode(user.getWarehouse().getCode())
                 .password(user.getPassword())
                 .build();
         return userResponseDto;

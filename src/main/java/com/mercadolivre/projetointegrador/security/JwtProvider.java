@@ -50,7 +50,6 @@ public class JwtProvider {
                 .compact();
     }
 
-
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token).getBody();
         Object authoritiesClaim = claims.get(AUTHORITIES_KEY);
@@ -70,5 +69,4 @@ public class JwtProvider {
         user.setUsername(claims.getSubject());
         return user;
     }
-
 }

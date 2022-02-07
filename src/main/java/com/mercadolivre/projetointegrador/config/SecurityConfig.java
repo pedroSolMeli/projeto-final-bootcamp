@@ -30,8 +30,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .antMatchers( "/user").permitAll()
-                .antMatchers(HttpMethod.POST, "/warehouse").permitAll()
+                .antMatchers( "/warehouse").permitAll()
+                .antMatchers("/h2/**").permitAll()
                 .anyRequest().authenticated();
+        http.headers().frameOptions().disable();
     }
 
     @Bean

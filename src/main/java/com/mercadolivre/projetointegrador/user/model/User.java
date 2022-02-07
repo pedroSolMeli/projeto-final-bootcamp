@@ -40,7 +40,7 @@ public class User implements Serializable {
 
     @ElementCollection(targetClass = UserRole.class)
     @JoinTable(name = "userRole", joinColumns = @JoinColumn(name = "userId"))
-    @Column(name = "role", nullable = false, unique = true)
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private List<UserRole> roles;
 
