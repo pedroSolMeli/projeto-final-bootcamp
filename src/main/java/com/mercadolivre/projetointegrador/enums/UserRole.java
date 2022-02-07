@@ -8,7 +8,7 @@ import lombok.Getter;
 public enum UserRole {
 	B("Builder"),
     S("Seller"),
-    L("Leader");
+    A("Agent");
 
     private final String description;
 
