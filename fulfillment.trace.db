@@ -1,0 +1,6 @@
+2022-02-08 19:17:08 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "USERWAREHOUSE_USER" not found; SQL statement:
+SELECT * FROM USERWAREHOUSE_USER [42102-200]
+2022-02-08 19:17:12 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "UWAREHOUSE_USER" not found; SQL statement:
+SELECT * FROM UWAREHOUSE_USER [42102-200]
