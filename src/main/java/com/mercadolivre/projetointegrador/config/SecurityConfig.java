@@ -29,8 +29,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                .antMatchers( "/user").permitAll()
-                .antMatchers( "/warehouse").permitAll()
+                .antMatchers("/user").permitAll()
+                .antMatchers("/warehouse").hasRole("A")
+                .antMatchers("/section").hasRole("A")
+                .antMatchers(HttpMethod.POST, "/product").hasRole("S")
+                .antMatchers(HttpMethod.GET, "/product").hasAnyRole()
                 .antMatchers("/h2/**").permitAll()
                 .anyRequest().authenticated();
         http.headers().frameOptions().disable();

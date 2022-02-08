@@ -15,14 +15,13 @@ public class WarehouseRequestDto {
     @NotBlank(message = "code must not be empty")
     private String code;
 
-    @NotNull(message = "code must not be empty")
+    @NotNull(message = "users list must not be null")
     private List<Long> users;
 
     public static Warehouse ConvertToObject(WarehouseRequestDto dto, ArrayList<User> userList) {
         Warehouse warehouse = Warehouse.builder().code(dto.getCode()).users(userList).build();
         return warehouse;
     }
-
 
 
 }

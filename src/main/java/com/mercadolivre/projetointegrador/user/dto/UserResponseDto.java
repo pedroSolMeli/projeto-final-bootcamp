@@ -21,6 +21,8 @@ public class UserResponseDto implements Serializable {
 
     private static final long serialVersionUID = -8019060760451294727L;
 
+    private Long id;
+
     private String cpf;
 
     private String name;
@@ -45,6 +47,7 @@ public class UserResponseDto implements Serializable {
 
     public static UserResponseDto ConvertToResponseDto(User user) {
         UserResponseDto userResponseDto = UserResponseDto.builder()
+                .id(user.getId())
                 .cpf(user.getCpf())
                 .name(user.getName())
                 .email(user.getEmail())

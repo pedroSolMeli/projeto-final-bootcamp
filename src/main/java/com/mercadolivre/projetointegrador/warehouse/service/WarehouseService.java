@@ -3,7 +3,7 @@ package com.mercadolivre.projetointegrador.warehouse.service;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.section.model.Section;
-import com.mercadolivre.projetointegrador.user.dto.UserResponseDto;
+import com.mercadolivre.projetointegrador.security.JwtProvider;
 import com.mercadolivre.projetointegrador.user.model.User;
 import com.mercadolivre.projetointegrador.user.service.UserService;
 import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseRequestDto;
@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,20 +33,26 @@ public class WarehouseService {
     @Autowired
     UserService userService;
 
-    public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto) {
+    @Autowired
+    JwtProvider jwtProvider;
+
+    public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto, String authHeader) {
         checkIfWarehouseCodeExists(warehouseRequestDto.getCode());
 
-        ArrayList<User> userList = new ArrayList<>();
-        for (Long userId: warehouseRequestDto.getUsers()) {
-            User user = userService.findUserWithoutConvert(userId);
-            userList.add(user);
-        }
+        User agent = userService.findUserWithoutConvert(jwtProvider.getUser(authHeader).getId());
 
-        Warehouse warehouse = WarehouseRequestDto.ConvertToObject(warehouseRequestDto, userList);
+        LinkedHashSet<User> userList = new LinkedHashSet<>();
+        userList.add(agent);
+        populateWarehouseUserList(userList, warehouseRequestDto.getUsers());
+
+        ArrayList<User> userArrayList = new ArrayList<>(userList);
+
+        Warehouse warehouse = WarehouseRequestDto.ConvertToObject(warehouseRequestDto, userArrayList);
         Warehouse result = repository.saveAndFlush(warehouse);
-        WarehouseResponseDto response = WarehouseResponseDto.ConvertToResponseDto(result, userList);
+        WarehouseResponseDto response = WarehouseResponseDto.ConvertToResponseDto(result, userArrayList);
         return response;
     }
+
 
     public List<Warehouse> findAllWarehouses() {
         return repository.findAll();
@@ -77,39 +84,49 @@ public class WarehouseService {
         }
     }
 
-    public WarehousesByProductResponseDto getWarehousesByProducts(Long productId){
-
+    public WarehousesByProductResponseDto getWarehousesByProducts(Long productId) {
         List<Warehouse> warehouses = findAllWarehouses();
         int quantity;
-
         List<WarehousesDto> warehousesDtoList = new ArrayList<>();
-        for (Warehouse warehouse: warehouses) {
+        for (Warehouse warehouse : warehouses) {
             quantity = 0;
             WarehousesDto warehousesDto = null;
             List<Section> sections = warehouse.getSections();
-            for (Section section : sections){
+            for (Section section : sections) {
                 List<InboundOrder> inboundOrders = section.getInboundOrder();
-                for (InboundOrder inbound: inboundOrders) {
+                for (InboundOrder inbound : inboundOrders) {
                     List<Batch> batchStocks = inbound.getBatchStock();
-                    for (Batch batch: batchStocks) {
+                    for (Batch batch : batchStocks) {
                         Long id = batch.getProduct().getId();
-                        if (productId == id){
+                        if (productId == id) {
                             quantity = quantity + batch.getCurrentQuantity();
                             warehousesDto = WarehousesDto.builder().warehouseCode(warehouse.getCode()).totalyQuantity(quantity).build();
                         }
                     }
                 }
             }
-            if (warehousesDto != null){
+            if (warehousesDto != null) {
                 warehousesDtoList.add(warehousesDto);
             }
         }
 
-        if(warehousesDtoList.isEmpty()){
+        if (warehousesDtoList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found a valid product with id: " + productId);
         }
         return WarehousesByProductResponseDto.builder().productId(productId).warehouses(warehousesDtoList).build();
 
+    }
+
+    private void populateWarehouseUserList(LinkedHashSet<User> userList, List<Long> userIdList) {
+        for (Long id : userIdList) {
+            User user = userService.findUserWithoutConvert(id);
+            if (user.getRoles().stream().anyMatch(userRole -> userRole.name().equals("A") || userRole.name().equals("S"))) {
+                userList.add(user);
+            } else {
+                ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User with id " + id + " is not seller/agent");
+                throw responseStatusException;
+            }
+        }
     }
 
 }
