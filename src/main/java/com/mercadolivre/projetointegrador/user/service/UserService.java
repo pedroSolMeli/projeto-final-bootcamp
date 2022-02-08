@@ -29,16 +29,8 @@ public class UserService {
     WarehouseService warehouseService;
 
     public UserResponseDto createUser(UserRequestDto user) {
-        User userConvert = null;
-        List<String> roles = user.getRoles();
-        for (String role : roles) {
-            if (!role.equals(UserRole.B.name())){
-                Warehouse warehouseByCode = warehouseService.getWarehouseByCode(user.getWarehouseCode());
-                userConvert = UserRequestDto.ConvertToObject(user, warehouseByCode);
-            }else{
-                userConvert = UserRequestDto.ConvertToObject(user);
-            }
-        }
+        Warehouse warehouseByCode = warehouseService.getWarehouseByCode(user.getWarehouseCode());
+        User userConvert = UserRequestDto.ConvertToObject(user, warehouseByCode);
 
         User userSave = userRepository.saveAndFlush(userConvert);
         User userById = userRepository.getUserById(userSave.getId());

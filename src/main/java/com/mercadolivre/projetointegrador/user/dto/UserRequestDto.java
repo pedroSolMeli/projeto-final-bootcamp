@@ -64,19 +64,4 @@ public class UserRequestDto implements Serializable {
         return user;
     }
 
-    public static User ConvertToObject(UserRequestDto dto) {
-        PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
-
-        User user = User.builder()
-                .cpf(dto.getCpf())
-                .name(dto.getName())
-                .username(dto.getUsername())
-                .email(dto.getEmail())
-                .password(encoder.encode(dto.getPassword()))
-                .roles(dto.getRoles().stream().map(r -> Enum.valueOf(UserRole.class, r)).collect(Collectors.toList()))
-                .build();
-        return user;
-    }
-
-
 }
