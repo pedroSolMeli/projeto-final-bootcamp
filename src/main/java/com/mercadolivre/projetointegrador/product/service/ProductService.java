@@ -2,10 +2,8 @@ package com.mercadolivre.projetointegrador.product.service;
 
 import com.mercadolivre.projetointegrador.batch.dto.BatchStockDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
-import com.mercadolivre.projetointegrador.batch.service.BatchService;
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
-import com.mercadolivre.projetointegrador.inboundorder.service.InboundOrderService;
 import com.mercadolivre.projetointegrador.product.dto.FindProductReponseDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductRequestDto;
 import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
@@ -21,13 +19,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.time.Duration;
 import java.time.LocalDate;
 import java.time.Period;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
-import java.util.Locale;
 import java.util.stream.Collectors;
 
 @Service
@@ -118,7 +114,7 @@ public class ProductService {
         }
 
         SectionDto sectionDto = SectionDto.builder().sectionCode(sectionOp.getCode()).warehouseCode(sectionOp.getWarehouse().getCode()).build();
-        List<BatchStockDto> batchStockDtos = BatchService.ConvertToListBatchStockDto(listBatch);
+        List<BatchStockDto> batchStockDtos = BatchStockDto.ConvertToListBatchStockDto(listBatch);
 
         List<BatchStockDto> batchStock = orderBy !=  null ? sortList(orderBy, batchStockDtos) : batchStockDtos;
 
