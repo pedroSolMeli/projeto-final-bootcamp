@@ -47,6 +47,7 @@ public class InboundOrderService {
         for(InboundOrder y : section.getInboundOrder()){
             somaBatch = somaBatch + y.getBatchStock().size();
         }
+
         for (Batch i : inboundOrder.getBatchStock()){
             if(inboundOrder.getSection().getSectionType() == i.getProduct().getProductType()) {
                 if (inboundOrder.getSection().getMaxCapacity() >= somaBatch) {
@@ -54,11 +55,14 @@ public class InboundOrderService {
                     InboundOrderResponseDto response = InboundOrderResponseDto.ConvertToDto(result);
 
                     return response;
+
+                }else{
+                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "could not add batch, section is full");
                 }
             }
         }
 
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "could not insert the product");
+        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "product type does not match section type");
     }
 
     public List<InboundOrder> getInboundOrderBySectionWarehouseId(Long warehouseId){
