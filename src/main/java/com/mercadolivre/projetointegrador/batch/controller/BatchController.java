@@ -4,6 +4,7 @@ import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
 import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.service.BatchService;
+import com.mercadolivre.projetointegrador.enums.ProductType;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,8 +33,8 @@ public class BatchController {
     }
 
     @GetMapping("/duedate")
-    public ResponseEntity<?> findAlByDueDate(@RequestParam Long sectionId, @RequestParam int numberOfDays){
-        List<BatchResponseDto> result = service.findAllBatchBySection(sectionId, numberOfDays);
+    public ResponseEntity<?> findAlByDueDate(@RequestParam(required = false) Long sectionId, @RequestParam int numberOfDays, @RequestParam(required = false) ProductType category){
+        List<BatchResponseDto> result = service.findAllBatchBySectionAndDateLimit(sectionId, numberOfDays, category);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 

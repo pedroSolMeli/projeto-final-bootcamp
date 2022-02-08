@@ -104,7 +104,7 @@ public class ProductService {
                 for (Batch batch: batchStocks) {
                     Long id = batch.getProduct().getId();
                     if (productId == id){
-                        if (isDueDateValid(batch.getDueDate())) {
+                        if (isValidDate(batch.getDueDate()) && isDueDateValid(batch.getDueDate(), 21)) {
                             sectionOp = section;
                             listBatch.add(batch);
                         }
@@ -165,13 +165,15 @@ public class ProductService {
         return orderList;
     }
 
-    public boolean isDueDateValid(LocalDate dueDate){
+    public boolean isValidDate(LocalDate dueDate){
+        return dueDate.isAfter(LocalDate.now());
+    }
+
+    public boolean isDueDateValid(LocalDate dueDate, int quantityDays){
         Period diff = Period.between(LocalDate.now(), dueDate);
 
-        if (dueDate.isAfter(LocalDate.now())) {
-            if ((diff.getMonths() == 0 && diff.getDays() > 21) || diff.getMonths() > 0) {
-                return true;
-            }
+        if ((diff.getMonths() == 0 && diff.getDays() > quantityDays) || diff.getMonths() > 0) {
+            return true;
         }
 
         return false;

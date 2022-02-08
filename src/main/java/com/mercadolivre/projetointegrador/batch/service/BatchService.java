@@ -5,6 +5,7 @@ import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
 import com.mercadolivre.projetointegrador.batch.dto.BatchStockDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.repository.BatchRepository;
+import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDto;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
@@ -54,11 +55,38 @@ public class BatchService {
         return response;
     }
 
-    public List<BatchResponseDto> findAllBatchBySection(Long sectionId, int numberOfDays) {
-        //TODO- Já esta buscando por section (Fazer - Ordenar por data de vencimento de acordo com a quantidade de dias)
-        List<Batch> result = batchRepository.getBatchsByinboundOrder_Section_Id(sectionId);
+    public List<BatchResponseDto> findAllBatchBySectionAndDateLimit(Long sectionId, int numberOfDays, ProductType category) {
+
+        List<Batch> resultByDateLimit = new ArrayList<>();
+
+        if(sectionId != null && category != null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Filtering by sectionId and category together is not allowed");
+        }
+
+        if(sectionId != null){
+            List<Batch> result = batchRepository.getBatchsByinboundOrder_Section_Id(sectionId);
+            for (Batch batch : result) {
+                if (productService.isValidDate(batch.getDueDate())){
+                    if(!productService.isDueDateValid(batch.getDueDate(), numberOfDays)){
+                        resultByDateLimit.add(batch);
+                    }
+                }
+            }
+        }
+
+        if(category != null){
+            List<Batch> result = batchRepository.getBatchesByProduct_ProductType(category);
+            for (Batch batch : result) {
+                if (productService.isValidDate(batch.getDueDate())){
+                    if(!productService.isDueDateValid(batch.getDueDate(), numberOfDays)){
+                        resultByDateLimit.add(batch);
+                    }
+                }
+            }
+        }
+
         //Todo - Ajustar dto de retorno
-        List<BatchResponseDto> response = ConvertToResponseDto(result);
+        List<BatchResponseDto> response = ConvertToResponseDto(resultByDateLimit);
         return response;
     }
 
