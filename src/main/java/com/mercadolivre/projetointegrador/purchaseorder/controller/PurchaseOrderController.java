@@ -9,9 +9,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 @RestController("PurchaseOrderController")
 @RequestMapping("/purchaseorder")
 public class PurchaseOrderController {
@@ -45,9 +42,10 @@ public class PurchaseOrderController {
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
-    @PutMapping()
-    public ResponseEntity<?> update(@RequestBody PurchaseOrder order) {
-        PurchaseOrder result = service.updatePurchaseOrder(order);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> update(@PathVariable Long id, @RequestBody PurchaseOrderDto order) {
+        service.updatePurchaseOrder(id, order);
+        PurschaseOrderResponseDto result = service.createaPurchaseOrder(order);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

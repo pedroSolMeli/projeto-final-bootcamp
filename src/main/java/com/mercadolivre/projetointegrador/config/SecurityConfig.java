@@ -32,10 +32,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers(HttpMethod.POST, "/user").permitAll()
                 .antMatchers("/h2/**").permitAll()
                 .antMatchers("/purchaseorder").hasRole("B")
-                .antMatchers("/product").permitAll()
-                .antMatchers("/section").permitAll()
                 .antMatchers("/warehouse").permitAll()
-                .antMatchers("/inboundorder").permitAll()
                 .anyRequest().authenticated();
 
         http.headers().frameOptions().disable();
