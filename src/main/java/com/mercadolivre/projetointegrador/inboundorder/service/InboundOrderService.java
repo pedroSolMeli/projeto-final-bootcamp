@@ -12,7 +12,9 @@ import com.mercadolivre.projetointegrador.section.service.SectionService;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -40,10 +42,23 @@ public class InboundOrderService {
         InboundOrder inboundOrderPopulated = inboundOrderRepository.save(inboundOrder);
         List<Batch> batchListWithInboundOrder = batchService.populateBatchListWithInboundOrder(inboundOrderRequestDto, inboundOrderPopulated);
         inboundOrderPopulated.setBatchStock(batchListWithInboundOrder);
-        InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
-        InboundOrderResponseDto response = InboundOrderResponseDto.ConvertToDto(result);
 
-        return response;
+        int somaBatch = 0;
+        for(InboundOrder y : section.getInboundOrder()){
+            somaBatch = somaBatch + y.getBatchStock().size();
+        }
+        for (Batch i : inboundOrder.getBatchStock()){
+            if(inboundOrder.getSection().getSectionType() == i.getProduct().getProductType()) {
+                if (inboundOrder.getSection().getMaxCapacity() >= somaBatch) {
+                    InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
+                    InboundOrderResponseDto response = InboundOrderResponseDto.ConvertToDto(result);
+
+                    return response;
+                }
+            }
+        }
+
+        throw new ResponseStatusException(HttpStatus.NOT_FOUND, "could not insert the product");
     }
 
     public List<InboundOrder> getInboundOrderBySectionWarehouseId(Long warehouseId){
