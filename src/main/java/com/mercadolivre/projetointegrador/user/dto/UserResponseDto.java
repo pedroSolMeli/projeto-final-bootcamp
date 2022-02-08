@@ -32,7 +32,7 @@ public class UserResponseDto implements Serializable {
     @JsonIgnore
     private String password;
 
-    List<WarehouseResponseDto>  warehouse;
+    private WarehouseResponseDto warehouse;
 
     public static List<UserResponseDto> ConvertToResponseDto(List<User> userlist) {
         if (userlist == null)
@@ -50,7 +50,6 @@ public class UserResponseDto implements Serializable {
                 .email(user.getEmail())
                 .roles(user.getRoles().stream().map(UserRole::name).collect(Collectors.toList()))
                 .password(user.getPassword())
-                .warehouse(WarehouseResponseDto.ConvertToResponseDto(user.getWarehouses()))
                 .build();
         return userResponseDto;
     }

@@ -44,13 +44,9 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private List<UserRole> roles;
 
-    @ManyToMany
-    @JoinTable(
-            name = "warehouseUser",
-            joinColumns = @JoinColumn(name = "userId"),
-            inverseJoinColumns = @JoinColumn(name = "warehouseId")
-    )
-    private List<Warehouse> warehouses;
+    @ManyToOne
+    @JsonIgnoreProperties("warehouse")
+    private Warehouse warehouse;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyer")
     @JsonIgnoreProperties("buyer")

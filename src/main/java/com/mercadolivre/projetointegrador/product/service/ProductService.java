@@ -106,13 +106,11 @@ public class ProductService {
 
     public FindProductReponseDto getProductsAndBatchs(Long productId, String orderBy, String authHeader){
 
-        User user = jwtProvider.getUser(authHeader);
-        UserResponseDto userDto = userService.findUser(user.getId());
+        User userAuth = jwtProvider.getUser(authHeader);
+        User user = userService.findUserWithoutConvert(userAuth.getId());
 
         //Todo - pegar o codigo armazen do representante
-
-        //TODO - Manu continua daqui - por cod aqui
-        Warehouse warehouse = warehouseService.getWarehouseByCode("");
+        Warehouse warehouse = warehouseService.getWarehouseByCode(user.getWarehouse().getCode());
         List<Section> sections = warehouse.getSections();
 
         List<Batch> listBatch = new ArrayList<>();

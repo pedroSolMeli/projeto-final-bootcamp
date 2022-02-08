@@ -32,7 +32,8 @@ public class Warehouse implements Serializable {
     @JsonIgnoreProperties("warehouse")
     private List<Section> sections;
 
-    @ManyToMany(mappedBy = "warehouses")
+    @OneToMany(cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnoreProperties("users")
     private List<User> users;
 
 }
