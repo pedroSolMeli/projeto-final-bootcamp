@@ -44,10 +44,8 @@ public class UserRequestDto implements Serializable {
     @Size(min = 5, message = "password must be at least 5 characters long")
     private String password;
 
-    //@NotNull(message = "userRole must not be empty")
+    @NotNull(message = "userRole must not be empty")
     private List<String> roles;
-
-    private String warehouseCode;
 
     public static User ConvertToObject(UserRequestDto dto, Warehouse warehouseByCode) {
         PasswordEncoder encoder = PasswordEncoderFactories.createDelegatingPasswordEncoder();
@@ -59,7 +57,6 @@ public class UserRequestDto implements Serializable {
                 .email(dto.getEmail())
                 .password(encoder.encode(dto.getPassword()))
                 .roles(dto.getRoles().stream().map(r -> Enum.valueOf(UserRole.class, r)).collect(Collectors.toList()))
-                .warehouse(warehouseByCode)
                 .build();
         return user;
     }
@@ -77,6 +74,5 @@ public class UserRequestDto implements Serializable {
                 .build();
         return user;
     }
-
 
 }
