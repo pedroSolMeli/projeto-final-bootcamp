@@ -1,6 +1,7 @@
 package com.mercadolivre.projetointegrador.batch.service;
 
 import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
+import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDateLimitDto;
 import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.repository.BatchRepository;
@@ -52,7 +53,7 @@ public class BatchService {
         return response;
     }
 
-    public List<BatchResponseDto> findAllBatchBySectionAndDateLimit(Long sectionId, int numberOfDays, ProductType category) {
+    public List<BatchResponseDateLimitDto> findAllBatchBySectionAndDateLimit(Long sectionId, int numberOfDays, ProductType category) {
 
         List<Batch> resultByDateLimit = new ArrayList<>();
 
@@ -62,29 +63,27 @@ public class BatchService {
 
         if(sectionId != null){
             List<Batch> result = batchRepository.getBatchsByinboundOrder_Section_Id(sectionId);
-            for (Batch batch : result) {
-                if (productService.isValidDate(batch.getDueDate())){
-                    if(!productService.isDueDateValid(batch.getDueDate(), numberOfDays)){
-                        resultByDateLimit.add(batch);
-                    }
-                }
-            }
+            addBatchListForDateValid(numberOfDays, resultByDateLimit, result);
         }
 
         if(category != null){
             List<Batch> result = batchRepository.getBatchesByProduct_ProductType(category);
-            for (Batch batch : result) {
-                if (productService.isValidDate(batch.getDueDate())){
-                    if(!productService.isDueDateValid(batch.getDueDate(), numberOfDays)){
-                        resultByDateLimit.add(batch);
-                    }
-                }
-            }
+            addBatchListForDateValid(numberOfDays, resultByDateLimit, result);
         }
 
         //Todo - Ajustar dto de retorno
-        List<BatchResponseDto> response = BatchResponseDto.ConvertToResponseDto(resultByDateLimit);
+        List<BatchResponseDateLimitDto> response = BatchResponseDateLimitDto.ConvertToBatchResponseDateLimitDto(resultByDateLimit);
         return response;
+    }
+
+    private void addBatchListForDateValid(int numberOfDays, List<Batch> resultByDateLimit, List<Batch> result) {
+        for (Batch batch : result) {
+            if (productService.isValidDate(batch.getDueDate())) {
+                if (!productService.isDueDateValid(batch.getDueDate(), numberOfDays)) {
+                    resultByDateLimit.add(batch);
+                }
+            }
+        }
     }
 
     public Batch updateBatch(Batch batch) {

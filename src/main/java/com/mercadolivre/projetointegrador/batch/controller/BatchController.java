@@ -1,6 +1,7 @@
 package com.mercadolivre.projetointegrador.batch.controller;
 
 import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
+import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDateLimitDto;
 import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.service.BatchService;
@@ -34,7 +35,7 @@ public class BatchController {
 
     @GetMapping("/duedate")
     public ResponseEntity<?> findAlByDueDate(@RequestParam(required = false) Long sectionId, @RequestParam int numberOfDays, @RequestParam(required = false) ProductType category){
-        List<BatchResponseDto> result = service.findAllBatchBySectionAndDateLimit(sectionId, numberOfDays, category);
+        List<BatchResponseDateLimitDto> result = service.findAllBatchBySectionAndDateLimit(sectionId, numberOfDays, category);
         return new ResponseEntity<>(result, HttpStatus.OK);
     }
 
