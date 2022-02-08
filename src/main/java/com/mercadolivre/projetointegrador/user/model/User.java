@@ -44,10 +44,13 @@ public class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private List<UserRole> roles;
 
-    @ManyToOne
-    @JsonIgnoreProperties("user")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
-    private Warehouse warehouse;
+    @ManyToMany
+    @JoinTable(
+            name = "warehouseUser",
+            joinColumns = @JoinColumn(name = "userId"),
+            inverseJoinColumns = @JoinColumn(name = "warehouseId")
+    )
+    private List<Warehouse> warehouses;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyer")
     @JsonIgnoreProperties("buyer")

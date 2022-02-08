@@ -10,7 +10,9 @@ import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 import java.util.Objects;
@@ -24,13 +26,8 @@ public class UserService {
     @Autowired
     UserRepository userRepository;
 
-    @Qualifier("WarehouseService")
-    @Autowired
-    WarehouseService warehouseService;
-
     public UserResponseDto createUser(UserRequestDto user) {
-        Warehouse warehouseByCode = warehouseService.getWarehouseByCode(user.getWarehouseCode());
-        User userConvert = UserRequestDto.ConvertToObject(user, warehouseByCode);
+        User userConvert = UserRequestDto.ConvertToObject(user);
 
         User userSave = userRepository.saveAndFlush(userConvert);
         User userById = userRepository.getUserById(userSave.getId());
@@ -45,6 +42,17 @@ public class UserService {
         return UserResponseDto.ConvertToResponseDto(userRepository.getUserById(id));
     }
 
+    public User findUserWithoutConvert(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+
+        if (user == null){
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found id: " + id);
+            throw responseStatusException;
+        }
+
+        return user;
+    }
+    
     public Optional<UserDto> findUserByUsername(String username) {
         User user = userRepository.findUserByUsername(username).orElse(null);
 
@@ -59,6 +67,5 @@ public class UserService {
                 .roles(user.getRoles().stream().map(UserRole::name).collect(Collectors.toList()))
                 .build());
     }
-
 
 }

@@ -3,6 +3,9 @@ package com.mercadolivre.projetointegrador.warehouse.service;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.section.model.Section;
+import com.mercadolivre.projetointegrador.user.dto.UserResponseDto;
+import com.mercadolivre.projetointegrador.user.model.User;
+import com.mercadolivre.projetointegrador.user.service.UserService;
 import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseRequestDto;
 import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseResponseDto;
 import com.mercadolivre.projetointegrador.warehouse.dto.WarehousesByProductResponseDto;
@@ -26,11 +29,21 @@ public class WarehouseService {
     @Autowired
     WarehouseRepository repository;
 
+    @Autowired
+    UserService userService;
+
     public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto) {
         checkIfWarehouseCodeExists(warehouseRequestDto.getCode());
-        Warehouse warehouse = WarehouseRequestDto.ConvertToObject(warehouseRequestDto);
+
+        ArrayList<User> userList = new ArrayList<>();
+        for (Long userId: warehouseRequestDto.getUsers()) {
+            User user = userService.findUserWithoutConvert(userId);
+            userList.add(user);
+        }
+
+        Warehouse warehouse = WarehouseRequestDto.ConvertToObject(warehouseRequestDto, userList);
         Warehouse result = repository.saveAndFlush(warehouse);
-        WarehouseResponseDto response = WarehouseResponseDto.ConvertToResponseDto(result);
+        WarehouseResponseDto response = WarehouseResponseDto.ConvertToResponseDto(result, userList);
         return response;
     }
 

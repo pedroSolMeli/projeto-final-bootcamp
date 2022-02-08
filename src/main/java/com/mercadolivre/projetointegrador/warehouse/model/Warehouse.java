@@ -32,8 +32,7 @@ public class Warehouse implements Serializable {
     @JsonIgnoreProperties("warehouse")
     private List<Section> sections;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "warehouse")
-    @JsonIgnoreProperties("User")
+    @ManyToMany(mappedBy = "warehouses")
     private List<User> users;
 
 }

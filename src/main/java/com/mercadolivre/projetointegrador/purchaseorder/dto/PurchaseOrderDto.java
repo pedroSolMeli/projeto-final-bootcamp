@@ -26,8 +26,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 @NoArgsConstructor
 @AllArgsConstructor
 public class PurchaseOrderDto {
-	
-
 
     @NotNull(message = "orderNumber cannot be null")
 	private LocalDate orderDate;
