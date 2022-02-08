@@ -110,7 +110,9 @@ public class ProductService {
         UserResponseDto userDto = userService.findUser(user.getId());
 
         //Todo - pegar o codigo armazen do representante
-        Warehouse warehouse = warehouseService.getWarehouseByCode(userDto.getWarehouseCode());
+
+        //TODO - Manu continua daqui - por cod aqui
+        Warehouse warehouse = warehouseService.getWarehouseByCode("");
         List<Section> sections = warehouse.getSections();
 
         List<Batch> listBatch = new ArrayList<>();

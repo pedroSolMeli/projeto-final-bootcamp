@@ -3,6 +3,8 @@ package com.mercadolivre.projetointegrador.user.dto;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.mercadolivre.projetointegrador.enums.UserRole;
 import com.mercadolivre.projetointegrador.user.model.User;
+import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseResponseDto;
+import com.mercadolivre.projetointegrador.warehouse.dto.WarehousesDto;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
@@ -30,6 +32,8 @@ public class UserResponseDto implements Serializable {
     @JsonIgnore
     private String password;
 
+    List<WarehouseResponseDto>  warehouse;
+
     public static List<UserResponseDto> ConvertToResponseDto(List<User> userlist) {
         if (userlist == null)
             return new ArrayList<>();
@@ -46,6 +50,7 @@ public class UserResponseDto implements Serializable {
                 .email(user.getEmail())
                 .roles(user.getRoles().stream().map(UserRole::name).collect(Collectors.toList()))
                 .password(user.getPassword())
+                .warehouse(WarehouseResponseDto.ConvertToResponseDto(user.getWarehouses()))
                 .build();
         return userResponseDto;
     }

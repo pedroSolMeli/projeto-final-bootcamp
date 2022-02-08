@@ -4,6 +4,7 @@ import java.util.List;
 
 import javax.validation.Valid;
 
+import com.mercadolivre.projetointegrador.user.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -38,7 +39,5 @@ public class UserController {
 		UserResponseDto result = service.findUser(id);
 		return new ResponseEntity<>(result, HttpStatus.OK);
 	}
-
-
 
 }

@@ -44,7 +44,6 @@ public class UserService {
 
     public User findUserWithoutConvert(Long id) {
         User user = userRepository.findById(id).orElse(null);
-
         if (user == null){
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found id: " + id);
             throw responseStatusException;
