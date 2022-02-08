@@ -10,10 +10,16 @@ import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
 import com.mercadolivre.projetointegrador.section.service.SectionService;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
+import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 
 @Service
@@ -33,17 +39,26 @@ public class InboundOrderService {
     BatchService batchService;
 
     public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
-        SectionDto sectionDto = inboundOrderRequestDto.getInboundOrder().getSection();
-        Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
-        InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
-        InboundOrder inboundOrderPopulated = inboundOrderRepository.save(inboundOrder);
-        List<Batch> batchListWithInboundOrder = batchService.populateBatchListWithInboundOrder(inboundOrderRequestDto, inboundOrderPopulated);
-        inboundOrderPopulated.setBatchStock(batchListWithInboundOrder);
-        InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
-        InboundOrderResponseDto response = InboundOrderResponseDto.ConvertToDto(result);
+        InboundOrderResponseDto response = null;
+        try {
+            SectionDto sectionDto = inboundOrderRequestDto.getInboundOrder().getSection();
+            Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
+            InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
+            InboundOrder inboundOrderPopulated = inboundOrderRepository.save(inboundOrder);
+            List<Batch> batchListWithInboundOrder = batchService.populateBatchListWithInboundOrder(inboundOrderRequestDto, inboundOrderPopulated);
+            inboundOrderPopulated.setBatchStock(batchListWithInboundOrder);
+
+            InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
+             response = InboundOrderResponseDto.ConvertToDto(result);
+
+        }catch (DataIntegrityViolationException ex){
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.BAD_REQUEST, "Please, validate the information entered");
+            throw responseStatusException;
+        }
         return response;
+
     }
 
     public List<InboundOrder> getInboundOrderBySectionWarehouseId(Long warehouseId){
