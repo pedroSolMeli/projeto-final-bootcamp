@@ -13,6 +13,10 @@ import com.mercadolivre.projetointegrador.product.service.ProductService;
 import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
 import com.mercadolivre.projetointegrador.section.service.SectionService;
+import com.mercadolivre.projetointegrador.security.JwtProvider;
+import com.mercadolivre.projetointegrador.user.model.User;
+import com.mercadolivre.projetointegrador.user.service.UserService;
+import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -41,11 +45,21 @@ public class InboundOrderService {
     @Autowired
     BatchService batchService;
 
-    public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    JwtProvider jwtProvider;
+
+    public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, String authHeader) {
 
         InboundOrderDto inboundOrderDto = inboundOrderRequestDto.getInboundOrder();
-        SectionDto sectionDto = inboundOrderDto.getSection();
 
+        User userAuth = jwtProvider.getUser(authHeader);
+        User user = userService.findUserWithoutConvert(userAuth.getId());
+        checkIfUserBelongsToWarehouse(inboundOrderDto.getSection().getWarehouseCode(), user);
+
+        SectionDto sectionDto = inboundOrderDto.getSection();
         Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
         checkIfOrderNumberExists(inboundOrderDto.getOrderNumber());
@@ -114,5 +128,15 @@ public class InboundOrderService {
             totalBatch += y.getBatchStock().size();
         }
         return totalBatch;
+    }
+
+    private void checkIfUserBelongsToWarehouse(String requestWarehouseCode, User user) {
+        Warehouse warehouse = warehouseService.getWarehouseByUser(user);
+        if (warehouse == null)
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "user does not belong to any warehouse");
+
+        if (!warehouse.getCode().equals(requestWarehouseCode)) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "you can only send inbound order to your own warehouse");
+        }
     }
 }
