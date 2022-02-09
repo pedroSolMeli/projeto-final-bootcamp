@@ -18,6 +18,8 @@ public class InboundOrderDto implements Serializable{
 
 	private static final long serialVersionUID = 1468401630009655948L;
 
+	private Long id;
+	
 	@NotNull(message = "orderNumber cannot be null")
     private Long orderNumber;
 

@@ -21,6 +21,7 @@ public class InboundOrderRequestDto {
     public static InboundOrder ConvertToObject(InboundOrderRequestDto inboundOrderRequestDto, Section section) {
         InboundOrderDto inboundOrder = inboundOrderRequestDto.getInboundOrder();
         InboundOrder object = InboundOrder.builder()
+        		.id(inboundOrder.getId())
                 .orderNumber(inboundOrder.getOrderNumber())
                 .orderDate(inboundOrder.getOrderDate())
                 .section(section)
