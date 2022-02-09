@@ -12,6 +12,7 @@ import com.mercadolivre.projetointegrador.section.service.SectionService;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -35,40 +36,40 @@ public class InboundOrderService {
     BatchService batchService;
 
     public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
-        SectionDto sectionDto = inboundOrderRequestDto.getInboundOrder().getSection();
-        Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
-        InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
-        InboundOrder inboundOrderPopulated = inboundOrderRepository.save(inboundOrder);
-        List<Batch> batchListWithInboundOrder = batchService.populateBatchListWithInboundOrder(inboundOrderRequestDto, inboundOrderPopulated);
-        inboundOrderPopulated.setBatchStock(batchListWithInboundOrder);
+        InboundOrderResponseDto response = null;
+        try {
+            SectionDto sectionDto = inboundOrderRequestDto.getInboundOrder().getSection();
+            Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
-        int somaBatch = 0;
-        for(InboundOrder y : section.getInboundOrder()){
-            somaBatch = somaBatch + y.getBatchStock().size();
-        }
+            InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
+            InboundOrder inboundOrderPopulated = inboundOrderRepository.save(inboundOrder);
+            List<Batch> batchListWithInboundOrder = batchService.populateBatchListWithInboundOrder(inboundOrderRequestDto, inboundOrderPopulated);
+            inboundOrderPopulated.setBatchStock(batchListWithInboundOrder);
 
-        for (Batch i : inboundOrder.getBatchStock()){
-            if(inboundOrder.getSection().getSectionType() == i.getProduct().getProductType()) {
-                if (inboundOrder.getSection().getMaxCapacity() >= somaBatch) {
-                    InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
-                    InboundOrderResponseDto response = InboundOrderResponseDto.ConvertToDto(result);
+            int somaBatch = 0;
+            for (InboundOrder y : section.getInboundOrder()) {
+                somaBatch = somaBatch + y.getBatchStock().size();
+            }
 
-                    return response;
-
-                }else{
-                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "could not add batch, section is full");
+            for (Batch i : inboundOrder.getBatchStock()) {
+                if (inboundOrder.getSection().getSectionType() == i.getProduct().getProductType()) {
+                    if (inboundOrder.getSection().getMaxCapacity() >= somaBatch) {
+                        InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
+                        return InboundOrderResponseDto.ConvertToDto(result);
+                    } else {
+                        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "could not add batch, section is full");
+                    }
                 }
             }
+
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "product type does not match section type");
+        } catch (
+                DataIntegrityViolationException ex) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.BAD_REQUEST, "batchNumber/orderNumber already exists");
+            throw responseStatusException;
         }
-
-        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "product type does not match section type");
     }
-
-    public List<InboundOrder> getInboundOrderBySectionWarehouseId(Long warehouseId){
-       return inboundOrderRepository.getInboundOrderBySection_Warehouse_Id(warehouseId);
-    }
-
     public List<InboundOrderResponseDto> findAllInboundOrders() {
         List<InboundOrder> result = inboundOrderRepository.findAll();
         List<InboundOrderResponseDto> response = InboundOrderResponseDto.ConvertToDto(result);
