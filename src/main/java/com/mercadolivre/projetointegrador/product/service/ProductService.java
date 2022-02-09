@@ -9,7 +9,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import com.mercadolivre.projetointegrador.security.JwtProvider;
-import com.mercadolivre.projetointegrador.user.dto.UserResponseDto;
 import com.mercadolivre.projetointegrador.user.model.User;
 import com.mercadolivre.projetointegrador.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -110,7 +109,7 @@ public class ProductService {
         User user = userService.findUserWithoutConvert(userAuth.getId());
 
         //Todo - pegar o codigo armazen do representante
-        Warehouse warehouse = warehouseService.getWarehouseByCode(user.getWarehouse().getCode());
+        Warehouse warehouse = warehouseService.getWarehouseByUser(user);
         List<Section> sections = warehouse.getSections();
 
         List<Batch> listBatch = new ArrayList<>();

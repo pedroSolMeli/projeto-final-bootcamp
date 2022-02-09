@@ -14,6 +14,7 @@ import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import com.mercadolivre.projetointegrador.warehouse.repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -39,17 +40,21 @@ public class WarehouseService {
     public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto, String authHeader) {
         checkIfWarehouseCodeExists(warehouseRequestDto.getCode());
 
-        User agent = userService.findUserWithoutConvert(jwtProvider.getUser(authHeader).getId());
-
         LinkedHashSet<User> userList = new LinkedHashSet<>();
-        userList.add(agent);
         populateWarehouseUserList(userList, warehouseRequestDto.getUsers());
 
         ArrayList<User> userArrayList = new ArrayList<>(userList);
 
         Warehouse warehouse = WarehouseRequestDto.ConvertToObject(warehouseRequestDto, userArrayList);
-        Warehouse result = repository.saveAndFlush(warehouse);
-        WarehouseResponseDto response = WarehouseResponseDto.ConvertToResponseDto(result, userArrayList);
+        WarehouseResponseDto response = null;
+        try {
+            Warehouse result = repository.saveAndFlush(warehouse);
+            response = WarehouseResponseDto.ConvertToResponseDto(result, userArrayList);
+
+        } catch (DataIntegrityViolationException e) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User already exists in other warehouse");
+            throw responseStatusException;
+        }
         return response;
     }
 
@@ -64,6 +69,11 @@ public class WarehouseService {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Warehouse not found");
             throw responseStatusException;
         }
+        return warehouse;
+    }
+
+    public Warehouse getWarehouseByUser(User u) {
+        Warehouse warehouse = repository.getWarehouseByUsers(u);
         return warehouse;
     }
 
