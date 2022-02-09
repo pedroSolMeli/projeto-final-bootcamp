@@ -35,8 +35,8 @@ public class InboundOrderController {
     }
 
     @PutMapping()
-    public ResponseEntity<?> update(@RequestBody InboundOrder inboundOrder) {
-        InboundOrder result = inboundOrderService.updateInboundOrder(inboundOrder);
+    public ResponseEntity<?> update(@RequestBody InboundOrderRequestDto inboundOrder) {
+        InboundOrderResponseDto result = inboundOrderService.updateInboundOrder(inboundOrder);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

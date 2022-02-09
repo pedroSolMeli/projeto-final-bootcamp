@@ -78,9 +78,9 @@ public class InboundOrderService {
         return response;
     }
 
-    public InboundOrder updateInboundOrder(InboundOrder inboundOrder) {
-        //TODO ajustar para chamar o create
-        return inboundOrderRepository.saveAndFlush(inboundOrder);
+    public InboundOrderResponseDto updateInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
+    	InboundOrderResponseDto result = createInboundOrder(inboundOrderRequestDto);
+        return result;
     }
 
     public void checkIfOrderNumberExists(Long orderNumber) {
