@@ -37,38 +37,39 @@ public class InboundOrderService {
 
     public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
 
-        InboundOrderResponseDto response = null;
-        try {
-            SectionDto sectionDto = inboundOrderRequestDto.getInboundOrder().getSection();
-            Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
+        SectionDto sectionDto = inboundOrderRequestDto.getInboundOrder().getSection();
+        Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
-            InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
-            InboundOrder inboundOrderPopulated = inboundOrderRepository.save(inboundOrder);
-            List<Batch> batchListWithInboundOrder = batchService.populateBatchListWithInboundOrder(inboundOrderRequestDto, inboundOrderPopulated);
-            inboundOrderPopulated.setBatchStock(batchListWithInboundOrder);
+        InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
+        InboundOrder inboundOrderPopulated = inboundOrderRepository.save(inboundOrder);
+        List<Batch> batchListWithInboundOrder = batchService.populateBatchListWithInboundOrder(inboundOrderRequestDto, inboundOrderPopulated);
+        inboundOrderPopulated.setBatchStock(batchListWithInboundOrder);
 
-            int somaBatch = 0;
-            for (InboundOrder y : section.getInboundOrder()) {
-                somaBatch = somaBatch + y.getBatchStock().size();
-            }
+        int somaBatch = 0;
+        for (InboundOrder y : section.getInboundOrder()) {
+            somaBatch = somaBatch + y.getBatchStock().size();
+        }
 
-            for (Batch i : inboundOrder.getBatchStock()) {
-                if (inboundOrder.getSection().getSectionType() == i.getProduct().getProductType()) {
-                    if (inboundOrder.getSection().getMaxCapacity() >= somaBatch) {
-                        InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
-                        return InboundOrderResponseDto.ConvertToDto(result);
-                    } else {
-                        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "could not add batch, section is full");
-                    }
+        for (Batch i : inboundOrder.getBatchStock()) {
+            if (inboundOrder.getSection().getSectionType() == i.getProduct().getProductType()) {
+                if (inboundOrder.getSection().getMaxCapacity() >= somaBatch) {
+                InboundOrderResponseDto inboundOrderResponseDto = null;
+                try {
+                    InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
+                    inboundOrderResponseDto = InboundOrderResponseDto.ConvertToDto(result);
+                } catch (DataIntegrityViolationException ex) {
+                    ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.BAD_REQUEST, "batchNumber/orderNumber already exists");
+                    throw responseStatusException;
+                }
+                    return inboundOrderResponseDto;
+                } else {
+                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "could not add batch, section is full");
                 }
             }
-
-            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "product type does not match section type");
-        } catch (
-                DataIntegrityViolationException ex) {
-            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.BAD_REQUEST, "batchNumber/orderNumber already exists");
-            throw responseStatusException;
         }
+
+        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "product type does not match section type");
+
     }
     public List<InboundOrderResponseDto> findAllInboundOrders() {
         List<InboundOrder> result = inboundOrderRepository.findAll();
@@ -79,6 +80,5 @@ public class InboundOrderService {
     public InboundOrder updateInboundOrder(InboundOrder inboundOrder) {
         return inboundOrderRepository.saveAndFlush(inboundOrder);
     }
-
 
 }
