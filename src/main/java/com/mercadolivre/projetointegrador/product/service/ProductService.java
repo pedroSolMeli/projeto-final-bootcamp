@@ -166,12 +166,13 @@ public class ProductService {
     }
 
     public boolean isDueDateValid(LocalDate dueDate, int quantityDays){
-        Period diff = Period.between(LocalDate.now(), dueDate);
-
-        if ((diff.getMonths() == 0 && diff.getDays() > quantityDays) || diff.getMonths() > 0) {
-            return true;
-        }
-
+    	LocalDate DayWithQuantityDays = LocalDate.now().plusDays(quantityDays);
+        
+        
+        if (dueDate.isAfter(DayWithQuantityDays)) {
+          return true;
+      }
         return false;
     }
+    
 }

@@ -70,6 +70,10 @@ public class BatchService {
             List<Batch> result = batchRepository.getBatchesByProduct_ProductType(category);
             addBatchListForDateValid(numberOfDays, resultByDateLimit, result);
         }
+        if(numberOfDays > 0){
+            List<Batch> result = batchRepository.findAll();
+            addBatchListForDateValid(numberOfDays, resultByDateLimit, result);
+        }
 
         //Todo - Ajustar dto de retorno
         List<BatchResponseDateLimitDto> response = BatchResponseDateLimitDto.ConvertToBatchResponseDateLimitDto(resultByDateLimit);
