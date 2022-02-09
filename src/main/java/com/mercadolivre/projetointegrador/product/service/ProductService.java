@@ -8,6 +8,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+import com.mercadolivre.projetointegrador.security.JwtProvider;
+import com.mercadolivre.projetointegrador.user.model.User;
+import com.mercadolivre.projetointegrador.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -38,6 +41,12 @@ public class ProductService {
 
     @Autowired
     WarehouseService warehouseService;
+
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    JwtProvider jwtProvider;
 
     public ProductResponseDto create(ProductRequestDto productRequestDto) {
         Product product = ConvertToObject(productRequestDto);
@@ -94,9 +103,13 @@ public class ProductService {
         return product;
     }
 
-    public FindProductReponseDto getProductsAndBatchs(Long productId, String orderBy){
+    public FindProductReponseDto getProductsAndBatchs(Long productId, String orderBy, String authHeader){
+
+        User userAuth = jwtProvider.getUser(authHeader);
+        User user = userService.findUserWithoutConvert(userAuth.getId());
+
         //Todo - pegar o codigo armazen do representante
-        Warehouse warehouse = warehouseService.getWarehouseById(2l);
+        Warehouse warehouse = warehouseService.getWarehouseByUser(user);
         List<Section> sections = warehouse.getSections();
 
         List<Batch> listBatch = new ArrayList<>();

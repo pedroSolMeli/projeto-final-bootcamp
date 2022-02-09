@@ -40,13 +40,12 @@ public class User implements Serializable {
 
     @ElementCollection(targetClass = UserRole.class)
     @JoinTable(name = "userRole", joinColumns = @JoinColumn(name = "userId"))
-    @Column(name = "role", nullable = false, unique = true)
+    @Column(name = "role", nullable = false)
     @Enumerated(EnumType.STRING)
     private List<UserRole> roles;
 
     @ManyToOne
-    @JsonIgnoreProperties("user")
-    @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
+    @JsonIgnoreProperties("warehouse")
     private Warehouse warehouse;
 
     @OneToMany(cascade = CascadeType.ALL, mappedBy = "buyer")
