@@ -4,10 +4,6 @@ import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDt
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderResponseDto;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.inboundorder.service.InboundOrderService;
-import com.mercadolivre.projetointegrador.section.model.Section;
-import com.mercadolivre.projetointegrador.section.service.SectionService;
-import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
-import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,8 +19,9 @@ public class InboundOrderController {
     InboundOrderService inboundOrderService;
 
     @PostMapping()
-    public ResponseEntity<?> create(@RequestBody InboundOrderRequestDto inboundOrderRequestDto) {
-        InboundOrderResponseDto result = inboundOrderService.createInboundOrder(inboundOrderRequestDto);
+    public ResponseEntity<?> create(@RequestBody InboundOrderRequestDto inboundOrderRequestDto,
+                                    @RequestHeader(value = "Authorization") String authHeader) {
+        InboundOrderResponseDto result = inboundOrderService.createInboundOrder(inboundOrderRequestDto, authHeader);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
