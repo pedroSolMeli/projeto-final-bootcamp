@@ -41,7 +41,7 @@ public class BatchService {
 
     public BatchResponseDto createBatch(BatchRequestDto batchRequestDto) {
         checkIfBatchNumberExists(batchRequestDto.getBatchNumber());
-//        checkIfManufacturingDateAndTimeAreTheSame(batchRequestDto.getManufacturingDate(), batchRequestDto.getManufacturingTime());
+        checkIfManufacturingDateAndTimeAreTheSame(batchRequestDto.getManufacturingDate(), batchRequestDto.getManufacturingTime());
         validateDueDate(batchRequestDto.getDueDate());
         Product product = productService.getProductById(batchRequestDto.getProductId());
         Batch batch = BatchRequestDto.ConvertToObject(batchRequestDto, product);

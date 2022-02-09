@@ -1,7 +1,6 @@
 package com.mercadolivre.projetointegrador.batch.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.databind.jsonFormatVisitors.JsonFormatTypes;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.product.model.Product;
 import lombok.AllArgsConstructor;
@@ -20,6 +19,8 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class BatchRequestDto implements Serializable {
 
 	private static final long serialVersionUID = -2685868728841596914L;
@@ -49,15 +50,13 @@ public class BatchRequestDto implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate manufacturingDate;
 
-//    @NotNull(message = "manufacturingDate must not be empty")
-//    @JsonFormat( pattern = "yyyy-MM-dd HH:mm")
-//    private LocalDateTime manufacturingTime;
+    @NotNull(message = "manufacturingDate must not be empty")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm")
+    private LocalDateTime manufacturingTime;
 
     @NotNull(message = "manufacturingDate must not be empty")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
-
-
 
     public static Batch ConvertToObject(BatchRequestDto dto, Product product) {
         Batch batch = Batch.builder()
@@ -68,7 +67,7 @@ public class BatchRequestDto implements Serializable {
                 .initialQuantity(dto.getInitialQuantity())
                 .currentQuantity(dto.getCurrentQuantity())
                 .manufacturingDate(dto.getManufacturingDate())
-//                .manufacturingTime(dto.getManufacturingTime())
+                .manufacturingTime(dto.getManufacturingTime())
                 .dueDate(dto.getDueDate())
                 .build();
         return batch;
@@ -82,7 +81,7 @@ public class BatchRequestDto implements Serializable {
                 .initialQuantity(dto.getInitialQuantity())
                 .currentQuantity(dto.getCurrentQuantity())
                 .manufacturingDate(dto.getManufacturingDate())
-//                .manufacturingTime(dto.getManufacturingTime())
+                .manufacturingTime(dto.getManufacturingTime())
                 .dueDate(dto.getDueDate())
                 .build();
         return batch;
