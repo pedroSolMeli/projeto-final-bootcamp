@@ -1,8 +1,7 @@
 package com.mercadolivre.projetointegrador.batch.dto;
 
 import com.mercadolivre.projetointegrador.batch.model.Batch;
-import lombok.Builder;
-import lombok.Data;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -10,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
+@Getter
+@Setter
 @Builder
 public class BatchResponseDto {
     private Long id;
@@ -34,6 +34,7 @@ public class BatchResponseDto {
     }
 
     public static BatchResponseDto ConvertToResponseDto(Batch batch) {
+
         BatchResponseDto response = BatchResponseDto.builder()
                 .id(batch.getId())
                 .batchNumber(batch.getBatchNumber())

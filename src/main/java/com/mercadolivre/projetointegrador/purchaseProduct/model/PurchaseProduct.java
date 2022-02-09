@@ -15,22 +15,25 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @Builder
 @Entity
 @AllArgsConstructor
 @NoArgsConstructor
-public class PurchaseProduct {
-	
-	  	@Id
-	    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-	    private Long id;
-	  	
-	  	private int quantity;
-	  	
-	    @ManyToOne
-//	    @JsonIgnoreProperties("purchaseProduct")
-	    private Product product;
-	
+public class PurchaseProduct{
+
+	@Id
+	@GeneratedValue(strategy = GenerationType.SEQUENCE)
+	private Long id;
+
+	private int quantity;
+
+	@ManyToOne
+//	@JsonIgnoreProperties("purchaseProduct")
+	private Product product;
+
+	private boolean haveStock;
 
 }

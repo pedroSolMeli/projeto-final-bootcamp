@@ -37,7 +37,7 @@ public class WarehouseService {
     @Autowired
     JwtProvider jwtProvider;
 
-    public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto, String authHeader) {
+    public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto) {
         checkIfWarehouseCodeExists(warehouseRequestDto.getCode());
 
         LinkedHashSet<User> userList = new LinkedHashSet<>();

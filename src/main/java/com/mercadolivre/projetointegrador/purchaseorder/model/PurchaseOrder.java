@@ -19,25 +19,20 @@ import com.mercadolivre.projetointegrador.enums.OrderStatus;
 import com.mercadolivre.projetointegrador.purchaseProduct.model.PurchaseProduct;
 import com.mercadolivre.projetointegrador.user.model.User;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 
 @Entity
-@Data
+@Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class PurchaseOrder implements Serializable{
-	
-	private static final long serialVersionUID = 8900316972484234225L;
+public class PurchaseOrder {
 	
 	@Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
-
 
 	@JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate orderDate;

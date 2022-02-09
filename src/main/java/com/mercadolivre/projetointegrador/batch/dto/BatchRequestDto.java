@@ -23,7 +23,9 @@ import java.util.stream.Collectors;
 @AllArgsConstructor
 public class BatchRequestDto implements Serializable {
 
-    @NotNull(message = "productId must no be null")
+	private static final long serialVersionUID = -2685868728841596914L;
+
+	@NotNull(message = "productId must no be null")
     private Long productId;
 
     @NotNull(message = "batchNumber must not be null")
@@ -55,8 +57,6 @@ public class BatchRequestDto implements Serializable {
     @NotNull(message = "manufacturingDate must not be empty")
     @JsonFormat(pattern = "yyyy-MM-dd")
     private LocalDate dueDate;
-
-
 
     public static Batch ConvertToObject(BatchRequestDto dto, Product product) {
         Batch batch = Batch.builder()
