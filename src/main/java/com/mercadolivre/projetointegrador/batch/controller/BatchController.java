@@ -1,18 +1,19 @@
 package com.mercadolivre.projetointegrador.batch.controller;
 
-import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
-import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDateLimitDto;
-import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
-import com.mercadolivre.projetointegrador.batch.model.Batch;
-import com.mercadolivre.projetointegrador.batch.service.BatchService;
-import com.mercadolivre.projetointegrador.enums.ProductType;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
-import java.util.List;
+import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDateLimitDto;
+import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
+import com.mercadolivre.projetointegrador.batch.service.BatchService;
+import com.mercadolivre.projetointegrador.enums.ProductType;
 
 @RestController("BatchController")
 @RequestMapping("/batch")
@@ -21,11 +22,6 @@ public class BatchController {
     @Autowired
     BatchService service;
 
-    @PostMapping()
-    public ResponseEntity<?> create(@Valid @RequestBody BatchRequestDto batchRequestDto){
-        BatchResponseDto result = service.createBatch(batchRequestDto);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
-    }
 
     @GetMapping
     public ResponseEntity<?> findAll(){
@@ -37,12 +33,6 @@ public class BatchController {
     public ResponseEntity<?> findAlByDueDate(@RequestParam(required = false) Long sectionId, @RequestParam int numberOfDays, @RequestParam(required = false) ProductType category){
         List<BatchResponseDateLimitDto> result = service.findAllBatchBySectionAndDateLimit(sectionId, numberOfDays, category);
         return new ResponseEntity<>(result, HttpStatus.OK);
-    }
-
-    @PutMapping()
-    public ResponseEntity<?> update(@RequestBody Batch batch){
-        Batch result = service.updateBatch(batch);
-        return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
 }
