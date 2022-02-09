@@ -1,22 +1,5 @@
 package com.mercadolivre.projetointegrador.product.service;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import com.mercadolivre.projetointegrador.security.JwtProvider;
-import com.mercadolivre.projetointegrador.user.model.User;
-import com.mercadolivre.projetointegrador.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.mercadolivre.projetointegrador.batch.dto.BatchStockDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.enums.ProductType;
@@ -28,6 +11,9 @@ import com.mercadolivre.projetointegrador.product.model.Product;
 import com.mercadolivre.projetointegrador.product.repository.ProductRepository;
 import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
+import com.mercadolivre.projetointegrador.security.JwtProvider;
+import com.mercadolivre.projetointegrador.user.model.User;
+import com.mercadolivre.projetointegrador.user.service.UserService;
 import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,10 +23,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDate;
-import java.time.Period;
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
