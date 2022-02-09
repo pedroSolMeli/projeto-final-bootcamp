@@ -1,9 +1,10 @@
 package com.mercadolivre.projetointegrador.batch.service;
 
+import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDateLimitDto;
+import com.mercadolivre.projetointegrador.batch.dto.BatchResponseDto;
 import com.mercadolivre.projetointegrador.batch.dto.UnavailableProductDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.repository.BatchRepository;
-import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDto;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.product.model.Product;

@@ -19,8 +19,6 @@ import java.util.stream.Collectors;
 
 @Data
 @Builder
-@NoArgsConstructor
-@AllArgsConstructor
 public class BatchRequestDto implements Serializable {
 
     @NotNull(message = "productId must no be null")
