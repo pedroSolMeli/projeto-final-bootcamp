@@ -110,7 +110,7 @@ public class BatchService {
         return batch;
     }
 
-    private void checkIfBatchNumberExists(Long batchNumber) {
+    public void checkIfBatchNumberExists(Long batchNumber) {
         Batch batch = batchRepository.getBatchByBatchNumber(batchNumber);
         if (batch != null) {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.CONFLICT, "batchNumber already exists");
