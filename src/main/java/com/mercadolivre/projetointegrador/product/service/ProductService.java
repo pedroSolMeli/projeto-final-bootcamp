@@ -1,5 +1,22 @@
 package com.mercadolivre.projetointegrador.product.service;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import com.mercadolivre.projetointegrador.security.JwtProvider;
+import com.mercadolivre.projetointegrador.user.model.User;
+import com.mercadolivre.projetointegrador.user.service.UserService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
 import com.mercadolivre.projetointegrador.batch.dto.BatchStockDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.enums.ProductType;
@@ -36,6 +53,12 @@ public class ProductService {
     @Autowired
     WarehouseService warehouseService;
 
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    JwtProvider jwtProvider;
+
     public ProductResponseDto create(ProductRequestDto productRequestDto) {
         Product product = ConvertToObject(productRequestDto);
         Product result = repository.saveAndFlush(product);
@@ -43,8 +66,14 @@ public class ProductService {
         return response;
     }
 
-    public List<ProductResponseDto> findAllProducts() {
-        List<Product> result = repository.findAll();
+    public List<ProductResponseDto> findAllProducts(Optional<ProductType> type) {
+        if(!type.isPresent()) {
+            List<Product> result = repository.findAll();
+            List<ProductResponseDto> response = ConvertToResponseDto(result);
+            return response;
+        }
+
+        List<Product> result = repository.getAllByProductType(type);
         List<ProductResponseDto> response = ConvertToResponseDto(result);
         return response;
     }
@@ -85,9 +114,13 @@ public class ProductService {
         return product;
     }
 
-    public FindProductReponseDto getProductsAndBatchs(Long productId, String orderBy){
+    public FindProductReponseDto getProductsAndBatchs(Long productId, String orderBy, String authHeader){
+
+        User userAuth = jwtProvider.getUser(authHeader);
+        User user = userService.findUserWithoutConvert(userAuth.getId());
+
         //Todo - pegar o codigo armazen do representante
-        Warehouse warehouse = warehouseService.getWarehouseById(2l);
+        Warehouse warehouse = warehouseService.getWarehouseByUser(user);
         List<Section> sections = warehouse.getSections();
 
         List<Batch> listBatch = new ArrayList<>();
@@ -167,12 +200,12 @@ public class ProductService {
 
     public boolean isDueDateValid(LocalDate dueDate, int quantityDays){
     	LocalDate DayWithQuantityDays = LocalDate.now().plusDays(quantityDays);
-        
-        
+
+
         if (dueDate.isAfter(DayWithQuantityDays)) {
           return true;
       }
         return false;
     }
-    
+
 }

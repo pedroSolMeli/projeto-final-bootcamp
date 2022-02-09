@@ -5,11 +5,10 @@ import lombok.Getter;
 
 @Getter
 @AllArgsConstructor
-public enum UserRole {
-	B("Buyer"),
-    S("Seller"),
-    A("Agent");
+public enum OrderStatus {
 
-    private final String description;
+	C("Cart");
 
+    private final String status;
+	
 }
