@@ -19,31 +19,31 @@ import java.util.stream.Collectors;
 @Builder
 public class UserResponseDto implements Serializable {
 
-    private static final long serialVersionUID = -8019060760451294727L;
+	private static final long serialVersionUID = -8019060760451294727L;
 
-    private Long id;
+	private Long id;
 
-    private String cpf;
+	private String cpf;
 
-    private String name;
+	private String name;
 
-    private String email;
+	private String email;
 
-    private List<String> roles;
+	private List<String> roles;
 
-    @JsonIgnore
-    private String password;
+	@JsonIgnore
+	private String password;
 
     private WarehouseResponseDto warehouse;
 
-    public static List<UserResponseDto> ConvertToResponseDto(List<User> userlist) {
-        if (userlist == null)
-            return new ArrayList<>();
-        List<UserResponseDto> userResponseDtoList = userlist.stream()
-                .map(s -> ConvertToResponseDto(s))
-                .collect(Collectors.toList());
-        return userResponseDtoList;
-    }
+	public static List<UserResponseDto> ConvertToResponseDto(List<User> userlist) {
+		if (userlist == null)
+			return new ArrayList<>();
+		List<UserResponseDto> userResponseDtoList = userlist.stream()
+				.map(s -> ConvertToResponseDto(s))
+				.collect(Collectors.toList());
+		return userResponseDtoList;
+	}
 
     public static UserResponseDto ConvertToResponseDto(User user) {
         UserResponseDto userResponseDto = UserResponseDto.builder()

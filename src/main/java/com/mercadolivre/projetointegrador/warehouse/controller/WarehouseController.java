@@ -21,8 +21,8 @@ public class WarehouseController {
     WarehouseService service;
 
     @PostMapping()
-    public ResponseEntity<?> create(@Valid @RequestBody WarehouseRequestDto warehouseRequestDto, @RequestHeader(value = "Authorization") String authHeader) {
-        WarehouseResponseDto result = service.createWarehouse(warehouseRequestDto, authHeader);
+    public ResponseEntity<?> create(@Valid @RequestBody WarehouseRequestDto warehouseRequestDto){
+        WarehouseResponseDto result = service.createWarehouse(warehouseRequestDto);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
