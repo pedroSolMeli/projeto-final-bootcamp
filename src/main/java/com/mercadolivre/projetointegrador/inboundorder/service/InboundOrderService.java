@@ -1,18 +1,21 @@
 package com.mercadolivre.projetointegrador.inboundorder.service;
 
+import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.batch.service.BatchService;
+import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderDto;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDto;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderResponseDto;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.inboundorder.repository.InboundOrderRepository;
+import com.mercadolivre.projetointegrador.product.model.Product;
+import com.mercadolivre.projetointegrador.product.service.ProductService;
 import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
 import com.mercadolivre.projetointegrador.section.service.SectionService;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -33,53 +36,42 @@ public class InboundOrderService {
     SectionService sectionService;
 
     @Autowired
+    ProductService productService;
+
+    @Autowired
     BatchService batchService;
 
     public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
 
-        SectionDto sectionDto = inboundOrderRequestDto.getInboundOrder().getSection();
+        InboundOrderDto inboundOrderDto = inboundOrderRequestDto.getInboundOrder();
+        SectionDto sectionDto = inboundOrderDto.getSection();
+
         Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
+        checkIfOrderNumberExists(inboundOrderDto.getOrderNumber());
+        checkIfBatchNumberExists(inboundOrderDto.getBatchStock());
+        checkIfSectionHasEnoughSpace(inboundOrderDto.getBatchStock().size(), section);
+        checkIfProductTypeMatchesSectionType(inboundOrderDto.getBatchStock(), section);
+
         InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
-        //aqui salva sem a lista batch
+
         InboundOrder inboundOrderPopulated = inboundOrderRepository.save(inboundOrder);
-//        aqui converte a lista no jeito q é para ficar no registro
+
         List<Batch> batchListWithInboundOrder = batchService.populateBatchListWithInboundOrder(inboundOrderRequestDto, inboundOrderPopulated);
-        //aqui popula mas não salva, pode seer isso??? q na primeira salva uma lista agregada vazia e depois seta outra??? ver objetos e dtos melhor
         inboundOrderPopulated.setBatchStock(batchListWithInboundOrder);
-        //para q usa o soma batch??
-        int somaBatch = 0;
-        for (InboundOrder y : section.getInboundOrder()) {
-            somaBatch = somaBatch + y.getBatchStock().size();
-        }
 
-        
-        //o inboundOrder objeto aqui é só o objeto, a lista de batch foi setada no outro ali, não nele
-        
-        for (Batch i : inboundOrder.getBatchStock()) {
-            if (inboundOrder.getSection().getSectionType() == i.getProduct().getProductType()) {
-                if (inboundOrder.getSection().getMaxCapacity() >= somaBatch) {
-                	//aqui dá o if e o noll sem fazer nada, tipo variavel local e sem return??? acho q entendi q é para inicializar e usar o método convert
-                InboundOrderResponseDto inboundOrderResponseDto = null;
-                try {
-                    InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
-                    inboundOrderResponseDto = InboundOrderResponseDto.ConvertToDto(result);
-                } catch (DataIntegrityViolationException ex) {
-//                	ver se tá ok... testei e apareceu, só q a gente não salva ali antes??? salva sim, tá registrando o inbound order mesmo , pois ele estoura esse erro depois de  salvo
-                    ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.BAD_REQUEST, "batchNumber/orderNumber already exists");
-                    throw responseStatusException;
-                }
-                    return inboundOrderResponseDto;
-                } else {
-                	// o mesmo q anterior, já fez o registo
-                    throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "could not add batch, section is full");
-                }
-            }
-        }
+        InboundOrder result = inboundOrderRepository.saveAndFlush(inboundOrderPopulated);
+        InboundOrderResponseDto inboundOrderResponseDto = InboundOrderResponseDto.ConvertToDto(result);
 
-        throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "product type does not match section type");
-
+        return inboundOrderResponseDto;
     }
+
+    private void checkIfBatchNumberExists(List<BatchRequestDto> batchStock) {
+        batchStock.stream().forEach(b -> {
+            batchService.checkIfBatchNumberExists(b.getBatchNumber());
+        });
+    }
+
     public List<InboundOrderResponseDto> findAllInboundOrders() {
         List<InboundOrder> result = inboundOrderRepository.findAll();
         List<InboundOrderResponseDto> response = InboundOrderResponseDto.ConvertToDto(result);
@@ -87,8 +79,40 @@ public class InboundOrderService {
     }
 
     public InboundOrder updateInboundOrder(InboundOrder inboundOrder) {
-    	//TODO ajustar para chamar o create
+        //TODO ajustar para chamar o create
         return inboundOrderRepository.saveAndFlush(inboundOrder);
     }
 
+    public void checkIfOrderNumberExists(Long orderNumber) {
+        InboundOrder inboundOrder = inboundOrderRepository.getInboundOrderByOrderNumber(orderNumber);
+        if (inboundOrder != null) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.CONFLICT, "orderNumber already exists");
+            throw responseStatusException;
+        }
+    }
+
+    private void checkIfProductTypeMatchesSectionType(List<BatchRequestDto> batchStock, Section section) {
+        for (BatchRequestDto b : batchStock) {
+            Product product = productService.getProductById(b.getProductId());
+            if (!product.getProductType().equals(section.getSectionType())) {
+                throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "product type does not match section type");
+            }
+        }
+    }
+
+    private void checkIfSectionHasEnoughSpace(Integer batchStockSize, Section section) {
+        Integer totalBatchesInSection = countBatchesInSection(section);
+        Integer availableSpace = section.getMaxCapacity() - totalBatchesInSection;
+        if (batchStockSize > availableSpace) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "batchStock size is bigger than section available capacity");
+        }
+    }
+
+    private Integer countBatchesInSection(Section section) {
+        Integer totalBatch = 0;
+        for (InboundOrder y : section.getInboundOrder()) {
+            totalBatch += y.getBatchStock().size();
+        }
+        return totalBatch;
+    }
 }

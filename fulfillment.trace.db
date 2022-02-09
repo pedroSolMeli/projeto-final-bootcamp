@@ -1,9 +1,0 @@
-2022-02-09 14:19:18 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DELETE *[*] FROM INBOUND_ORDER"; expected "identifier"; SQL statement:
-DELETE * FROM INBOUND_ORDER [42001-200]
-2022-02-09 14:19:28 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DROP *[*] FROM INBOUND_ORDER"; expected "TABLE, INDEX, USER, SEQUENCE, CONSTANT, TRIGGER, VIEW, ROLE, ALIAS, SCHEMA, ALL, DOMAIN, TYPE, DATATYPE, AGGREGATE, SYNONYM"; SQL statement:
-DROP * FROM INBOUND_ORDER [42001-200]
-2022-02-09 14:21:00 jdbc[13]: exception
-org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "DELETE *[*]  FROM BATCH"; expected "identifier"; SQL statement:
-DELETE *  FROM BATCH [42001-200]

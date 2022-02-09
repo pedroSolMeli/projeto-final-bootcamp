@@ -34,7 +34,7 @@ public class Section implements Serializable {
     @JsonIgnoreProperties("sections")
     private Warehouse warehouse;
 
-    @OneToMany(cascade = CascadeType.ALL, mappedBy = "section")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "section")
     @JsonIgnoreProperties("section")
     private List<InboundOrder> inboundOrder;
 

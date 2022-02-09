@@ -26,6 +26,7 @@ public class InboundOrder implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(unique = true)
 	private Long orderNumber;
 
 	private LocalDate orderDate;
@@ -34,7 +35,7 @@ public class InboundOrder implements Serializable {
     @JsonIgnoreProperties("inboundOrder")
     private Section section;
 
-    @OneToMany(cascade = CascadeType.MERGE, mappedBy = "inboundOrder")
+    @OneToMany(cascade = {CascadeType.MERGE, CascadeType.REMOVE}, mappedBy = "inboundOrder")
     @JsonIgnoreProperties("inboundOrder")
     private List<Batch> batchStock;
 
