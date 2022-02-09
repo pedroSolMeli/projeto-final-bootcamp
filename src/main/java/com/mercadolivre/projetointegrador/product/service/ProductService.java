@@ -1,25 +1,7 @@
 package com.mercadolivre.projetointegrador.product.service;
 
-import java.time.LocalDate;
-import java.time.Period;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-
-import com.mercadolivre.projetointegrador.security.JwtProvider;
-import com.mercadolivre.projetointegrador.user.model.User;
-import com.mercadolivre.projetointegrador.user.service.UserService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
-
 import com.mercadolivre.projetointegrador.batch.dto.BatchStockDto;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
-import com.mercadolivre.projetointegrador.batch.service.BatchService;
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.product.dto.FindProductReponseDto;
@@ -29,8 +11,23 @@ import com.mercadolivre.projetointegrador.product.model.Product;
 import com.mercadolivre.projetointegrador.product.repository.ProductRepository;
 import com.mercadolivre.projetointegrador.section.dto.SectionDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
+import com.mercadolivre.projetointegrador.security.JwtProvider;
+import com.mercadolivre.projetointegrador.user.model.User;
+import com.mercadolivre.projetointegrador.user.service.UserService;
 import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import com.mercadolivre.projetointegrador.warehouse.service.WarehouseService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.web.server.ResponseStatusException;
+
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class ProductService {
@@ -122,7 +119,7 @@ public class ProductService {
                 for (Batch batch: batchStocks) {
                     Long id = batch.getProduct().getId();
                     if (productId == id){
-                        if (isDueDateValid(batch.getDueDate())) {
+                        if (isValidDate(batch.getDueDate()) && isDueDateValid(batch.getDueDate(), 21)) {
                             sectionOp = section;
                             listBatch.add(batch);
                         }
@@ -136,7 +133,7 @@ public class ProductService {
         }
 
         SectionDto sectionDto = SectionDto.builder().sectionCode(sectionOp.getCode()).warehouseCode(sectionOp.getWarehouse().getCode()).build();
-        List<BatchStockDto> batchStockDtos = BatchService.ConvertToListBatchStockDto(listBatch);
+        List<BatchStockDto> batchStockDtos = BatchStockDto.ConvertToListBatchStockDto(listBatch);
 
         List<BatchStockDto> batchStock = orderBy !=  null ? sortList(orderBy, batchStockDtos) : batchStockDtos;
 
@@ -183,15 +180,17 @@ public class ProductService {
         return orderList;
     }
 
-    public boolean isDueDateValid(LocalDate dueDate){
-        Period diff = Period.between(LocalDate.now(), dueDate);
+    public boolean isValidDate(LocalDate dueDate){
+        return dueDate.isAfter(LocalDate.now());
+    }
 
-        if (dueDate.isAfter(LocalDate.now())) {
-            if ((diff.getMonths() == 0 && diff.getDays() > 21) || diff.getMonths() > 0) {
-                return true;
-            }
-        }
+    public boolean isDueDateValid(LocalDate dueDate, int quantityDays){
+    	LocalDate DayWithQuantityDays = LocalDate.now().plusDays(quantityDays);
 
+
+        if (dueDate.isAfter(DayWithQuantityDays)) {
+          return true;
+      }
         return false;
     }
 
