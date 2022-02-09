@@ -2,6 +2,7 @@ package com.mercadolivre.projetointegrador.security;
 
 import com.mercadolivre.projetointegrador.user.dto.UserDto;
 import com.mercadolivre.projetointegrador.user.model.User;
+import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -44,12 +45,12 @@ public class JwtProvider {
                 .setSubject(user.getUsername())
                 .claim(AUTHORITIES_KEY, authoritiesStr)
                 .claim("userId", user.getId())
+                .claim("warehouseCode", user.getWarehouseCode())
                 .setIssuedAt(issueTime)
                 .setExpiration(expirationTIme)
                 .signWith(key, SignatureAlgorithm.HS512)
                 .compact();
     }
-
 
     public Authentication getAuthentication(String token) {
         Claims claims = Jwts.parserBuilder().setSigningKey(this.key).build().parseClaimsJws(token).getBody();
@@ -68,6 +69,7 @@ public class JwtProvider {
         User user = new User();
         user.setId(claims.get("userId", Long.class));
         user.setUsername(claims.getSubject());
+
         return user;
     }
 

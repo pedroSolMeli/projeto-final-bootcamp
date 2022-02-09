@@ -1,7 +1,7 @@
 package com.mercadolivre.projetointegrador.batch.dto;
 
-
 import com.mercadolivre.projetointegrador.batch.model.Batch;
+import com.mercadolivre.projetointegrador.enums.ProductType;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -16,16 +16,20 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-public class BatchStockDto {
+public class BatchResponseDateLimitDto {
 
     private Long batchNumber;
+    private Long productId;
+    private ProductType productType;
     private Integer currentQuantity;
     private LocalDate dueDate;
 
 
-    public static BatchStockDto ConvertToBatchStockDto(Batch batch) {
-        BatchStockDto response = BatchStockDto.builder()
+    public static BatchResponseDateLimitDto ConvertToBatchResponseDateLimitDto(Batch batch) {
+        BatchResponseDateLimitDto response = BatchResponseDateLimitDto.builder()
                 .batchNumber(batch.getBatchNumber())
+                .productId(batch.getProduct().getId())
+                .productType(batch.getProduct().getProductType())
                 .currentQuantity(batch.getCurrentQuantity())
                 .currentQuantity(batch.getCurrentQuantity())
                 .dueDate(batch.getDueDate())
@@ -33,10 +37,10 @@ public class BatchStockDto {
         return response;
     }
 
-    public static List<BatchStockDto> ConvertToListBatchStockDto(List<Batch> batchList) {
+    public static List<BatchResponseDateLimitDto> ConvertToBatchResponseDateLimitDto(List<Batch> batchList) {
         if (batchList == null)
-            return new ArrayList<BatchStockDto>();
-        List<BatchStockDto> productResponseDtoList = batchList.stream().map(s -> ConvertToBatchStockDto(s)).collect(Collectors.toList());
+            return new ArrayList<BatchResponseDateLimitDto>();
+        List<BatchResponseDateLimitDto> productResponseDtoList = batchList.stream().map(s -> ConvertToBatchResponseDateLimitDto(s)).collect(Collectors.toList());
         return productResponseDtoList;
     }
 

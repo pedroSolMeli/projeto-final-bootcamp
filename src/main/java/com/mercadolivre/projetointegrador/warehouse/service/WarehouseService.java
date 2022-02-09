@@ -3,6 +3,9 @@ package com.mercadolivre.projetointegrador.warehouse.service;
 import com.mercadolivre.projetointegrador.batch.model.Batch;
 import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.section.model.Section;
+import com.mercadolivre.projetointegrador.security.JwtProvider;
+import com.mercadolivre.projetointegrador.user.model.User;
+import com.mercadolivre.projetointegrador.user.service.UserService;
 import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseRequestDto;
 import com.mercadolivre.projetointegrador.warehouse.dto.WarehouseResponseDto;
 import com.mercadolivre.projetointegrador.warehouse.dto.WarehousesByProductResponseDto;
@@ -11,11 +14,13 @@ import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import com.mercadolivre.projetointegrador.warehouse.repository.WarehouseRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,13 +31,33 @@ public class WarehouseService {
     @Autowired
     WarehouseRepository repository;
 
-    public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto) {
+    @Autowired
+    UserService userService;
+
+    @Autowired
+    JwtProvider jwtProvider;
+
+    public WarehouseResponseDto createWarehouse(WarehouseRequestDto warehouseRequestDto, String authHeader) {
         checkIfWarehouseCodeExists(warehouseRequestDto.getCode());
-        Warehouse warehouse = WarehouseRequestDto.ConvertToObject(warehouseRequestDto);
-        Warehouse result = repository.saveAndFlush(warehouse);
-        WarehouseResponseDto response = WarehouseResponseDto.ConvertToResponseDto(result);
+
+        LinkedHashSet<User> userList = new LinkedHashSet<>();
+        populateWarehouseUserList(userList, warehouseRequestDto.getUsers());
+
+        ArrayList<User> userArrayList = new ArrayList<>(userList);
+
+        Warehouse warehouse = WarehouseRequestDto.ConvertToObject(warehouseRequestDto, userArrayList);
+        WarehouseResponseDto response = null;
+        try {
+            Warehouse result = repository.saveAndFlush(warehouse);
+            response = WarehouseResponseDto.ConvertToResponseDto(result, userArrayList);
+
+        } catch (DataIntegrityViolationException e) {
+            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User already exists in other warehouse");
+            throw responseStatusException;
+        }
         return response;
     }
+
 
     public List<Warehouse> findAllWarehouses() {
         return repository.findAll();
@@ -44,6 +69,11 @@ public class WarehouseService {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Warehouse not found");
             throw responseStatusException;
         }
+        return warehouse;
+    }
+
+    public Warehouse getWarehouseByUser(User u) {
+        Warehouse warehouse = repository.getWarehouseByUsers(u);
         return warehouse;
     }
 
@@ -64,39 +94,49 @@ public class WarehouseService {
         }
     }
 
-    public WarehousesByProductResponseDto getWarehousesByProducts(Long productId){
-
+    public WarehousesByProductResponseDto getWarehousesByProducts(Long productId) {
         List<Warehouse> warehouses = findAllWarehouses();
         int quantity;
-
         List<WarehousesDto> warehousesDtoList = new ArrayList<>();
-        for (Warehouse warehouse: warehouses) {
+        for (Warehouse warehouse : warehouses) {
             quantity = 0;
             WarehousesDto warehousesDto = null;
             List<Section> sections = warehouse.getSections();
-            for (Section section : sections){
+            for (Section section : sections) {
                 List<InboundOrder> inboundOrders = section.getInboundOrder();
-                for (InboundOrder inbound: inboundOrders) {
+                for (InboundOrder inbound : inboundOrders) {
                     List<Batch> batchStocks = inbound.getBatchStock();
-                    for (Batch batch: batchStocks) {
+                    for (Batch batch : batchStocks) {
                         Long id = batch.getProduct().getId();
-                        if (productId == id){
+                        if (productId == id) {
                             quantity = quantity + batch.getCurrentQuantity();
                             warehousesDto = WarehousesDto.builder().warehouseCode(warehouse.getCode()).totalyQuantity(quantity).build();
                         }
                     }
                 }
             }
-            if (warehousesDto != null){
+            if (warehousesDto != null) {
                 warehousesDtoList.add(warehousesDto);
             }
         }
 
-        if(warehousesDtoList.isEmpty()){
+        if (warehousesDtoList.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found a valid product with id: " + productId);
         }
         return WarehousesByProductResponseDto.builder().productId(productId).warehouses(warehousesDtoList).build();
 
+    }
+
+    private void populateWarehouseUserList(LinkedHashSet<User> userList, List<Long> userIdList) {
+        for (Long id : userIdList) {
+            User user = userService.findUserWithoutConvert(id);
+            if (user.getRoles().stream().anyMatch(userRole -> userRole.name().equals("A") || userRole.name().equals("S"))) {
+                userList.add(user);
+            } else {
+                ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "User with id " + id + " is not seller/agent");
+                throw responseStatusException;
+            }
+        }
     }
 
 }

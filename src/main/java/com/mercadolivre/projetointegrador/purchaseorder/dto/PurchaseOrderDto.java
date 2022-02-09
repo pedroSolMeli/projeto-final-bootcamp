@@ -28,7 +28,9 @@ public class PurchaseOrderDto {
     private LocalDate orderDate;
 
     private Long buyerId;
+
     private OrderStatus orderStatus;
+
     private List<PurchaseProductDto> products;
 
     public PurchaseOrder ConvertToObject(PurchaseOrderDto purchaseOrderDto, User user) {

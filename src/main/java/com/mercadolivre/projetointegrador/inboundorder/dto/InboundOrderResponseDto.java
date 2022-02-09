@@ -22,7 +22,7 @@ public class InboundOrderResponseDto {
 
     public static InboundOrderResponseDto ConvertToDto(InboundOrder inboundOrder) {
         List<Batch> batchStock = inboundOrder.getBatchStock();
-        List<BatchResponseDto> batchResponseDtoList = BatchService.ConvertToResponseDto(batchStock);
+        List<BatchResponseDto> batchResponseDtoList = BatchResponseDto.ConvertToResponseDto(batchStock);
         InboundOrderResponseDto dto = InboundOrderResponseDto.builder().batchStock(batchResponseDtoList).build();
         return dto;
     }

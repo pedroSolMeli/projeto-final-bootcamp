@@ -5,15 +5,11 @@ import java.util.Optional;
 
 import javax.validation.Valid;
 
+import com.mercadolivre.projetointegrador.security.JwtProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.product.dto.FindProductReponseDto;
@@ -47,8 +43,9 @@ public class ProductController {
 
     @GetMapping("/list")
     public ResponseEntity<?> findProductsAndBatchs(@RequestParam(name= "productId") Long productId,
-                                                   @RequestParam(name= "orderBy", required = false) String orderBy) {
-        FindProductReponseDto productsAndBatchs = service.getProductsAndBatchs(productId, orderBy);
+                                                   @RequestParam(name= "orderBy", required = false) String orderBy,
+                                                   @RequestHeader(value = "Authorization") String authHeader) {
+        FindProductReponseDto productsAndBatchs = service.getProductsAndBatchs(productId, orderBy, authHeader);
         return new ResponseEntity<>(productsAndBatchs, HttpStatus.OK);
     }
 

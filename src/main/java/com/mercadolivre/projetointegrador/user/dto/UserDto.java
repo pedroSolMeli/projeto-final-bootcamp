@@ -17,5 +17,6 @@ public class UserDto {
     @JsonIgnore
     private String password;
     private List<String> roles;
+    private String warehouseCode;
 
 }
