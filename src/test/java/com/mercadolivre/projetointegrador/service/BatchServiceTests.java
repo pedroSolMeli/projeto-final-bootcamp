@@ -2,8 +2,11 @@ package com.mercadolivre.projetointegrador.service;
 
 import java.util.Optional;
 
+import com.mercadolivre.projetointegrador.batch.service.BatchService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -22,17 +25,21 @@ public class BatchServiceTests {
 	
 	@Mock
 	BatchRepository batchRepository;
-	
-	
+
+	@InjectMocks
+	BatchService batchService;
+
+
 	
 	@Test
 	public void shouldReturnBatchByIdSuccessfully() {
 		//given
-		Batch batch = Batch.builder().batchNumber(1l).currentQuantity(2).dueDate(null).currentTemperature(null).id(2l).product(null).build();
+		Batch batch = Batch.builder().batchNumber(1l).currentQuantity(2).dueDate(null).currentTemperature(null).id(2L).product(null).build();
 		//when
-		Mockito.when(batchRepository.findById(2l)).thenReturn(Optional.ofNullable(batch));
+		Mockito.when(batchRepository.findById(2L)).thenReturn(Optional.ofNullable(batch));
+		Batch batchReturn = batchService.getById(2L);
 		//then
-		
+		Assertions.assertEquals(2L, batchReturn.getId());
 	}
 	
 
