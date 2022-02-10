@@ -30,13 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers(HttpMethod.POST, "/auth").permitAll()
                 .antMatchers("/user").permitAll()
-//                .antMatchers("/purchaseorder").hasRole("B")
-//                .antMatchers("/warehouse").hasRole("A")
-//                .antMatchers("/section").hasRole("A")
-                .antMatchers("/purchaseorder").permitAll()
-              .antMatchers("/warehouse").permitAll()
-              .antMatchers("/section").permitAll()
-                
+                .antMatchers("/purchaseorder").hasRole("B")
+                .antMatchers("/warehouse/**").hasRole("A")
+                .antMatchers("/section").hasRole("A")
                 .antMatchers(HttpMethod.GET, "/product").permitAll()
                 .antMatchers("/h2/**").permitAll()
                 .anyRequest().authenticated();
