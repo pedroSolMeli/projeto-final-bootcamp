@@ -37,7 +37,7 @@ public class InboundOrderController {
     public ResponseEntity<?> update(@RequestBody InboundOrderRequestDto inboundOrder
 				   @RequestHeader(value = "Authorization") String authHeader) {
     	Boolean update = true; 
-        InboundOrderResponseDto result = inboundOrderService.updateInboundOrder(inboundOrder, update);
+        InboundOrderResponseDto result = inboundOrderService.updateInboundOrder(inboundOrder,authHeader, update);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
