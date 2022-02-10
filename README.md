@@ -58,3 +58,5 @@ O Seguinte desafio foi proposto para aplicar os conhecimentos até então alcan�
 
 <br>
 
+[Coleção de requests Insomnia](./insomnia)
+
