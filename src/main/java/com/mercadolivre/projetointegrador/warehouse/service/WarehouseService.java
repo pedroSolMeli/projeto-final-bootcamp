@@ -58,7 +58,6 @@ public class WarehouseService {
         return response;
     }
 
-
     public List<Warehouse> findAllWarehouses() {
         return repository.findAll();
     }
@@ -74,15 +73,6 @@ public class WarehouseService {
 
     public Warehouse getWarehouseByUser(User u) {
         Warehouse warehouse = repository.getWarehouseByUsers(u);
-        return warehouse;
-    }
-
-    public Warehouse getWarehouseById(Long id) {
-        Warehouse warehouse = repository.findById(id).orElse(null);
-        if (warehouse == null) {
-            ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Warehouse not found");
-            throw responseStatusException;
-        }
         return warehouse;
     }
 
