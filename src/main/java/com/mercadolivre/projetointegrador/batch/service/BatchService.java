@@ -114,7 +114,7 @@ public class BatchService {
         }
     }
 
-    private void checkIfManufacturingDateAndTimeAreTheSame(LocalDate manufacturingDate, LocalDateTime manufacturingTime) {
+    public void checkIfManufacturingDateAndTimeAreTheSame(LocalDate manufacturingDate, LocalDateTime manufacturingTime) {
         boolean equalDates = manufacturingDate.equals(manufacturingTime.toLocalDate());
         if (!equalDates) {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "manufacturingDate and manufacturingTime are not the same");
