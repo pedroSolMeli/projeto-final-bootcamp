@@ -32,11 +32,11 @@ public class WarehouseControllerTests {
     JwtProvider jwtProvider;
 
     @Test
-    public void shouldCreateWarehouse() throws Exception {
-        UserDto user = UserDto.builder().id(2l).username("Agent1").roles(List.of("ROLE_A")).build();
+    public void shouldReturBadRequestWarehouse() throws Exception {
+        UserDto user = UserDto.builder().id(2l).username("Agent2").roles(List.of("ROLE_A")).build();
         String token = jwtProvider.createToken(user, user.getRoles());
 
-        String payload = "{\"code\":\"RJ001\",\"users\":[2]}";
+        String payload = "{\"code\":\"RJ001\"}";
 
         MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.post( "/warehouse")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -44,23 +44,30 @@ public class WarehouseControllerTests {
                 .andDo(print())
                 .andReturn();
 
-        assertEquals(HttpStatus.CREATED.value(), mvcResult.getResponse().getStatus());
+        assertEquals(HttpStatus.BAD_REQUEST.value(), mvcResult.getResponse().getStatus());
     }
 
-//    @Test
-//    public void shouldReturnConflictCreatingWarehouse() throws Exception {
-//        String payload = "{\"code\":\"RJ001\",\"users\":[1]}";
-//        mockMvc.perform(MockMvcRequestBuilders
-//                .post("/warehouse")
-//                .contentType(MediaType.APPLICATION_JSON)
-//                .content(payload))
-//                .andExpect(MockMvcResultMatchers.status().isConflict());
-//    }
-//
-//    @Test
-//    public void shouldReturnWarehouseList() throws Exception {
-//        mockMvc.perform(MockMvcRequestBuilders
-//                .get("/warehouse"))
-//                .andExpect(MockMvcResultMatchers.status().isOk());
-//    }
+    @Test
+    public void shouldReturnConflictCreatingWarehouse() throws Exception {
+        UserDto user = UserDto.builder().id(3l).username("Agent3").roles(List.of("ROLE_A")).build();
+        String token = jwtProvider.createToken(user, user.getRoles());
+
+        String payload = "{\"code\":\"RJ001\",\"users\":[2]}";
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/warehouse")
+                .contentType(MediaType.APPLICATION_JSON)
+                .header("Authorization",  "Bearer "  + token).content(payload))
+                .andExpect(MockMvcResultMatchers.status().isConflict());
+    }
+
+    @Test
+    public void shouldReturnWarehouseList() throws Exception {
+        UserDto user = UserDto.builder().id(2l).username("Agent1").roles(List.of("ROLE_A")).build();
+        String token = jwtProvider.createToken(user, user.getRoles());
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/warehouse").header("Authorization",  "Bearer "  + token))
+                .andExpect(MockMvcResultMatchers.status().isOk());
+    }
 }
