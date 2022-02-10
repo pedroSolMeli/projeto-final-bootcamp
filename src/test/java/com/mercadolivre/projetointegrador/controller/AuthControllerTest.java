@@ -81,78 +81,50 @@ public class AuthControllerTest{
         Assertions.assertEquals("buyer1", authentication.getPrincipal());
         Assertions.assertNotNull(authentication.getCredentials());
     }
-//
-//    @Test
-//    void pingWithValidCredentials() throws Exception {
-//        UserDto user = UserDto.builder().username("test").build();
-//        String token = jwtProvider.createToken(user, List.of("ROLE_admin"));
-//
-//        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/ping")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .header("Authorization", "Bearer " + token))
-//                .andDo(print())
-//                .andReturn();
-//
-//        assertEquals(HttpStatus.OK.value(), mvcResult.getResponse().getStatus());
-//        assertEquals("pong", mvcResult.getResponse().getContentAsString());
-//    }
-//
-//    @Test
-//    void pingWithInvalidCredentials() throws Exception {
-//        String token = "invalid token";
-//
-//        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/ping")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .header("Authorization", "Bearer " + token))
-//                .andDo(print())
-//                .andReturn();
-//
-//        assertEquals(HttpStatus.UNAUTHORIZED.value(), mvcResult.getResponse().getStatus());
-//    }
-//
-//    @Test
-//    void endpointWithInvalidRole() throws Exception {
-//        UserDto user = UserDto.builder().username("test").roles(List.of("ROLE_INVALID")).build();
-//        String token = jwtProvider.createToken(user, user.getRoles());
-//
-//        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(PATH + "/fresh-products/list")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .header("Authorization", "Bearer " + token))
-//                .andDo(print())
-//                .andReturn();
-//
-//        assertEquals(HttpStatus.UNAUTHORIZED.value(), mvcResult.getResponse().getStatus());
-//    }
-//
-//    @Test
-//    void endpointWithValidRole() throws Exception {
-//        UserDto user = UserDto.builder().username("admin").roles(List.of("ROLE_BUYER")).build();
-//        String token = jwtProvider.createToken(user, user.getRoles());
-//
-//        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get(PATH + "/fresh-products/list")
-//                        .contentType(MediaType.APPLICATION_JSON)
-//                        .header("Authorization", "Bearer " + token))
-//                .andDo(print())
-//                .andReturn();
-//
-//        assertNotEquals(HttpStatus.UNAUTHORIZED.value(), mvcResult.getResponse().getStatus());
-//    }
-//
-//    @Test
-//    void obtainUserFromAuthHeader() {
-//        User expected = new User();
-//        expected.setId(1L);
-//        expected.setUsername("admin");
-//
-//        List<String> authorities = List.of("ROLE_A");
-//        UserDto user = UserDto.builder()
-//                .id(expected.getId())
-//                .username(expected.getUsername())
-//                .build();
-//        String token = jwtProvider.createToken(user, authorities);
-//        User obtained = jwtProvider.getUser("Bearer " + token);
-//
-//        assertEquals(expected, obtained);
-//    }
+
+    @Test
+    void endpointWithInvalidRole() throws Exception {
+        UserDto user = UserDto.builder().username("test").roles(List.of("ROLE_B")).build();
+        String token = jwtProvider.createToken(user, user.getRoles());
+
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get( "/section")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
+                .andDo(print())
+                .andReturn();
+
+        assertEquals(HttpStatus.FORBIDDEN.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    void endpointWithValidRole() throws Exception {
+        UserDto user = UserDto.builder().username("admin").roles(List.of("ROLE_A")).build();
+        String token = jwtProvider.createToken(user, user.getRoles());
+
+        MvcResult mvcResult = this.mockMvc.perform(MockMvcRequestBuilders.get("/section")
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header("Authorization", "Bearer " + token))
+                .andDo(print())
+                .andReturn();
+
+        assertNotEquals(HttpStatus.UNAUTHORIZED.value(), mvcResult.getResponse().getStatus());
+    }
+
+    @Test
+    void obtainUserFromAuthHeader() {
+        User expected = new User();
+        expected.setId(1L);
+        expected.setUsername("buyer1");
+
+        List<String> authorities = List.of("ROLE_B");
+        UserDto user = UserDto.builder()
+                .id(expected.getId())
+                .username(expected.getUsername())
+                .build();
+        String token = jwtProvider.createToken(user, authorities);
+        User obtained = jwtProvider.getUser("Bearer " + token);
+
+        assertEquals(expected.getId(), obtained.getId());
+    }
 
 }
