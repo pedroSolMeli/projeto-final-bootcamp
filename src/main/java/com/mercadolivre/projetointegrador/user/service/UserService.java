@@ -30,8 +30,7 @@ public class UserService {
         User userConvert = UserRequestDto.ConvertToObject(user);
 
         User userSave = userRepository.saveAndFlush(userConvert);
-        User userById = userRepository.getUserById(userSave.getId());
-        return UserResponseDto.ConvertToResponseDto(userById);
+        return UserResponseDto.ConvertToResponseDto(userSave);
     }
 
     public List<UserResponseDto> findAllUsers() {

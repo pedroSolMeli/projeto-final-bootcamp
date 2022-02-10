@@ -2,6 +2,7 @@ package com.mercadolivre.projetointegrador.warehouse.dto;
 
 import com.mercadolivre.projetointegrador.user.model.User;
 import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
+import lombok.Builder;
 import lombok.Data;
 
 import javax.validation.constraints.NotBlank;
@@ -10,6 +11,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Data
+@Builder
 public class WarehouseRequestDto {
 
     @NotBlank(message = "code must not be empty")

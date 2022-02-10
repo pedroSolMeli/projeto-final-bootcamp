@@ -23,23 +23,25 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		this.jwtAuthorizationFilter = jwtAuthorizationFilter;
 	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		http.csrf().disable().addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-				.authorizeRequests()
-				.antMatchers(HttpMethod.POST, "/auth").permitAll()
-				.antMatchers("/user").permitAll()
-				.antMatchers("/purchaseorder").hasRole("B")
-				.antMatchers("/warehouse/**").hasRole("A")
-				.antMatchers("/inboundorder/**").hasRole("A")
-				.antMatchers("/section").hasRole("A")
-				.antMatchers(HttpMethod.GET, "/product").permitAll()
-				.antMatchers("/h2/**").permitAll().anyRequest().authenticated();
-		http.headers().frameOptions().disable();
-	}
+    protected void configure(HttpSecurity http) throws Exception {
+        http.csrf().disable()
+                .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+                .authorizeRequests()
+                .antMatchers(HttpMethod.POST, "/auth").permitAll()
+                .antMatchers("/user").permitAll()
+                .antMatchers("/purchaseorder").hasRole("B")
+                .antMatchers("/inboundorder/**").hasRole("A")
+                .antMatchers("/warehouse/**").hasRole("A")
+                .antMatchers("/section").hasRole("A")
+                .antMatchers(HttpMethod.GET, "/product").permitAll()
+                .antMatchers("/h2/**").permitAll()
+                .anyRequest().authenticated();
+        http.headers().frameOptions().disable();
+    }
 
 	@Bean
 	protected PasswordEncoder passwordEncoder() {
 		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
 	}
+  
 }

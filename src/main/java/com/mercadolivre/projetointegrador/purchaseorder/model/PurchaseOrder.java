@@ -1,7 +1,5 @@
 package com.mercadolivre.projetointegrador.purchaseorder.model;
 
-
-import java.io.Serializable;
 import java.time.LocalDate;
 import java.util.List;
 
@@ -20,7 +18,6 @@ import com.mercadolivre.projetointegrador.purchaseProduct.model.PurchaseProduct;
 import com.mercadolivre.projetointegrador.user.model.User;
 
 import lombok.*;
-
 
 @Entity
 @Getter
@@ -45,9 +42,5 @@ public class PurchaseOrder {
     
     @OneToMany(cascade = CascadeType.ALL)
     private List<PurchaseProduct> purchaseProducts;
-
-// TODO COLOCAR TOTAL 
-//	totalPrice(response) DOUBLE
-
 
 }

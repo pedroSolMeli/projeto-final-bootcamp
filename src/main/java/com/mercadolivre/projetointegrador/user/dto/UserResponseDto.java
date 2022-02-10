@@ -34,6 +34,7 @@ public class UserResponseDto implements Serializable {
 	@JsonIgnore
 	private String password;
 
+	@JsonIgnore
     private WarehouseResponseDto warehouse;
 
 	public static List<UserResponseDto> ConvertToResponseDto(List<User> userlist) {

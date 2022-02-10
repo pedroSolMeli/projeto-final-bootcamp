@@ -78,7 +78,6 @@ public class BatchService {
             addBatchListForDateValid(numberOfDays, resultByDateLimit, result);
         }
 
-        //Todo - Ajustar dto de retorno
         List<BatchResponseDateLimitDto> response = BatchResponseDateLimitDto.ConvertToBatchResponseDateLimitDto(resultByDateLimit);
         return response;
     }
@@ -114,7 +113,7 @@ public class BatchService {
         }
     }
 
-    private void checkIfManufacturingDateAndTimeAreTheSame(LocalDate manufacturingDate, LocalDateTime manufacturingTime) {
+    public void checkIfManufacturingDateAndTimeAreTheSame(LocalDate manufacturingDate, LocalDateTime manufacturingTime) {
         boolean equalDates = manufacturingDate.equals(manufacturingTime.toLocalDate());
         if (!equalDates) {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "manufacturingDate and manufacturingTime are not the same");
@@ -160,7 +159,7 @@ public class BatchService {
         batchList.stream().forEach(batch -> {
             totalQuantityAvailable.accumulateAndGet(batch.getCurrentQuantity(), Integer::sum);
         });
-        //TODO VERIFICAR SE ESTÁ DISPONÍVEL NO ESTOQUE
+
         if (totalQuantityAvailable.get() < productQuantity) {
             unavailableProductDto = UnavailableProductDto.builder()
                     .productId(productId)
