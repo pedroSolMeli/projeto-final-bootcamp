@@ -7,6 +7,8 @@ import com.mercadolivre.projetointegrador.product.dto.ProductResponseDto;
 import com.mercadolivre.projetointegrador.product.model.Product;
 import com.mercadolivre.projetointegrador.product.repository.ProductRepository;
 import com.mercadolivre.projetointegrador.product.service.ProductService;
+import com.mercadolivre.projetointegrador.security.JwtProvider;
+import com.mercadolivre.projetointegrador.user.dto.UserDto;
 import com.mercadolivre.projetointegrador.warehouse.model.Warehouse;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -41,7 +43,7 @@ public class ProductControllerTests {
     ProductRepository productRepository;
 
     @Test
-    public void shouldCreateProduct() throws Exception{
+    public void shouldCreateProduct(){
         Product product = Product.builder()
                 .name("batata")
                 .productType(ProductType.REFRIGERATED)

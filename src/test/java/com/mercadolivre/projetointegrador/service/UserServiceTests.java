@@ -43,6 +43,7 @@ public class UserServiceTests {
                 .password("pedro123").roles(Arrays.asList("A", "S")).build();
 
         User user = UserRequestDto.ConvertToObject(request);
+        user.setId(1l);
         Mockito.when(userRepository.saveAndFlush(Mockito.any())).thenReturn(user);
         UserResponseDto response = userService.createUser(request);
 
