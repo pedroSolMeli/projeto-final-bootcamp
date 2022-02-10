@@ -58,6 +58,15 @@ O Seguinte desafio foi proposto para aplicar os conhecimentos até então alcan�
 
 <br>
 
+
+Observações sobre o projeto/endpoints atendendo os requisitos: 
+* Usuário do tipo "B"(comprador) é o único que acessa "/purchaseOrder"
+* Usuário do tipo "A"(agente/representante) é o único que acessa "/inboundOrder, /section, /warehouse"
+* Para criar uma entrada de estoque (inboundOrder), precisa estar com a section, warehouse e produto(s) já cadastrados.
+* Algumas requests de filtragem e ordenação não estão pré-cadastradas no arquivo de insomnia, mas estão funcionais de acordo com os requisitos. Estas dependem de variáveis a seram escolhidas, ou de acordo com cadastros realizados.
+
+
+<br>
 [Coleção de requests Insomnia](./insomnia)
 
 * Usuários já cadastrados:

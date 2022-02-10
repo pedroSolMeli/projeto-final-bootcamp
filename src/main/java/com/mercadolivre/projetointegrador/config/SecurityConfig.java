@@ -17,34 +17,29 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-    private final JwtAuthorizationFilter jwtAuthorizationFilter;
+	private final JwtAuthorizationFilter jwtAuthorizationFilter;
 
-    public SecurityConfig(JwtAuthorizationFilter jwtAuthorizationFilter) {
-        this.jwtAuthorizationFilter = jwtAuthorizationFilter;
-    }
+	public SecurityConfig(JwtAuthorizationFilter jwtAuthorizationFilter) {
+		this.jwtAuthorizationFilter = jwtAuthorizationFilter;
+	}
 
-    @Override
-    protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable()
-                .addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
-                .authorizeRequests()
-                .antMatchers(HttpMethod.POST, "/auth").permitAll()
-                .antMatchers("/user").permitAll()
-//                .antMatchers("/purchaseorder").hasRole("B")
-//                .antMatchers("/warehouse").hasRole("A")
-//                .antMatchers("/section").hasRole("A")
-                .antMatchers("/purchaseorder").permitAll()
-              .antMatchers("/warehouse").permitAll()
-              .antMatchers("/section").permitAll()
-                
-                .antMatchers(HttpMethod.GET, "/product").permitAll()
-                .antMatchers("/h2/**").permitAll()
-                .anyRequest().authenticated();
-        http.headers().frameOptions().disable();
-    }
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http.csrf().disable().addFilterAfter(jwtAuthorizationFilter, UsernamePasswordAuthenticationFilter.class)
+				.authorizeRequests()
+				.antMatchers(HttpMethod.POST, "/auth").permitAll()
+				.antMatchers("/user").permitAll()
+				.antMatchers("/purchaseorder").hasRole("B")
+				.antMatchers("/warehouse/**").hasRole("A")
+				.antMatchers("/inboundorder/**").hasRole("A")
+				.antMatchers("/section").hasRole("A")
+				.antMatchers(HttpMethod.GET, "/product").permitAll()
+				.antMatchers("/h2/**").permitAll().anyRequest().authenticated();
+		http.headers().frameOptions().disable();
+	}
 
-    @Bean
-    protected PasswordEncoder passwordEncoder() {
-        return PasswordEncoderFactories.createDelegatingPasswordEncoder();
-    }
+	@Bean
+	protected PasswordEncoder passwordEncoder() {
+		return PasswordEncoderFactories.createDelegatingPasswordEncoder();
+	}
 }
