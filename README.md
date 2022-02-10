@@ -60,3 +60,12 @@ O Seguinte desafio foi proposto para aplicar os conhecimentos até então alcan�
 
 [Coleção de requests Insomnia](./insomnia)
 
+* Usuários já cadastrados:
+- {
+	"username": "userbuyer",
+	"password":"12345"
+}  //Usuário comprador
+- {
+	"username": "useragent",
+	"password":"12345"
+}  //Usuário agente--o mesmo que representante
