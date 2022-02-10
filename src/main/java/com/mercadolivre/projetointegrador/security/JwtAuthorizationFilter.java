@@ -53,8 +53,6 @@ public class JwtAuthorizationFilter extends OncePerRequestFilter {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.FORBIDDEN, ex.getMessage());
             String error = objectMapper.writer().writeValueAsString(responseStatusException);
 
-            httpServletResponse.setStatus(HttpStatus.UNAUTHORIZED.value());
-            httpServletResponse.setContentType(MediaType.APPLICATION_JSON_VALUE);
             httpServletResponse.getOutputStream().print(error);
         }
     }

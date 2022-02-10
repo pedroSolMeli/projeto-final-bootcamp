@@ -33,7 +33,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/purchaseorder").hasRole("B")
                 .antMatchers("/warehouse").hasRole("A")
                 .antMatchers("/section").hasRole("A")
-                
                 .antMatchers(HttpMethod.GET, "/product").permitAll()
                 .antMatchers("/h2/**").permitAll()
                 .anyRequest().authenticated();
