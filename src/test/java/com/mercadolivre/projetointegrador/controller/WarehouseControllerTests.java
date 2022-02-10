@@ -21,7 +21,7 @@ public class WarehouseControllerTests {
 
     @Test
     public void shouldCreateWarehouse() throws Exception {
-        String payload = "{ \"code\": \"RJ59\" }";
+        String payload = "{\"code\":\"RJ001\",\"users\":[1]}";
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/warehouse")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -31,7 +31,7 @@ public class WarehouseControllerTests {
 
     @Test
     public void shouldReturnConflictCreatingWarehouse() throws Exception {
-        String payload = "{ \"code\": \"RJ2\" }";
+        String payload = "{\"code\":\"RJ001\",\"users\":[1]}";
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/warehouse")
                 .contentType(MediaType.APPLICATION_JSON)

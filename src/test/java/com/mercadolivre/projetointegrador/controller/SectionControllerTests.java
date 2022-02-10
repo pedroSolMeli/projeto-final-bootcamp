@@ -28,6 +28,7 @@ public class SectionControllerTests {
 
     @Test
     public void shouldCreateSection() throws Exception {
+
         String payload = "{\n" +
                 "\t\"sectionCode\": \"1891906\",\n" +
                 "\t\"sectionType\": \"frozen\",\n" +
