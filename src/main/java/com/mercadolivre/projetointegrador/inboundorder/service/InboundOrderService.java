@@ -98,7 +98,7 @@ public class InboundOrderService {
         return response;
     }
 
-    public InboundOrderResponseDto updateInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, Boolean update) {
+    public InboundOrderResponseDto updateInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, String authHeader, Boolean update) {
     	InboundOrderResponseDto result = createInboundOrder(inboundOrderRequestDto, update);
         return result;
     }
