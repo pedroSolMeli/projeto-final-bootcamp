@@ -13,7 +13,7 @@ public interface BatchRepository extends JpaRepository<Batch, Long> {
 
     Batch getBatchByBatchNumber(Long batchNumber);
 
-    List<Batch> getBatchesByProduct_IdOrderByCurrentQuantity(Long productId);
+    List<Batch> getBatchesByProduct_IdOrderByCurrentQuantityDesc(Long productId);
 
     List<Batch> getBatchsByinboundOrder_Section_Id(Long sectionId);
 

@@ -20,19 +20,17 @@ public class PurchaseProductService {
     @Autowired
     BatchService batchService;
 
-    //TODO TESTAR PRA VER SE TA FUNCIONANDO A REMOÇÃO DO ESTOQUE
     public void subtractProductFromStock(PurchaseProduct purchaseProduct) {
         Product product = purchaseProduct.getProduct();
         int quantity = purchaseProduct.getQuantity();
         List<Batch> batchList = batchService.getBatchesByProductId(product.getId());
         while (quantity > 0) {
-            for (int i = 0; i >= batchList.size() ; i++) {
-                int diference = batchList.get(i).getCurrentQuantity() - purchaseProduct.getQuantity();
+            for (int i = 0; i < batchList.size() ; i++) {
+                int diference = batchList.get(i).getCurrentQuantity() - quantity;
                 if (diference < 0) {
                     batchList.get(i).setCurrentQuantity(0);
                     quantity = diference * (-1);
                     batchService.saveBatch(batchList.get(i));
-                    continue;
                 } else {
                     batchList.get(i).setCurrentQuantity(diference);
                     quantity = 0;
