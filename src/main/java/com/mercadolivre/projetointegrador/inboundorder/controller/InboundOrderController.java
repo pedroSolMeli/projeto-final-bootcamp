@@ -34,7 +34,7 @@ public class InboundOrderController {
     }
 
     @PutMapping()
-    public ResponseEntity<?> update(@RequestBody InboundOrderRequestDto inboundOrder
+    public ResponseEntity<?> update(@RequestBody InboundOrderRequestDto inboundOrder,
 				   @RequestHeader(value = "Authorization") String authHeader) {
     	Boolean update = true; 
         InboundOrderResponseDto result = inboundOrderService.updateInboundOrder(inboundOrder,authHeader, update);
