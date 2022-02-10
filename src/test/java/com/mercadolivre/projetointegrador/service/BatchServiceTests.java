@@ -1,12 +1,15 @@
 package com.mercadolivre.projetointegrador.service;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
 import com.mercadolivre.projetointegrador.batch.service.BatchService;
+import com.mercadolivre.projetointegrador.enums.ProductType;
 import com.mercadolivre.projetointegrador.product.model.Product;
 import com.mercadolivre.projetointegrador.product.service.ProductService;
+import com.mercadolivre.projetointegrador.product.repository.ProductRepository;
 
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -19,6 +22,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.HttpStatus;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.reactive.server.WebTestClient;
 import org.springframework.web.server.ResponseStatusException;
 
 import com.mercadolivre.projetointegrador.batch.dto.BatchRequestDto;
@@ -36,21 +40,25 @@ public class BatchServiceTests {
 	BatchRepository batchRepository;
 
 	@Mock
-	ProductService productService;
+	ProductRepository productRepository;
 	
 	@InjectMocks
 	BatchService batchService;
-
-	@Mock
-	Product product;
 	
 	@Test
 	public void shouldCreateBatchWithSucces() {
 		// given
-		BatchRequestDto batchRequestDto = BatchRequestDto.builder()
+		Product productBuild = Product.builder()
+				.id(1l)
+				.name("batata")
+				.productType(ProductType.REFRIGERATED)
+				.price(BigDecimal.valueOf(10))
+				.build();
+
+		BatchRequestDto batchRequestDtoBuild = BatchRequestDto.builder()
 				.batchNumber(1l)
 				.currentQuantity(1)
-				.productId(1L)
+				.productId(1l)
 				.currentTemperature(10.3)
 				.minimalTemperature(15.0)
        			.initialQuantity(60)
@@ -58,7 +66,6 @@ public class BatchServiceTests {
        			.manufacturingTime(LocalDateTime.of(2022, 01, 15, 13, 10, 00))
        			.dueDate(LocalDate.of(2022, 10, 15))
        			.build();
-		product.setId(1L);
 		
 		Batch batch = Batch.builder()
 				.batchNumber(1l)
@@ -70,7 +77,7 @@ public class BatchServiceTests {
        			.manufacturingTime(LocalDateTime.of(2022, 01, 15, 13, 10, 00))
        			.dueDate(LocalDate.of(2022, 10, 15))
        			.id(1L)
-       			.product(product)
+       			.product(productBuild)
        			.build();
 		
 		
@@ -78,12 +85,12 @@ public class BatchServiceTests {
 //		Mockito.doNothing().when(batchService).checkIfBatchNumberExists(batchRequestDto.getBatchNumber());
 //		Mockito.doNothing().when(batchService).checkIfManufacturingDateAndTimeAreTheSame(batchRequestDto.getManufacturingDate(), batchRequestDto.getManufacturingTime());
 //		Mockito.doNothing().when(batchService).validateDueDate(batchRequestDto.getDueDate());
-		Mockito.when(productService.getProductById(batchRequestDto.getProductId())).thenReturn(product);
-		Mockito.when(BatchRequestDto.ConvertToObject(batchRequestDto, product)).thenReturn(batch);
+		Mockito.when(productRepository.getProductById(batchRequestDtoBuild.getProductId())).thenReturn(productBuild);
+		Mockito.when(BatchRequestDto.ConvertToObject(Mockito.any(), Mockito.any())).thenReturn(batch);
 		Mockito.when(batchRepository.saveAndFlush(batch)).thenReturn(batch);
-		
-		
-		BatchResponseDto responseDto = batchService.createBatch(batchRequestDto); 
+		BatchResponseDto responseDto = batchService.createBatch(batchRequestDtoBuild);
+
+		Assertions.assertEquals(batch, responseDto);
 	}
 
 
