@@ -19,12 +19,14 @@ import java.util.List;
 @RequestMapping("/inboundorder")
 public class InboundOrderController {
 
-    @Autowired
+    
+	@Autowired
     InboundOrderService inboundOrderService;
 
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody InboundOrderRequestDto inboundOrderRequestDto) {
-        InboundOrderResponseDto result = inboundOrderService.createInboundOrder(inboundOrderRequestDto);
+    	Boolean update = false; 
+        InboundOrderResponseDto result = inboundOrderService.createInboundOrder(inboundOrderRequestDto, update );
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -36,7 +38,8 @@ public class InboundOrderController {
 
     @PutMapping()
     public ResponseEntity<?> update(@RequestBody InboundOrderRequestDto inboundOrder) {
-        InboundOrderResponseDto result = inboundOrderService.updateInboundOrder(inboundOrder);
+    	Boolean update = true; 
+        InboundOrderResponseDto result = inboundOrderService.updateInboundOrder(inboundOrder, update);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

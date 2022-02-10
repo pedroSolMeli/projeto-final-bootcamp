@@ -41,17 +41,16 @@ public class InboundOrderService {
     @Autowired
     BatchService batchService;
 
-    public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
+    public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, Boolean update) {
 
         InboundOrderDto inboundOrderDto = inboundOrderRequestDto.getInboundOrder();
         SectionDto sectionDto = inboundOrderDto.getSection();
 
         Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
-        checkIfOrderNumberExists(inboundOrderDto.getOrderNumber());
-        checkIfBatchNumberExists(inboundOrderDto.getBatchStock());
-        checkIfSectionHasEnoughSpace(inboundOrderDto.getBatchStock().size(), section);
-        checkIfProductTypeMatchesSectionType(inboundOrderDto.getBatchStock(), section);
+        if(!update) {
+        checksValidatesToNewInput(inboundOrderDto, section);
+        }
 
         InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
 
@@ -66,6 +65,13 @@ public class InboundOrderService {
         return inboundOrderResponseDto;
     }
 
+	private void checksValidatesToNewInput(InboundOrderDto inboundOrderDto, Section section) {
+		checkIfOrderNumberExists(inboundOrderDto.getOrderNumber());
+        checkIfBatchNumberExists(inboundOrderDto.getBatchStock());
+        checkIfSectionHasEnoughSpace(inboundOrderDto.getBatchStock().size(), section);
+        checkIfProductTypeMatchesSectionType(inboundOrderDto.getBatchStock(), section);
+	}
+
     private void checkIfBatchNumberExists(List<BatchRequestDto> batchStock) {
         batchStock.stream().forEach(b -> {
             batchService.checkIfBatchNumberExists(b.getBatchNumber());
@@ -78,8 +84,8 @@ public class InboundOrderService {
         return response;
     }
 
-    public InboundOrderResponseDto updateInboundOrder(InboundOrderRequestDto inboundOrderRequestDto) {
-    	InboundOrderResponseDto result = createInboundOrder(inboundOrderRequestDto);
+    public InboundOrderResponseDto updateInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, Boolean update) {
+    	InboundOrderResponseDto result = createInboundOrder(inboundOrderRequestDto, update);
         return result;
     }
 
