@@ -105,7 +105,6 @@ public class ProductService {
         User userAuth = jwtProvider.getUser(authHeader);
         User user = userService.findUserWithoutConvert(userAuth.getId());
 
-        //Todo - pegar o codigo armazen do representante
         Warehouse warehouse = warehouseService.getWarehouseByUser(user);
         List<Section> sections = warehouse.getSections();
 

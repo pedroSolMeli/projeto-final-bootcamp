@@ -8,7 +8,6 @@ import lombok.*;
 @NoArgsConstructor
 @AllArgsConstructor
 public class UnavailableProductDto {
-    //TODO RESPOSNE DE PRODUTO INDÍPONÍVEL
     private Long productId;
     private Integer availableQuantity;
     private String message;
