@@ -15,13 +15,15 @@ import java.util.List;
 @RequestMapping("/inboundorder")
 public class InboundOrderController {
 
-    @Autowired
+    
+	@Autowired
     InboundOrderService inboundOrderService;
 
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody InboundOrderRequestDto inboundOrderRequestDto,
                                     @RequestHeader(value = "Authorization") String authHeader) {
-        InboundOrderResponseDto result = inboundOrderService.createInboundOrder(inboundOrderRequestDto, authHeader);
+        Boolean update = false; 
+        InboundOrderResponseDto result = inboundOrderService.createInboundOrder(inboundOrderRequestDto, authHeader, update);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
@@ -32,8 +34,9 @@ public class InboundOrderController {
     }
 
     @PutMapping()
-    public ResponseEntity<?> update(@RequestBody InboundOrder inboundOrder) {
-        InboundOrder result = inboundOrderService.updateInboundOrder(inboundOrder);
+    public ResponseEntity<?> update(@RequestBody InboundOrderRequestDto inboundOrder) {
+    	Boolean update = true; 
+        InboundOrderResponseDto result = inboundOrderService.updateInboundOrder(inboundOrder, update);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 

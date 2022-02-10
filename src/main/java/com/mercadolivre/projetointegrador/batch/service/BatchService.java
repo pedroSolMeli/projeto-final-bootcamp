@@ -93,10 +93,6 @@ public class BatchService {
         }
     }
 
-    public Batch updateBatch(Batch batch) {
-        return batchRepository.saveAndFlush(batch);
-    }
-
     public Batch saveBatch(Batch batch) {
         return batchRepository.saveAndFlush(batch);
     }

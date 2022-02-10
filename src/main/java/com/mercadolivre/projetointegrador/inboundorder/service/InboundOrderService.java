@@ -51,7 +51,7 @@ public class InboundOrderService {
     @Autowired
     JwtProvider jwtProvider;
 
-    public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, String authHeader) {
+    public InboundOrderResponseDto createInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, String authHeader, Boolean update) {
 
         InboundOrderDto inboundOrderDto = inboundOrderRequestDto.getInboundOrder();
 
@@ -62,10 +62,9 @@ public class InboundOrderService {
         SectionDto sectionDto = inboundOrderDto.getSection();
         Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
-        checkIfOrderNumberExists(inboundOrderDto.getOrderNumber());
-        checkIfBatchNumberExists(inboundOrderDto.getBatchStock());
-        checkIfSectionHasEnoughSpace(inboundOrderDto.getBatchStock().size(), section);
-        checkIfProductTypeMatchesSectionType(inboundOrderDto.getBatchStock(), section);
+        if(!update) {
+        checksValidatesToNewInput(inboundOrderDto, section);
+        }
 
         InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
 
@@ -80,6 +79,13 @@ public class InboundOrderService {
         return inboundOrderResponseDto;
     }
 
+	private void checksValidatesToNewInput(InboundOrderDto inboundOrderDto, Section section) {
+		checkIfOrderNumberExists(inboundOrderDto.getOrderNumber());
+        checkIfBatchNumberExists(inboundOrderDto.getBatchStock());
+        checkIfSectionHasEnoughSpace(inboundOrderDto.getBatchStock().size(), section);
+        checkIfProductTypeMatchesSectionType(inboundOrderDto.getBatchStock(), section);
+	}
+
     private void checkIfBatchNumberExists(List<BatchRequestDto> batchStock) {
         batchStock.stream().forEach(b -> {
             batchService.checkIfBatchNumberExists(b.getBatchNumber());
@@ -92,9 +98,9 @@ public class InboundOrderService {
         return response;
     }
 
-    public InboundOrder updateInboundOrder(InboundOrder inboundOrder) {
-        //TODO ajustar para chamar o create
-        return inboundOrderRepository.saveAndFlush(inboundOrder);
+    public InboundOrderResponseDto updateInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, Boolean update) {
+    	InboundOrderResponseDto result = createInboundOrder(inboundOrderRequestDto, update);
+        return result;
     }
 
     public void checkIfOrderNumberExists(Long orderNumber) {
