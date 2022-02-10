@@ -136,7 +136,7 @@ public class BatchService {
     }
 
     public List<Batch> getBatchesByProductId(Long productId) {
-        List<Batch> batchs = batchRepository.getBatchesByProduct_IdOrderByCurrentQuantity(productId);
+        List<Batch> batchs = batchRepository.getBatchesByProduct_IdOrderByCurrentQuantityDesc(productId);
         if (batchs.size() == 0) {
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not available in stock");
             throw responseStatusException;
