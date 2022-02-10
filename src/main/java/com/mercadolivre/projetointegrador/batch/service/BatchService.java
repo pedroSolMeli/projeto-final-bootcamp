@@ -78,7 +78,6 @@ public class BatchService {
             addBatchListForDateValid(numberOfDays, resultByDateLimit, result);
         }
 
-        //Todo - Ajustar dto de retorno
         List<BatchResponseDateLimitDto> response = BatchResponseDateLimitDto.ConvertToBatchResponseDateLimitDto(resultByDateLimit);
         return response;
     }
@@ -160,7 +159,7 @@ public class BatchService {
         batchList.stream().forEach(batch -> {
             totalQuantityAvailable.accumulateAndGet(batch.getCurrentQuantity(), Integer::sum);
         });
-        //TODO VERIFICAR SE ESTÁ DISPONÍVEL NO ESTOQUE
+
         if (totalQuantityAvailable.get() < productQuantity) {
             unavailableProductDto = UnavailableProductDto.builder()
                     .productId(productId)

@@ -40,7 +40,7 @@ public class BatchServiceTests {
 	BatchRepository batchRepository;
 
 	@Mock
-	ProductRepository productRepository;
+	ProductService productService;
 	
 	@InjectMocks
 	BatchService batchService;
@@ -79,23 +79,14 @@ public class BatchServiceTests {
        			.id(1L)
        			.product(productBuild)
        			.build();
-		
-		
-//		when
-//		Mockito.doNothing().when(batchService).checkIfBatchNumberExists(batchRequestDto.getBatchNumber());
-//		Mockito.doNothing().when(batchService).checkIfManufacturingDateAndTimeAreTheSame(batchRequestDto.getManufacturingDate(), batchRequestDto.getManufacturingTime());
-//		Mockito.doNothing().when(batchService).validateDueDate(batchRequestDto.getDueDate());
-		Mockito.when(productRepository.getProductById(batchRequestDtoBuild.getProductId())).thenReturn(productBuild);
-		Mockito.when(BatchRequestDto.ConvertToObject(Mockito.any(), Mockito.any())).thenReturn(batch);
-		Mockito.when(batchRepository.saveAndFlush(batch)).thenReturn(batch);
+
+		Mockito.when(productService.getProductById(Mockito.any())).thenReturn(productBuild);
+		Mockito.when(batchRepository.saveAndFlush(Mockito.any())).thenReturn(batch);
 		BatchResponseDto responseDto = batchService.createBatch(batchRequestDtoBuild);
 
-		Assertions.assertEquals(batch, responseDto);
+		Assertions.assertEquals(batch.getBatchNumber(), responseDto.getBatchNumber());
 	}
 
-
-	
-	
 	@Test
 	public void shouldReturnBatchByIdWithSucces() {
 		//given
@@ -111,6 +102,5 @@ public class BatchServiceTests {
 	public void shouldReturnBatchByIdAException() {
 		 Assertions.assertThrows(ResponseStatusException.class, () -> batchService.getById(1L));
 	}
-	
 
 }
