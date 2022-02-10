@@ -13,7 +13,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class SectionControllerTests {
+public class SectionControllerTest {
 
     @Autowired
     private MockMvc mockMvc;

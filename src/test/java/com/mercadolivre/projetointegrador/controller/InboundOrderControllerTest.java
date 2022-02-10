@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class InboundOrderControllerTests {
+public class InboundOrderControllerTest {
 
     @Mock
     InboundOrderRepository inboundOrderRepository;

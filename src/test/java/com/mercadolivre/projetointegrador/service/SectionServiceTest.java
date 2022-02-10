@@ -1,6 +1,7 @@
 package com.mercadolivre.projetointegrador.service;
 
 import com.mercadolivre.projetointegrador.enums.ProductType;
+import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.section.dto.SectionRequestDto;
 import com.mercadolivre.projetointegrador.section.dto.SectionResponseDto;
 import com.mercadolivre.projetointegrador.section.model.Section;
@@ -21,7 +22,7 @@ import java.util.List;
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class SectionServiceTests {
+public class SectionServiceTest {
 
     @Mock
     SectionService sectionService;
@@ -68,6 +69,7 @@ public class SectionServiceTests {
 
     @Test
     public void shouldFindSectionByCodeWithSuccess() {
+
         List<Section> mockedSectionList = new ArrayList<>();
         Section section = Section.builder().id(1L).code("FZ01").sectionType(ProductType.FROZEN).maxCapacity(35).build();
         mockedSectionList.add(section);

@@ -23,7 +23,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @ActiveProfiles("test")
-public class WarehouseControllerTests {
+public class WarehouseControllerTest {
 
     @Autowired
     private MockMvc mockMvc;
@@ -70,4 +70,5 @@ public class WarehouseControllerTests {
                 .get("/warehouse").header("Authorization",  "Bearer "  + token))
                 .andExpect(MockMvcResultMatchers.status().isOk());
     }
+
 }
