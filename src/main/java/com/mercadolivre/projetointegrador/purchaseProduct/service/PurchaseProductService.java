@@ -20,25 +20,24 @@ public class PurchaseProductService {
     @Autowired
     BatchService batchService;
 
-    //TODO TESTAR PRA VER SE TA FUNCIONANDO A REMOÇÃO DO ESTOQUE
     public void subtractProductFromStock(PurchaseProduct purchaseProduct) {
         Product product = purchaseProduct.getProduct();
-        AtomicReference<Integer> quantity = new AtomicReference<>((int) purchaseProduct.getQuantity());
+        int quantity = purchaseProduct.getQuantity();
         List<Batch> batchList = batchService.getBatchesByProductId(product.getId());
-        while (quantity.get() > 0) {
-            batchList.stream().forEach(batch -> {
-                int diference = batch.getCurrentQuantity() - purchaseProduct.getQuantity();
+        while (quantity > 0) {
+            for (int i = 0; i < batchList.size() ; i++) {
+                int diference = batchList.get(i).getCurrentQuantity() - quantity;
                 if (diference < 0) {
-                    batch.setCurrentQuantity(0);
-                    quantity.set(diference * (-1));
-                    batchService.saveBatch(batch);
+                    batchList.get(i).setCurrentQuantity(0);
+                    quantity = diference * (-1);
+                    batchService.saveBatch(batchList.get(i));
                 } else {
-                    batch.setCurrentQuantity(diference);
-                    quantity.set(0);
-                    batchService.saveBatch(batch);
-                    return;
+                    batchList.get(i).setCurrentQuantity(diference);
+                    quantity = 0;
+                    batchService.saveBatch(batchList.get(i));
+                    break;
                 }
-            });
+            }
         }
     }
 }
