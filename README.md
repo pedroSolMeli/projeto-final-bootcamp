@@ -15,3 +15,6 @@ Projeto final da wave4 do bootcamp oferecido pelo Meli
 O Seguinte desafio foi proposto para aplicar os conhecimentos até então alcançados no BootcampIt - Meli
 
 
+[I'm a relative reference to a repository file](./requisitos/Enunciado Base Wave4.pdf)
+
+[I'm an inline-style link](https://www.google.com)
