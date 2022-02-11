@@ -62,8 +62,8 @@ public class InboundOrderService {
         SectionDto sectionDto = inboundOrderDto.getSection();
         Section section = sectionService.getSectionBySectionCodeAndWarehouseCode(sectionDto.getSectionCode(), sectionDto.getWarehouseCode());
 
-        if(!update) {
-        checksValidatesToNewInput(inboundOrderDto, section);
+        if (!update) {
+            checksValidatesToNewInput(inboundOrderDto, section);
         }
 
         InboundOrder inboundOrder = InboundOrderRequestDto.ConvertToObject(inboundOrderRequestDto, section);
@@ -79,12 +79,12 @@ public class InboundOrderService {
         return inboundOrderResponseDto;
     }
 
-	private void checksValidatesToNewInput(InboundOrderDto inboundOrderDto, Section section) {
-		checkIfOrderNumberExists(inboundOrderDto.getOrderNumber());
+    private void checksValidatesToNewInput(InboundOrderDto inboundOrderDto, Section section) {
+        checkIfOrderNumberExists(inboundOrderDto.getOrderNumber());
         checkIfBatchNumberExists(inboundOrderDto.getBatchStock());
         checkIfSectionHasEnoughSpace(inboundOrderDto.getBatchStock().size(), section);
         checkIfProductTypeMatchesSectionType(inboundOrderDto.getBatchStock(), section);
-	}
+    }
 
     private void checkIfBatchNumberExists(List<BatchRequestDto> batchStock) {
         batchStock.stream().forEach(b -> {
@@ -99,7 +99,7 @@ public class InboundOrderService {
     }
 
     public InboundOrderResponseDto updateInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, String authHeader, Boolean update) {
-    	  InboundOrderResponseDto result = createInboundOrder(inboundOrderRequestDto, authHeader,update);
+        InboundOrderResponseDto result = createInboundOrder(inboundOrderRequestDto, authHeader, update);
         return result;
     }
 
@@ -144,5 +144,23 @@ public class InboundOrderService {
         if (!warehouse.getCode().equals(requestWarehouseCode)) {
             throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "you can only send inbound order to your own warehouse");
         }
+    }
+
+    private void checkIfUserBelongsToWarehouse(User user) {
+        Warehouse warehouse = warehouseService.getWarehouseByUser(user);
+        if (warehouse == null) {
+            throw new ResponseStatusException(HttpStatus.NOT_ACCEPTABLE, "You cannot delete inbound Orders from others warehouses");
+        }
+    }
+
+    public void deleteInboundOrder(Long orderNumber, String authHeader) {
+        User userAuth = jwtProvider.getUser(authHeader);
+        User user = userService.findUserWithoutConvert(userAuth.getId());
+        checkIfUserBelongsToWarehouse(user);
+
+        InboundOrder inboundOrder = inboundOrderRepository.getInboundOrderByOrderNumber(orderNumber);
+        if (inboundOrder == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Inbound Order with orderNumber " + orderNumber + " not found");
+        inboundOrderRepository.delete(inboundOrder);
     }
 }

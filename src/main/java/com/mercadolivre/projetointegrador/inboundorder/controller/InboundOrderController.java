@@ -2,7 +2,6 @@ package com.mercadolivre.projetointegrador.inboundorder.controller;
 
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderRequestDto;
 import com.mercadolivre.projetointegrador.inboundorder.dto.InboundOrderResponseDto;
-import com.mercadolivre.projetointegrador.inboundorder.model.InboundOrder;
 import com.mercadolivre.projetointegrador.inboundorder.service.InboundOrderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -15,14 +14,14 @@ import java.util.List;
 @RequestMapping("/inboundorder")
 public class InboundOrderController {
 
-    
-	@Autowired
+
+    @Autowired
     InboundOrderService inboundOrderService;
 
     @PostMapping()
     public ResponseEntity<?> create(@RequestBody InboundOrderRequestDto inboundOrderRequestDto,
                                     @RequestHeader(value = "Authorization") String authHeader) {
-        Boolean update = false; 
+        Boolean update = false;
         InboundOrderResponseDto result = inboundOrderService.createInboundOrder(inboundOrderRequestDto, authHeader, update);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
@@ -35,11 +34,17 @@ public class InboundOrderController {
 
     @PutMapping()
     public ResponseEntity<?> update(@RequestBody InboundOrderRequestDto inboundOrder,
-				   @RequestHeader(value = "Authorization") String authHeader) {
-    	Boolean update = true; 
-        InboundOrderResponseDto result = inboundOrderService.updateInboundOrder(inboundOrder,authHeader, update);
+                                    @RequestHeader(value = "Authorization") String authHeader) {
+        Boolean update = true;
+        InboundOrderResponseDto result = inboundOrderService.updateInboundOrder(inboundOrder, authHeader, update);
         return new ResponseEntity<>(result, HttpStatus.CREATED);
     }
 
+    @DeleteMapping("/{orderNumber}")
+    public ResponseEntity<?> delete(@PathVariable Long orderNumber,
+                                    @RequestHeader(value = "Authorization") String authHeader) {
+        inboundOrderService.deleteInboundOrder(orderNumber, authHeader);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 
 }

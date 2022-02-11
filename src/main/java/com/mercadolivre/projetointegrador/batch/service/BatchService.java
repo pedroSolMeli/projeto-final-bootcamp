@@ -23,7 +23,6 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicReference;
-import java.util.stream.Collectors;
 
 @Service
 public class BatchService {
@@ -60,20 +59,20 @@ public class BatchService {
 
         List<Batch> resultByDateLimit = new ArrayList<>();
 
-        if(sectionId != null && category != null){
+        if (sectionId != null && category != null) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Filtering by sectionId and category together is not allowed");
         }
 
-        if(sectionId != null){
+        if (sectionId != null) {
             List<Batch> result = batchRepository.getBatchsByinboundOrder_Section_Id(sectionId);
             addBatchListForDateValid(numberOfDays, resultByDateLimit, result);
         }
 
-        if(category != null){
+        if (category != null) {
             List<Batch> result = batchRepository.getBatchesByProduct_ProductType(category);
             addBatchListForDateValid(numberOfDays, resultByDateLimit, result);
         }
-        if(numberOfDays > 0){
+        if (numberOfDays > 0) {
             List<Batch> result = batchRepository.findAll();
             addBatchListForDateValid(numberOfDays, resultByDateLimit, result);
         }
@@ -143,8 +142,8 @@ public class BatchService {
 
         List<Batch> batchsValid = new ArrayList<>();
 
-        for (Batch batch: batchs) {
-            if (productService.isValidDate(batch.getDueDate())){
+        for (Batch batch : batchs) {
+            if (productService.isValidDate(batch.getDueDate())) {
                 batchsValid.add(batch);
             }
         }
@@ -176,15 +175,6 @@ public class BatchService {
         return unavailableProductDto;
     }
 
-    public List<Batch> populateBatchWithProduct(List<BatchRequestDto> dtoList, List<Batch> batchList) {
-        for (int i = 0; i < dtoList.size(); i++) {
-            Long productId = dtoList.get(i).getProductId();
-            Product product = productService.getProductById(productId);
-            batchList.get(i).setProduct(product);
-        }
-        return batchList;
-    }
-
     public List<Batch> populateBatchListWithInboundOrder(InboundOrderRequestDto inboundOrderRequestDto, InboundOrder inbound) {
         List<BatchRequestDto> batchStock = inboundOrderRequestDto.getInboundOrder().getBatchStock();
         List<Batch> batchList = BatchRequestDto.ConvertToObjectList(batchStock);
@@ -198,4 +188,10 @@ public class BatchService {
         return batchList;
     }
 
+    public void deleteBatchByBatchNumber(Long batchNumber) {
+        Batch batch = batchRepository.getBatchByBatchNumber(batchNumber);
+        if (batch == null)
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Bathc with batchNumber " + batchNumber + " not found");
+        batchRepository.delete(batch);
+    }
 }
