@@ -11,6 +11,8 @@ import springfox.documentation.spi.DocumentationType;
 import springfox.documentation.spring.web.plugins.Docket;
 import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
+import java.util.function.Predicate;
+
 @Configuration
 @EnableSwagger2
 public class SwaggerConfig {
@@ -18,11 +20,13 @@ public class SwaggerConfig {
 	@Bean
 	public Docket api() {
 		return new Docket(DocumentationType.SWAGGER_2).select().apis(RequestHandlerSelectors.any())
-				.paths(PathSelectors.regex("/api/.*")).build().apiInfo(apiInfo());
+				.paths(PathSelectors.regex("/api/.*"))
+				.apis(RequestHandlerSelectors.basePackage("com.mercadolivre.projetointegrador"))
+				.build().apiInfo(apiInfo());
 	}
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("TITLE").description("DESCRIPTION").version("VERSION")
+		return new ApiInfoBuilder().title("MELI FRESCOS").description("PROJETO FINAL - GRUPO 03 - W4").version("VERSION")
 				.termsOfServiceUrl("http://terms-of-services.url").license("LICENSE")
 				.licenseUrl("http://url-to-license.com").build();
 	}
