@@ -35,6 +35,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .antMatchers("/section").hasRole("A")
                 .antMatchers(HttpMethod.GET, "/product").permitAll()
                 .antMatchers("/h2/**").permitAll()
+                .antMatchers("/swagger-ui.html").permitAll()
+                .antMatchers("/swagger-ui/**").permitAll()
                 .anyRequest().authenticated();
         http.headers().frameOptions().disable();
     }
