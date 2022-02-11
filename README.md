@@ -12,7 +12,7 @@ A descrição do desafio e seus respectivos requisitos se encontram abaixo:
 |Github Projects, Clean Code, Scrum |Java 11, Maven, SpringMvc, SpringWeb, SpringSecurity, Lombok, JWT, H2|
 
 ## Endpoints
-Arquivo de rotas do Insomnia: [Insomnia_2022-02-10.json](./insomnia/Insomnia_2022-02-10.json)   
+Arquivo de rotas do Insomnia: [Insomnia_2022-02-10.json](./insomnia)   
 URL Base: `localhost:8080/api/v1/fresh-products`
 | Tipo | URI | Função | Payload
 |--|--|--|--| 
@@ -38,7 +38,7 @@ Observações sobre o projeto/endpoints atendendo os requisitos:
 * Para criar uma entrada de estoque (inboundOrder), precisa estar com a section, warehouse e produto(s) já cadastrados.
 * Algumas requests de filtragem e ordenação não estão pré-cadastradas no arquivo de insomnia, mas estão funcionais de acordo com os requisitos. Estas dependem de variáveis a seram escolhidas, ou de acordo com cadastros realizados.
 
-[Coleção de requests Insomnia](./insomnia)
+
 
 Usuários já cadastrados:
 - `{"username": "userbuyer","password":"12345"} //Usuário comprador`  
