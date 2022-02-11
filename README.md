@@ -4,7 +4,7 @@ Projeto final desenvolvido pelo Grupo 3 da Wave 4 do BOOTCAMP MELI
 ## Desafio: Requisitos & Apresentação
 O Seguinte desafio foi proposto para aplicar os conhecimentos até então alcançados no BootcampIt - Meli.
 A descrição do desafio e seus respectivos requisitos se encontram abaixo:
-[Kickoff Projeto Integrador](./requisitos/EnunciadoBaseWave4.pdf), [Requisito 1](./requisitos/Requito1.pdf), [Requisito 2](./requisitos/Requito2.pdf), [Requisito 3](./requisitos/Requito3.pdf), [Requisito 4](./requisitos/Requito4.pdf), [Requisito 5](./requisitos/Requito5.pdf), [Requisito 6](./requisitos/Requito6.pdf)
+[Kickoff Projeto Integrador](./requisitos/EnunciadoBaseWave4.pdf), [Requisito 1](./requisitos/Requito1.pdf), [Requisito 2](./requisitos/Requito2.pdf), [Requisito 3](./requisitos/Requito3.pdf), [Requisito 4](./requisitos/Requito4.pdf), [Requisito 5](./requisitos/Requito5.pdf), [Requisito 6 - Pedro](./requisitos/Requisito6-deleteInboundOrderByOrderNumber.pdf)
 
 ## Ferramentas/tecnologias utilizadas
 | Boas praticas | Ferramentas|
