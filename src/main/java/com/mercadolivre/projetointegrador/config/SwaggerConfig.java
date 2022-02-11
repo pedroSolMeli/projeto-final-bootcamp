@@ -28,7 +28,7 @@ public class SwaggerConfig {
 	private ApiInfo apiInfo() {
 		return new ApiInfoBuilder().title("MELI FRESCOS").description("PROJETO FINAL - GRUPO 03 - W4").version("VERSION")
 				.termsOfServiceUrl("http://terms-of-services.url").license("LICENSE")
-				.licenseUrl("http://url-to-license.com").build();
+				.licenseUrl("http://url-to-license.com").version("1.0.0").build();
 	}
 
 }
