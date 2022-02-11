@@ -11,7 +11,8 @@ A descrição do desafio e seus respectivos requisitos se encontram abaixo:
 |--|--|
 |Github Projects, Clean Code, Scrum |Java 11, Maven, SpringMvc, SpringWeb, SpringSecurity, Lombok, JWT, H2|
 
-## Endpoints  
+## Endpoints
+Arquivo de rotas do Insomnia: [Insomnia_2022-02-10.json](./insomnia/Insomnia_2022-02-10.json)   
 URL Base: `localhost:8080/api/v1/fresh-products`
 | Tipo | URI | Função | Payload
 |--|--|--|--| 
