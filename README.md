@@ -38,11 +38,15 @@ Observações sobre o projeto/endpoints atendendo os requisitos:
 * Para criar uma entrada de estoque (inboundOrder), precisa estar com a section, warehouse e produto(s) já cadastrados.
 * Algumas requests de filtragem e ordenação não estão pré-cadastradas no arquivo de insomnia, mas estão funcionais de acordo com os requisitos. Estas dependem de variáveis a seram escolhidas, ou de acordo com cadastros realizados.
 
-
-
 Usuários já cadastrados:
 - `{"username": "userbuyer","password":"12345"} //Usuário comprador`  
 - `{"username": "useragent","password":"12345"}  //Usuário agente--o mesmo que representante`
+
+## Swagger
+
+Após iniciar o projeto a página do Swagger fica disponível [nesta URL](http://localhost:8080/api/v1/fresh-products/swagger-ui/)
+
+![Print da página do swagger](./imagens/swagger.png "Página do Swagger")
 
 ### Integrantes
 * [Emanuelle Besckow Figueiredo](https://github.com/emanuellebesckow)
