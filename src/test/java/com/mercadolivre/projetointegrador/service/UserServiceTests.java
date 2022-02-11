@@ -17,6 +17,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.factory.PasswordEncoderFactories;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.ActiveProfiles;
+import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.ConstraintViolationException;
 import java.util.Arrays;
@@ -66,13 +67,8 @@ public class UserServiceTests {
 
     @Test
     public void shouldReturnAllUsersWithSuccess() {
-        // User pedro = User.builder().id(1L).cpf("86545843001").name("pedro").username("psol").email("pedro@email.com")
-        //       .password(encoder.encode("pedro123")).roles(Arrays.asList(UserRole.A, UserRole.S)).build();
-
         User ana = User.builder().id(2L).cpf("98840453059").name("ana").username("anag").email("ana@email.com")
                 .password(encoder.encode("ana123")).roles(Arrays.asList(UserRole.A, UserRole.S, UserRole.B)).build();
-        // User renan = User.builder().id(3L).cpf("55027433069").name("renan").username("renanmeli").email("renan@email.com")
-        //         .password(encoder.encode("renan123")).roles(Arrays.asList(UserRole.A, UserRole.B)).build();
         List<User> users = Arrays.asList(ana);
 
         Mockito.when(userRepository.findAll()).thenReturn(users);
@@ -128,4 +124,45 @@ public class UserServiceTests {
         Assertions.assertEquals(ana.getRoles().toString(), response.get().getRoles().toString());
     }
 
+    @Test
+    public void shouldFindUserByRuleWithSuccess() {
+        User ana = User.builder().id(2L).cpf("98840453059").name("ana").username("anag").email("ana@email.com")
+                .password(encoder.encode("ana123")).roles(Arrays.asList(UserRole.A)).build();
+
+        Mockito.when(userRepository.getUsersByRoles(UserRole.A)).thenReturn(List.of(ana));
+        List<UserResponseDto> response = userService.findUserByRole("A");
+
+        Assertions.assertEquals(response.size(), 1);
+    }
+
+    @Test
+    public void shouldFindUserByCpfWithSuccess() {
+        User ana = User.builder().id(2L).cpf("98840453059").name("ana").username("anag").email("ana@email.com")
+                .password(encoder.encode("ana123")).roles(Arrays.asList(UserRole.A)).build();
+
+        Mockito.when(userRepository.findUserByCpf("98840453059")).thenReturn(Optional.ofNullable(ana));
+        UserResponseDto response = userService.findUserByCpf("98840453059");
+
+        Assertions.assertEquals(response.getCpf(), ana.getCpf());
+    }
+
+    @Test
+    public void shouldDeleteUser() {
+        User user = User.builder().id(1L).cpf("98840453059").name("ana").username("anag").email("ana@email.com")
+                .password(encoder.encode("ana123")).roles(Arrays.asList(UserRole.A)).build();
+
+        Mockito.when(userRepository.findById(Mockito.any())).thenReturn(Optional.ofNullable(user));
+        Mockito.doNothing().when(userRepository).delete(Mockito.any());
+        userService.deleteUserById(1L);
+    }
+
+    @Test
+    public void shouldThrowUserNotFound() {
+        Assertions.assertThrows(ResponseStatusException.class, () -> userService.deleteUserById(1L));
+    }
+
+    @Test
+    public void shouldFindUserByCpfWithUnsuccess() {
+        Assertions.assertThrows(ResponseStatusException.class, () -> userService.findUserByCpf("98840453059"));
+    }
 }

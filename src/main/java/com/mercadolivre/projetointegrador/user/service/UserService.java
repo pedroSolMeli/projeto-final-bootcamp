@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -41,13 +42,33 @@ public class UserService {
         return UserResponseDto.ConvertToResponseDto(userRepository.getUserById(id));
     }
 
+    public UserResponseDto findUserByCpf(String cpf) {
+        User user = userRepository.findUserByCpf(cpf).orElse(null);
+        if(user == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user with cpf: " + cpf);
+        }
+        return UserResponseDto.ConvertToResponseDto(user);
+    }
+
+    public void deleteUserById(Long id) {
+        User user = userRepository.findById(id).orElse(null);
+        if(user == null){
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Not found user with id: " + id);
+        }
+        userRepository.deleteById(id);
+    }
+
+    public List<UserResponseDto> findUserByRole(String role) {
+        UserRole userRole = UserRole.valueOf(role.toUpperCase(Locale.ROOT));
+        return UserResponseDto.ConvertToResponseDto(userRepository.getUsersByRoles(userRole));
+    }
+
     public User findUserWithoutConvert(Long id) {
         User user = userRepository.findById(id).orElse(null);
         if (user == null){
             ResponseStatusException responseStatusException = new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found id: " + id);
             throw responseStatusException;
         }
-
         return user;
     }
     

@@ -129,4 +129,10 @@ public class WarehouseService {
         }
     }
 
+    public String getNumberOfUserByWarehouseCode(String code){
+        Warehouse warehouseByCode = getWarehouseByCode(code);
+        int numberUser = warehouseByCode.getUsers().size();
+        return "{\"numberOfUser\":"+ numberUser +"}";
+    }
+
 }

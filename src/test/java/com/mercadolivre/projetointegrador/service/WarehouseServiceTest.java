@@ -62,6 +62,32 @@ public class WarehouseServiceTest {
     }
 
     @Test
+    public void shouldReturnWarehouseListCountUserWithSucces() {
+
+        ArrayList<UserRole> arrayRoles = new ArrayList<>();
+        arrayRoles.add(UserRole.A);
+
+        User user = User.builder()
+                .cpf("86545843001")
+                .name("pedro")
+                .username("pedro")
+                .email("pedro@email.com")
+                .password("pedro123")
+                .roles(arrayRoles)
+                .build();
+
+        ArrayList<User> arrayUser = new ArrayList<>();
+        arrayUser.add(user);
+
+        Warehouse warehouse = Warehouse.builder().id(1L).code("RJ1").users(arrayUser).build();
+
+        Mockito.when(repository.getWarehouseByCode("RJ1")).thenReturn(warehouse);
+        String result = warehouseService.getNumberOfUserByWarehouseCode("RJ1");
+
+        Assertions.assertEquals(result, "{\"numberOfUser\":1}");
+    }
+
+    @Test
     public void shouldReturnWarehouseByCodeWithSuccess() {
         Warehouse warehouse = Warehouse.builder().id(1L).code("RJ1").build();
 
